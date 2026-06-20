@@ -27,6 +27,48 @@ const preferredTags = [
   "correction",
 ];
 
+const focusTagLabels: Record<string, string> = {
+  particles: "조사",
+  vocab: "어휘",
+  grammar: "문법",
+  number: "숫자",
+  numbers: "숫자",
+  "sino-numbers": "일·이·삼",
+  "native-numbers": "하나·둘·셋",
+  time: "시간",
+  dates: "날짜",
+  routine: "일과",
+  progressive: "고 있어요",
+  purpose: "(으)러",
+  necessity: "아/어야 해요",
+  sentencebuilder: "문장 만들기",
+  "sentence-builder": "문장 만들기",
+  correction: "교정",
+  an: "안",
+  animals: "동물",
+  ayo: "아/어/여요",
+  bakke: "밖에",
+  "boda-particle": "보다",
+  buteo: "부터",
+  calendar: "달력",
+  card: "뜻 카드",
+  cheoreom: "처럼",
+  comparison: "비교",
+  conjugation: "활용",
+  connection: "연결",
+  connectors: "연결어",
+  "date-pattern": "날짜 표현",
+  describing: "묘사",
+  direction: "방향",
+  do: "도",
+  "do-dwaeyo": "도 돼요",
+  e: "에",
+};
+
+function focusTagLabel(tag: string): string {
+  return focusTagLabels[tag] ?? tag;
+}
+
 export function HomeScreen({
   packs,
   entries,
@@ -93,9 +135,10 @@ export function HomeScreen({
               className={selectedTags.includes(tag) ? "tag-button active" : "tag-button"}
               aria-pressed={selectedTags.includes(tag)}
               key={tag}
+              title={`Focus tag: ${tag}`}
               onClick={() => toggleFocus(tag)}
             >
-              {tag}
+              {focusTagLabel(tag)}
             </button>
           ))}
         </div>
