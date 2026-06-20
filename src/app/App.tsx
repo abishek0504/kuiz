@@ -14,6 +14,7 @@ import { loadStarterPack } from "../seed/loadStarterPack";
 
 export function App() {
   const [tab, setTab] = useState<MainTab>("home");
+  const [starterReady, setStarterReady] = useState(false);
   const [bootError, setBootError] = useState("");
   const packs = useLiveQuery(() => db.packs.toArray(), [], []);
   const entries = useLiveQuery(() => db.entries.toArray(), [], []);
@@ -24,9 +25,19 @@ export function App() {
   const settings = liveSettings ?? defaultSettings;
 
   useEffect(() => {
-    loadStarterPack(db).catch((error) => {
-      setBootError(error instanceof Error ? error.message : "Could not load starter pack.");
-    });
+    let mounted = true;
+    loadStarterPack(db)
+      .then(() => {
+        if (mounted) setStarterReady(true);
+      })
+      .catch((error) => {
+        if (mounted) {
+          setBootError(error instanceof Error ? error.message : "Could not load starter pack.");
+        }
+      });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   async function updateSettings(patch: Partial<UserSettings>) {
@@ -38,8 +49,25 @@ export function App() {
       return <div className="error-box">{bootError}</div>;
     }
 
+    if (!starterReady) {
+      return (
+        <div className="loading-state" role="status">
+          Loading Kuiz content...
+        </div>
+      );
+    }
+
     if (tab === "home") {
-      return <HomeScreen packs={packs} entries={entries} exercises={exercises} onStartQuiz={() => setTab("quiz")} />;
+      return (
+        <HomeScreen
+          packs={packs}
+          entries={entries}
+          exercises={exercises}
+          settings={settings}
+          onSettingsChange={updateSettings}
+          onStartQuiz={() => setTab("quiz")}
+        />
+      );
     }
     if (tab === "quiz") {
       return <QuizScreen exercises={exercises} settings={settings} onSettingsChange={updateSettings} />;

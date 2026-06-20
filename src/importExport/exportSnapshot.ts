@@ -14,7 +14,7 @@ export async function exportAuthoringSnapshot(database: KuizDatabase): Promise<A
   const tags = Array.from(new Set([...entries, ...exercises].flatMap((item) => item.tags))).sort();
 
   return {
-    schema: "ace-snapshot@1",
+    schema: "kuiz-snapshot@1",
     appVersion: "1.0.0",
     installedPackIds: packs.map((pack) => pack.packId).sort(),
     dedupeKeys,
@@ -22,6 +22,7 @@ export async function exportAuthoringSnapshot(database: KuizDatabase): Promise<A
     settings: {
       particleCoverage: settings.particleCoverage,
       particleStrictness: settings.particleStrictness,
+      focusTags: settings.focusTags,
     },
   };
 }

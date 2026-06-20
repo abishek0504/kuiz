@@ -55,10 +55,15 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
   const [input, setInput] = useState("");
   const [feedback, setFeedback] = useState<FeedbackState | undefined>();
 
-  const modeExercises = useMemo(
-    () => exercises.filter((exercise) => exerciseMatchesMode(exercise, mode)),
-    [exercises, mode],
-  );
+  const modeExercises = useMemo(() => {
+    const matchingMode = exercises.filter((exercise) => exerciseMatchesMode(exercise, mode));
+    const focusTags = settings.focusTags ?? [];
+    if (focusTags.length === 0) return matchingMode;
+    const matchingFocus = matchingMode.filter((exercise) =>
+      exercise.tags.some((tag) => focusTags.includes(tag)),
+    );
+    return matchingFocus.length > 0 ? matchingFocus : matchingMode;
+  }, [exercises, mode, settings.focusTags]);
   const exercise = modeExercises[index % Math.max(1, modeExercises.length)];
 
   useEffect(() => {
@@ -185,7 +190,7 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
         </div>
 
         {exercise.type === "mcq" ? (
-          <div className="choice-grid" aria-label="Answer choices">
+          <div className={feedback ? "choice-grid answered" : "choice-grid"} aria-label="Answer choices">
             {exercise.choices.map((choice) => (
               <button
                 key={choice.id}

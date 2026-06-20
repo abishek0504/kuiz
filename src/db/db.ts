@@ -68,7 +68,7 @@ export async function exportAllTables(database = db): Promise<BackupPayload> {
   ]);
 
   return {
-    schema: "ace-backup@1",
+    schema: "kuiz-backup@1",
     exportedAt: new Date().toISOString(),
     packs,
     entries,

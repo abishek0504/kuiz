@@ -7,6 +7,7 @@ export type ParticleStrictness = "strict" | "relaxed";
 export type UserSettings = {
   particleCoverage: ParticleCoverage;
   particleStrictness: ParticleStrictness;
+  focusTags: string[];
   autoAudio: boolean;
   speechRate: number;
   voiceURI?: string;
@@ -15,6 +16,7 @@ export type UserSettings = {
 export const defaultSettings: UserSettings = {
   particleCoverage: "all",
   particleStrictness: "strict",
+  focusTags: [],
   autoAudio: false,
   speechRate: 0.9,
 };
@@ -69,7 +71,7 @@ export type ImportLogRecord = {
 };
 
 export type BackupPayload = {
-  schema: "ace-backup@1";
+  schema: "kuiz-backup@1" | "ace-backup@1";
   exportedAt: string;
   packs: PackRecord[];
   entries: EntryRecord[];

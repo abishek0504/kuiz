@@ -6,7 +6,7 @@ test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
   await page.getByRole("tab", { name: "Multiple choice" }).click();
 
   await expect(page.getByRole("button", { name: "Next" })).toHaveCount(0);
-  await page.getByRole("button", { name: "저는 지금 한국어를 공부하고 있어요." }).click();
+  await page.locator(".choice").first().click();
 
   await expect(page.getByTestId("feedback-panel")).toBeVisible();
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();

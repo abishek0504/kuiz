@@ -4,6 +4,7 @@ import { db } from "../../db/db";
 import type { EntryRecord, ExerciseRecord, ImportLogRecord, PackRecord } from "../../db/schema";
 import { exportBackup, restoreBackup } from "../../importExport/exportBackup";
 import { exportAuthoringSnapshot } from "../../importExport/exportSnapshot";
+import { buildAuthoringPrompt } from "../../importExport/authoringPrompt";
 import { copyText } from "../../utils/clipboard";
 
 type LibraryScreenProps = {
@@ -36,6 +37,13 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
     setStatus(copied ? "Authoring snapshot copied." : JSON.stringify(snapshot));
   }
 
+  async function copyUpdatePrompt() {
+    const snapshot = await exportAuthoringSnapshot(db);
+    const prompt = buildAuthoringPrompt(snapshot);
+    const copied = await copyText(prompt);
+    setStatus(copied ? "ChatGPT update prompt copied." : prompt);
+  }
+
   async function restore() {
     const parsed = JSON.parse(restoreText);
     await restoreBackup(db, parsed);
@@ -59,6 +67,9 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
         <button type="button" className="secondary-button" onClick={copySnapshot}>
           Copy authoring snapshot
         </button>
+        <button type="button" className="secondary-button" onClick={copyUpdatePrompt}>
+          Copy ChatGPT update prompt
+        </button>
       </div>
       {status ? <p className="status-line">{status}</p> : null}
       <div className="stats-grid">
@@ -75,6 +86,15 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
           <span>exercises</span>
         </div>
       </div>
+      <section className="plain-section">
+        <h2>Add future lessons</h2>
+        <ol className="numbered-list">
+          <li>Copy the ChatGPT update prompt.</li>
+          <li>Paste it into chat with your new lesson notes, screenshots, PDF text, or worksheet material.</li>
+          <li>Ask for JSON only, then paste the returned pack into Paste JSON update.</li>
+          <li>Preview the import counts before confirming the merge.</li>
+        </ol>
+      </section>
       <section className="plain-section">
         <h2>Installed packs</h2>
         <div className="reference-list">
@@ -101,7 +121,7 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
           className="json-input small"
           value={restoreText}
           onChange={(event) => setRestoreText(event.target.value)}
-          placeholder="Paste ace-backup@1 JSON"
+          placeholder="Paste kuiz-backup@1 JSON"
         />
         <button type="button" className="secondary-button" disabled={!restoreText.trim()} onClick={restore}>
           Restore backup

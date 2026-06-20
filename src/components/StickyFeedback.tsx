@@ -27,9 +27,12 @@ export function StickyFeedback({ feedback, settings }: StickyFeedbackProps) {
         <NaverLookupLink query={feedback.lookupQuery} />
       </div>
       <p className="model-answer">{feedback.modelAnswer}</p>
-      {feedback.explanation ? <p>{feedback.explanation}</p> : null}
-      {feedback.particleNote ? <p className="note">Particle note: {feedback.particleNote}</p> : null}
-      {feedback.naturalnessNote ? <p className="note">Naturalness: {feedback.naturalnessNote}</p> : null}
+      <details className="feedback-details">
+        <summary>Why this answer?</summary>
+        {feedback.explanation ? <p>{feedback.explanation}</p> : null}
+        {feedback.particleNote ? <p className="note">Particle note: {feedback.particleNote}</p> : null}
+        {feedback.naturalnessNote ? <p className="note">Naturalness: {feedback.naturalnessNote}</p> : null}
+      </details>
       <AudioButton text={feedback.audioText ?? feedback.modelAnswer} settings={settings} label="Replay" />
     </section>
   );

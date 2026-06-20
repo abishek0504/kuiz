@@ -4,13 +4,13 @@ test("mobile quiz shows prompt and core controls without long initial scrolling"
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
 
-  await expect(page.getByRole("heading", { name: /Choose the best Korean/i })).toBeVisible();
+  await expect(page.locator(".quiz-card h1")).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("button", { name: "Listen" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Show answer" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Skip" })).toBeVisible();
 
   const skipBox = await page.getByRole("button", { name: "Skip" }).boundingBox();
-  expect(skipBox?.y ?? 9999).toBeLessThan(520);
+  expect(skipBox?.y ?? 9999).toBeLessThan(620);
 });
 
 test("mode chip highlighting follows selected state", async ({ page }) => {

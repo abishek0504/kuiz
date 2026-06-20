@@ -7,7 +7,7 @@ export async function exportBackup(database: KuizDatabase): Promise<BackupPayloa
 }
 
 export async function restoreBackup(database: KuizDatabase, backup: BackupPayload): Promise<void> {
-  if (backup.schema !== "ace-backup@1") {
+  if (backup.schema !== "kuiz-backup@1" && backup.schema !== "ace-backup@1") {
     throw new Error("Unsupported backup schema.");
   }
 

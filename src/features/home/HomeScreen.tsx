@@ -1,14 +1,53 @@
-import type { EntryRecord, ExerciseRecord, PackRecord } from "../../db/schema";
+import type { EntryRecord, ExerciseRecord, PackRecord, UserSettings } from "../../db/schema";
 
 type HomeScreenProps = {
   packs: PackRecord[];
   entries: EntryRecord[];
   exercises: ExerciseRecord[];
+  settings: UserSettings;
+  onSettingsChange: (patch: Partial<UserSettings>) => void;
   onStartQuiz: () => void;
 };
 
-export function HomeScreen({ packs, entries, exercises, onStartQuiz }: HomeScreenProps) {
-  const tags = Array.from(new Set([...entries, ...exercises].flatMap((item) => item.tags))).slice(0, 10);
+const preferredTags = [
+  "particles",
+  "vocab",
+  "grammar",
+  "number",
+  "numbers",
+  "sino-numbers",
+  "native-numbers",
+  "time",
+  "dates",
+  "routine",
+  "progressive",
+  "purpose",
+  "necessity",
+  "sentencebuilder",
+  "correction",
+];
+
+export function HomeScreen({
+  packs,
+  entries,
+  exercises,
+  settings,
+  onSettingsChange,
+  onStartQuiz,
+}: HomeScreenProps) {
+  const allTags = Array.from(new Set([...entries, ...exercises].flatMap((item) => item.tags))).sort();
+  const visibleTags = [
+    ...preferredTags.filter((tag) => allTags.includes(tag)),
+    ...allTags.filter((tag) => !preferredTags.includes(tag)).slice(0, 24),
+  ].slice(0, 32);
+  const selectedTags = settings.focusTags ?? [];
+
+  function toggleFocus(tag: string) {
+    const next = selectedTags.includes(tag)
+      ? selectedTags.filter((item) => item !== tag)
+      : [...selectedTags, tag];
+    onSettingsChange({ focusTags: next });
+  }
 
   return (
     <section className="stack">
@@ -34,12 +73,30 @@ export function HomeScreen({ packs, entries, exercises, onStartQuiz }: HomeScree
         Start quiz
       </button>
       <section className="plain-section">
-        <h2>Current focus</h2>
-        <div className="tag-wrap">
-          {tags.map((tag) => (
-            <span className="tag" key={tag}>
+        <div className="section-title-row">
+          <div>
+            <h2>Study focus</h2>
+            <p className="section-help">
+              Choose the topics you want Quiz to prioritize. Leave all off for the full deck.
+            </p>
+          </div>
+          {selectedTags.length > 0 ? (
+            <button type="button" className="text-button" onClick={() => onSettingsChange({ focusTags: [] })}>
+              Clear
+            </button>
+          ) : null}
+        </div>
+        <div className="tag-wrap focus-grid">
+          {visibleTags.map((tag) => (
+            <button
+              type="button"
+              className={selectedTags.includes(tag) ? "tag-button active" : "tag-button"}
+              aria-pressed={selectedTags.includes(tag)}
+              key={tag}
+              onClick={() => toggleFocus(tag)}
+            >
               {tag}
-            </span>
+            </button>
           ))}
         </div>
       </section>

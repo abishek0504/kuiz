@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const SnapshotSchema = z.object({
-  schema: z.literal("ace-snapshot@1"),
+  schema: z.literal("kuiz-snapshot@1"),
   appVersion: z.string(),
   installedPackIds: z.array(z.string()),
   dedupeKeys: z.array(z.string()),
@@ -9,6 +9,7 @@ export const SnapshotSchema = z.object({
   settings: z.object({
     particleCoverage: z.enum(["core", "all"]),
     particleStrictness: z.enum(["strict", "relaxed"]),
+    focusTags: z.array(z.string()).default([]),
   }),
 });
 

@@ -71,7 +71,7 @@ button {
   z-index: 30;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 3px;
+  gap: 2px;
   padding: 7px 8px max(7px, env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.96);
   border-top: 1px solid var(--line);
@@ -83,7 +83,7 @@ button {
   border-radius: 8px;
   color: var(--muted);
   background: transparent;
-  font-size: 0.76rem;
+  font-size: clamp(0.68rem, 2.45vw, 0.78rem);
   font-weight: 700;
 }
 
@@ -96,6 +96,14 @@ button {
 .quiz-layout {
   display: grid;
   gap: 14px;
+}
+
+.loading-state {
+  display: grid;
+  min-height: 42svh;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .screen-heading {
@@ -317,8 +325,10 @@ button:disabled {
   position: sticky;
   bottom: calc(68px + env(safe-area-inset-bottom));
   display: grid;
-  gap: 8px;
-  padding: 13px;
+  gap: 7px;
+  max-height: min(38svh, 280px);
+  overflow: auto;
+  padding: 11px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -339,6 +349,27 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.feedback-details {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+}
+
+.feedback-details summary {
+  min-height: 32px;
+  color: var(--accent-strong);
+}
+
+.feedback-details p {
+  margin: 5px 0;
+}
+
+.choice-grid.answered .choice:not(.selected) {
+  display: none;
 }
 
 .inline-link {
@@ -398,6 +429,48 @@ button:disabled {
 .tag {
   min-height: auto;
   font-size: 0.78rem;
+}
+
+.tag-button {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 10px;
+  color: var(--accent-strong);
+  background: var(--surface-strong);
+  font-weight: 800;
+}
+
+.tag-button.active {
+  color: #ffffff;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.focus-grid {
+  gap: 8px;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.section-help {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.numbered-list {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.numbered-list li + li {
+  margin-top: 6px;
 }
 
 .incorrect-source {
@@ -507,6 +580,18 @@ button:disabled {
     grid-column: 2;
     grid-row: 2;
     top: 68px;
+    max-height: calc(100svh - 150px);
     bottom: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .screen {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .quiz-card {
+    padding: 18px;
   }
 }

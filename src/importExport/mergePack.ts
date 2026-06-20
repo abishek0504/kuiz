@@ -56,6 +56,16 @@ function toExerciseRecord(packId: string, exercise: Exercise): ExerciseRecord {
   };
 }
 
+function stripEntryMetadata(record: EntryRecord): Entry {
+  const { packId: _packId, searchText: _searchText, ...entry } = record;
+  return entry;
+}
+
+function stripExerciseMetadata(record: ExerciseRecord): Exercise {
+  const { packId: _packId, searchText: _searchText, ...exercise } = record;
+  return exercise;
+}
+
 function toPackRecord(pack: ContentPack): PackRecord {
   return {
     packId: pack.pack.packId,
@@ -81,12 +91,20 @@ export async function previewContentPack(
     database.exercises.toArray(),
   ]);
 
-  const existingByKey = new Map<string, { id: string; kind: string }>();
+  const existingByKey = new Map<string, { id: string; kind: string; hash: string }>();
   for (const entry of existingEntries) {
-    existingByKey.set(dedupeIdentity(entry), { id: entry.id, kind: entry.kind });
+    existingByKey.set(dedupeIdentity(entry), {
+      id: entry.id,
+      kind: entry.kind,
+      hash: simpleHash(stripEntryMetadata(entry)),
+    });
   }
   for (const exercise of existingExercises) {
-    existingByKey.set(dedupeIdentity(exercise), { id: exercise.id, kind: exercise.type });
+    existingByKey.set(dedupeIdentity(exercise), {
+      id: exercise.id,
+      kind: exercise.type,
+      hash: simpleHash(stripExerciseMetadata(exercise)),
+    });
   }
 
   const preview: ImportPreview = {
@@ -109,6 +127,8 @@ export async function previewContentPack(
     const kind = "kind" in item ? item.kind : item.type;
     if (existing.kind !== kind) {
       preview.conflicts.push(key);
+    } else if (existing.hash !== simpleHash(item)) {
+      preview.updates.push(key);
     } else {
       preview.skips.push(key);
     }
@@ -128,10 +148,22 @@ export async function mergeContentPack(
   }
 
   const createKeys = new Set(resolvedPreview.creates);
+  const updateKeys = new Set(resolvedPreview.updates);
   const packId = pack.pack.packId;
   const now = new Date().toISOString();
 
   const snapshot = await exportAllTables(database);
+  const [existingEntries, existingExercises] = await Promise.all([
+    database.entries.toArray(),
+    database.exercises.toArray(),
+  ]);
+  const existingIdByKey = new Map<string, string>();
+  for (const entry of existingEntries) {
+    existingIdByKey.set(dedupeIdentity(entry), entry.id);
+  }
+  for (const exercise of existingExercises) {
+    existingIdByKey.set(dedupeIdentity(exercise), exercise.id);
+  }
 
   await database.transaction(
     "rw",
@@ -161,14 +193,22 @@ export async function mergeContentPack(
       );
 
       const entryRecords = packEntries(pack)
-        .filter((entry) => createKeys.has(dedupeIdentity(entry)))
+        .filter((entry) => createKeys.has(dedupeIdentity(entry)) || updateKeys.has(dedupeIdentity(entry)))
+        .map((entry) => ({
+          ...entry,
+          id: existingIdByKey.get(dedupeIdentity(entry)) ?? entry.id,
+        }))
         .map((entry) => toEntryRecord(packId, entry));
       if (entryRecords.length > 0) {
         await database.entries.bulkPut(entryRecords);
       }
 
       const exerciseRecords = pack.exercises
-        .filter((exercise) => createKeys.has(dedupeIdentity(exercise)))
+        .filter((exercise) => createKeys.has(dedupeIdentity(exercise)) || updateKeys.has(dedupeIdentity(exercise)))
+        .map((exercise) => ({
+          ...exercise,
+          id: existingIdByKey.get(dedupeIdentity(exercise)) ?? exercise.id,
+        }))
         .map((exercise) => toExerciseRecord(packId, exercise));
       if (exerciseRecords.length > 0) {
         await database.exercises.bulkPut(exerciseRecords);
