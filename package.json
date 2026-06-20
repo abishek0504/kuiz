@@ -1,0 +1,51 @@
+{
+  "name": "kuiz",
+  "version": "1.0.0",
+  "description": "A mobile-first, local-first Korean study app with validated content packs and spaced repetition.",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abishek0504/kuiz.git"
+  },
+  "keywords": [
+    "korean",
+    "language-learning",
+    "react",
+    "typescript",
+    "indexeddb",
+    "spaced-repetition",
+    "vite"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run --coverage",
+    "e2e": "playwright test",
+    "validate:pack": "tsx scripts/validate-pack.ts content-packs/*.json"
+  },
+  "dependencies": {
+    "dexie": "^4.0.11",
+    "dexie-react-hooks": "^1.1.7",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^4.1.9",
+    "jsdom": "^25.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.6",
+    "vitest": "^4.1.9"
+  }
+}

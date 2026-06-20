@@ -1,0 +1,1241 @@
+{
+  "schema": "kuiz-pack@1",
+  "pack": {
+    "packId": "starter.core.v1",
+    "version": "1.0.0",
+    "title": "Kuiz Starter Core Pack",
+    "locale": "en-CA",
+    "createdAt": "2026-06-18",
+    "appMinVersion": "1.0.0",
+    "includes": ["particles", "vocab", "progressive", "necessity", "time", "calendar", "routine"]
+  },
+  "sourceRefs": [
+    {
+      "sourceId": "lessons-pdf-particles-vocab",
+      "label": "Uploaded Lessons PDF export",
+      "locator": "Particles study guide and vocab pages",
+      "inferred": false
+    },
+    {
+      "sourceId": "chat-screens-progressive",
+      "label": "Uploaded chat screenshots",
+      "locator": "~고 있어요 worksheet and visual routine sheets",
+      "inferred": false
+    },
+    {
+      "sourceId": "chat-note-subakke",
+      "label": "Explicit user request",
+      "locator": "Include 수밖에 없어요",
+      "inferred": true
+    }
+  ],
+  "vocab": [
+    {
+      "id": "vocab-친구",
+      "dedupeKey": "vocab:친구",
+      "kind": "vocab",
+      "ko": "친구",
+      "en": "friend",
+      "pos": "noun",
+      "romanization": "chingu",
+      "tags": ["people", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구를 만나요.",
+          "en": "I meet a friend.",
+          "audioText": "친구를 만나요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "친구"
+      }
+    },
+    {
+      "id": "vocab-선생님",
+      "dedupeKey": "vocab:선생님",
+      "kind": "vocab",
+      "ko": "선생님",
+      "en": "teacher",
+      "pos": "noun",
+      "romanization": "seonsaengnim",
+      "tags": ["people", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "선생님께 질문했어요.",
+          "en": "I asked the teacher a question.",
+          "audioText": "선생님께 질문했어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "선생님"
+      }
+    },
+    {
+      "id": "vocab-학생",
+      "dedupeKey": "vocab:학생",
+      "kind": "vocab",
+      "ko": "학생",
+      "en": "student",
+      "pos": "noun",
+      "romanization": "haksaeng",
+      "tags": ["people", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저는 학생이에요.",
+          "en": "I am a student.",
+          "audioText": "저는 학생이에요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "학생"
+      }
+    },
+    {
+      "id": "vocab-학교",
+      "dedupeKey": "vocab:학교",
+      "kind": "vocab",
+      "ko": "학교",
+      "en": "school",
+      "pos": "noun",
+      "romanization": "hakgyo",
+      "tags": ["place", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "학교에 가요.",
+          "en": "I go to school.",
+          "audioText": "학교에 가요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "학교"
+      }
+    },
+    {
+      "id": "vocab-도서관",
+      "dedupeKey": "vocab:도서관",
+      "kind": "vocab",
+      "ko": "도서관",
+      "en": "library",
+      "pos": "noun",
+      "romanization": "doseogwan",
+      "tags": ["place", "study"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "도서관에서 공부해요.",
+          "en": "I study at the library.",
+          "audioText": "도서관에서 공부해요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "도서관"
+      }
+    },
+    {
+      "id": "vocab-집",
+      "dedupeKey": "vocab:집",
+      "kind": "vocab",
+      "ko": "집",
+      "en": "home; house",
+      "pos": "noun",
+      "romanization": "jip",
+      "tags": ["place", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "집에 있어요.",
+          "en": "I am at home.",
+          "audioText": "집에 있어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "집"
+      }
+    },
+    {
+      "id": "vocab-카페",
+      "dedupeKey": "vocab:카페",
+      "kind": "vocab",
+      "ko": "카페",
+      "en": "cafe",
+      "pos": "noun",
+      "romanization": "kape",
+      "tags": ["place", "routine"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": true,
+      "examples": [
+        {
+          "ko": "카페에 가요.",
+          "en": "I go to the cafe.",
+          "audioText": "카페에 가요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "카페"
+      }
+    },
+    {
+      "id": "vocab-오늘",
+      "dedupeKey": "vocab:오늘",
+      "kind": "vocab",
+      "ko": "오늘",
+      "en": "today",
+      "pos": "adverb",
+      "romanization": "oneul",
+      "tags": ["time", "calendar", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘 몇 월 며칠이에요?",
+          "en": "What month and date is it today?",
+          "audioText": "오늘 몇 월 며칠이에요?"
+        }
+      ],
+      "lookup": {
+        "naverQuery": "오늘"
+      }
+    },
+    {
+      "id": "vocab-내일",
+      "dedupeKey": "vocab:내일",
+      "kind": "vocab",
+      "ko": "내일",
+      "en": "tomorrow",
+      "pos": "adverb",
+      "romanization": "naeil",
+      "tags": ["time", "calendar", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "내일 도서관에서 시험 공부를 해요.",
+          "en": "Tomorrow I study for the exam at the library.",
+          "audioText": "내일 도서관에서 시험 공부를 해요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "내일"
+      }
+    },
+    {
+      "id": "vocab-지금",
+      "dedupeKey": "vocab:지금",
+      "kind": "vocab",
+      "ko": "지금",
+      "en": "now; right now",
+      "pos": "adverb",
+      "romanization": "jigeum",
+      "tags": ["time", "routine", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab", "chat-screens-progressive"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "지금 뭐 하고 있어요?",
+          "en": "What are you doing right now?",
+          "audioText": "지금 뭐 하고 있어요?"
+        }
+      ],
+      "lookup": {
+        "naverQuery": "지금"
+      }
+    },
+    {
+      "id": "vocab-아침",
+      "dedupeKey": "vocab:아침",
+      "kind": "vocab",
+      "ko": "아침",
+      "en": "morning; breakfast",
+      "pos": "noun",
+      "romanization": "achim",
+      "tags": ["time", "routine"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "아침부터 공부했어요.",
+          "en": "I studied from the morning.",
+          "audioText": "아침부터 공부했어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "아침"
+      }
+    },
+    {
+      "id": "vocab-저녁",
+      "dedupeKey": "vocab:저녁",
+      "kind": "vocab",
+      "ko": "저녁",
+      "en": "evening; dinner",
+      "pos": "noun",
+      "romanization": "jeonyeok",
+      "tags": ["time", "routine"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저녁까지 일해요.",
+          "en": "I work until evening.",
+          "audioText": "저녁까지 일해요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "저녁"
+      }
+    },
+    {
+      "id": "vocab-질문하다",
+      "dedupeKey": "vocab:질문하다",
+      "kind": "vocab",
+      "ko": "질문하다",
+      "en": "to ask a question",
+      "pos": "verb",
+      "romanization": "jilmunhada",
+      "tags": ["study", "verb"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "선생님께 질문했어요.",
+          "en": "I asked the teacher a question.",
+          "audioText": "선생님께 질문했어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "질문하다"
+      }
+    },
+    {
+      "id": "vocab-주다",
+      "dedupeKey": "vocab:주다",
+      "kind": "vocab",
+      "ko": "주다",
+      "en": "to give",
+      "pos": "verb",
+      "romanization": "juda",
+      "tags": ["verb", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구에게 선물을 줬어요.",
+          "en": "I gave a gift to my friend.",
+          "audioText": "친구에게 선물을 줬어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "주다"
+      }
+    },
+    {
+      "id": "vocab-받다",
+      "dedupeKey": "vocab:받다",
+      "kind": "vocab",
+      "ko": "받다",
+      "en": "to receive; to get",
+      "pos": "verb",
+      "romanization": "batda",
+      "tags": ["verb", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구에게서 편지를 받았어요.",
+          "en": "I got a letter from my friend.",
+          "audioText": "친구에게서 편지를 받았어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "받다"
+      }
+    },
+    {
+      "id": "vocab-공부하다",
+      "dedupeKey": "vocab:공부하다",
+      "kind": "vocab",
+      "ko": "공부하다",
+      "en": "to study",
+      "pos": "verb",
+      "romanization": "gongbuhada",
+      "tags": ["study", "verb", "starter"],
+      "sourceRefIds": ["chat-screens-progressive", "lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저는 한국어를 공부하고 있어요.",
+          "en": "I am studying Korean.",
+          "audioText": "저는 한국어를 공부하고 있어요."
+        }
+      ],
+      "lookup": {
+        "naverQuery": "공부하다"
+      }
+    }
+  ],
+  "particles": [
+    {
+      "id": "particle-이가",
+      "dedupeKey": "particle:이가",
+      "kind": "particle",
+      "form": "이/가",
+      "forms": ["이", "가"],
+      "meaning": "subject marker",
+      "usage": "Marks the subject, often for new information, emphasis, or with 있다/없다.",
+      "contrastsWith": ["particle:은는"],
+      "tags": ["particles", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "비가 와요.",
+          "en": "It is raining.",
+          "audioText": "비가 와요."
+        },
+        {
+          "ko": "친구가 있어요.",
+          "en": "I have a friend.",
+          "audioText": "친구가 있어요."
+        }
+      ],
+      "notes": "Often emphasises who or what does the action."
+    },
+    {
+      "id": "particle-은는",
+      "dedupeKey": "particle:은는",
+      "kind": "particle",
+      "form": "은/는",
+      "forms": ["은", "는"],
+      "meaning": "topic marker",
+      "usage": "Marks the sentence topic, often with contrast or known information.",
+      "contrastsWith": ["particle:이가"],
+      "tags": ["particles", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저는 학생이에요.",
+          "en": "As for me, I am a student.",
+          "audioText": "저는 학생이에요."
+        }
+      ],
+      "notes": "Can imply contrast depending on the context."
+    },
+    {
+      "id": "particle-을를",
+      "dedupeKey": "particle:을를",
+      "kind": "particle",
+      "form": "을/를",
+      "forms": ["을", "를"],
+      "meaning": "object marker",
+      "usage": "Marks the direct object of a verb.",
+      "contrastsWith": ["particle:은는", "particle:이가"],
+      "tags": ["particles", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "책을 읽어요.",
+          "en": "I read a book.",
+          "audioText": "책을 읽어요."
+        }
+      ],
+      "notes": "Can be dropped in casual speech, but keep it in writing and in strict practice."
+    },
+    {
+      "id": "particle-의",
+      "dedupeKey": "particle:의",
+      "kind": "particle",
+      "form": "의",
+      "forms": ["의"],
+      "meaning": "possessive marker",
+      "usage": "Shows possession or relation.",
+      "contrastsWith": [],
+      "tags": ["particles", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "철수의 책이에요.",
+          "en": "It is Chulsoo's book.",
+          "audioText": "철수의 책이에요."
+        }
+      ],
+      "notes": "Often omitted in casual speech."
+    },
+    {
+      "id": "particle-에",
+      "dedupeKey": "particle:에",
+      "kind": "particle",
+      "form": "에",
+      "forms": ["에"],
+      "meaning": "at; to; on; in",
+      "usage": "Marks destination, time, or static location with existence.",
+      "contrastsWith": ["particle:에서"],
+      "tags": ["particles", "time", "place"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "학교에 가요.",
+          "en": "I go to school.",
+          "audioText": "학교에 가요."
+        },
+        {
+          "ko": "3시에 만나요.",
+          "en": "Let's meet at 3 o'clock.",
+          "audioText": "3시에 만나요."
+        }
+      ],
+      "notes": "Use with 있다/없다 for existence."
+    },
+    {
+      "id": "particle-에서",
+      "dedupeKey": "particle:에서",
+      "kind": "particle",
+      "form": "에서",
+      "forms": ["에서"],
+      "meaning": "at; in; from",
+      "usage": "Marks where an action happens, or where movement starts from.",
+      "contrastsWith": ["particle:에", "particle:부터까지"],
+      "tags": ["particles", "place"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "도서관에서 공부해요.",
+          "en": "I study at the library.",
+          "audioText": "도서관에서 공부해요."
+        }
+      ],
+      "notes": "에 is destination/static location; 에서 is action location."
+    },
+    {
+      "id": "particle-으로로",
+      "dedupeKey": "particle:으로로",
+      "kind": "particle",
+      "form": "(으)로",
+      "forms": ["으로", "로"],
+      "meaning": "to; by; with; using",
+      "usage": "Marks means, direction, method, or material.",
+      "contrastsWith": ["particle:에"],
+      "tags": ["particles", "direction", "means"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "버스로 학교에 가요.",
+          "en": "I go to school by bus.",
+          "audioText": "버스로 학교에 가요."
+        }
+      ],
+      "notes": "Use 로 after a vowel or ㄹ batchim."
+    },
+    {
+      "id": "particle-에게한테께",
+      "dedupeKey": "particle:에게한테께",
+      "kind": "particle",
+      "form": "에게/한테/께",
+      "forms": ["에게", "한테", "께"],
+      "meaning": "to someone; for someone",
+      "usage": "Marks the recipient or target person.",
+      "contrastsWith": ["particle:에게서한테서"],
+      "tags": ["particles", "people", "register"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구에게 물어봤어요.",
+          "en": "I asked my friend.",
+          "audioText": "친구에게 물어봤어요."
+        },
+        {
+          "ko": "선생님께 드렸어요.",
+          "en": "I gave it to the teacher.",
+          "audioText": "선생님께 드렸어요."
+        }
+      ],
+      "notes": "한테 is casual, 에게 neutral, 께 honorific."
+    },
+    {
+      "id": "particle-에게서한테서",
+      "dedupeKey": "particle:에게서한테서",
+      "kind": "particle",
+      "form": "에게서/한테서",
+      "forms": ["에게서", "한테서"],
+      "meaning": "from someone",
+      "usage": "Marks the source person.",
+      "contrastsWith": ["particle:에게한테께", "particle:에서"],
+      "tags": ["particles", "people"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구에게서 편지를 받았어요.",
+          "en": "I got a letter from my friend.",
+          "audioText": "친구에게서 편지를 받았어요."
+        }
+      ],
+      "notes": "Use for people or animals, not locations."
+    },
+    {
+      "id": "particle-and-family",
+      "dedupeKey": "particle:and-family",
+      "kind": "particle",
+      "form": "와/과, 하고, (이)랑",
+      "forms": ["와", "과", "하고", "이랑", "랑"],
+      "meaning": "and; with",
+      "usage": "Connects nouns or marks accompaniment.",
+      "contrastsWith": [],
+      "tags": ["particles", "register", "connection"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "철수랑 시장에 갔어요.",
+          "en": "I went to the market with Chulsoo.",
+          "audioText": "철수랑 시장에 갔어요."
+        }
+      ],
+      "notes": "와/과 more formal, 하고 neutral, (이)랑 casual."
+    },
+    {
+      "id": "particle-도",
+      "dedupeKey": "particle:도",
+      "kind": "particle",
+      "form": "도",
+      "forms": ["도"],
+      "meaning": "also; too",
+      "usage": "Adds inclusion and can replace another particle position.",
+      "contrastsWith": ["particle:만"],
+      "tags": ["particles", "starter"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저도 학생이에요.",
+          "en": "I am also a student.",
+          "audioText": "저도 학생이에요."
+        }
+      ],
+      "notes": "Attach 도 directly where the particle slot belongs."
+    },
+    {
+      "id": "particle-만",
+      "dedupeKey": "particle:만",
+      "kind": "particle",
+      "form": "만",
+      "forms": ["만"],
+      "meaning": "only; just",
+      "usage": "Restricts meaning to only that noun.",
+      "contrastsWith": ["particle:도", "particle:밖에"],
+      "tags": ["particles", "restriction"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사과만 먹었어요.",
+          "en": "I only ate apples.",
+          "audioText": "사과만 먹었어요."
+        }
+      ],
+      "notes": "Attach directly after the noun."
+    },
+    {
+      "id": "particle-밖에",
+      "dedupeKey": "particle:밖에",
+      "kind": "particle",
+      "form": "밖에",
+      "forms": ["밖에"],
+      "meaning": "nothing but; only",
+      "usage": "Used with a negative form to mean there is nothing except or no choice but.",
+      "contrastsWith": ["particle:만"],
+      "tags": ["particles", "restriction", "negative"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab", "chat-note-subakke"],
+      "inferred": true,
+      "examples": [
+        {
+          "ko": "천 원밖에 안 남았어요.",
+          "en": "I only have 1,000 won left.",
+          "audioText": "천 원밖에 안 남았어요."
+        },
+        {
+          "ko": "공부할 수밖에 없어요.",
+          "en": "I have no choice but to study.",
+          "audioText": "공부할 수밖에 없어요."
+        }
+      ],
+      "notes": "Must pair with a negative predicate or negative meaning."
+    },
+    {
+      "id": "particle-부터까지",
+      "dedupeKey": "particle:부터까지",
+      "kind": "particle",
+      "form": "부터/까지",
+      "forms": ["부터", "까지"],
+      "meaning": "from; until",
+      "usage": "Marks the starting point and ending point in time or space.",
+      "contrastsWith": ["particle:에서"],
+      "tags": ["particles", "time", "range"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "아침부터 저녁까지 일해요.",
+          "en": "I work from morning until evening.",
+          "audioText": "아침부터 저녁까지 일해요."
+        }
+      ]
+    },
+    {
+      "id": "particle-처럼같이",
+      "dedupeKey": "particle:처럼같이",
+      "kind": "particle",
+      "form": "처럼/같이",
+      "forms": ["처럼", "같이"],
+      "meaning": "like; as",
+      "usage": "Shows similarity or likeness.",
+      "contrastsWith": ["particle:만큼", "particle:보다"],
+      "tags": ["particles", "comparison"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "새처럼 날아요.",
+          "en": "I fly like a bird.",
+          "audioText": "새처럼 날아요."
+        }
+      ]
+    },
+    {
+      "id": "particle-만큼",
+      "dedupeKey": "particle:만큼",
+      "kind": "particle",
+      "form": "만큼",
+      "forms": ["만큼"],
+      "meaning": "as much as; as...as",
+      "usage": "Compares degree or amount.",
+      "contrastsWith": ["particle:보다"],
+      "tags": ["particles", "comparison"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "너만큼 열심히 했어요.",
+          "en": "I worked as hard as you.",
+          "audioText": "너만큼 열심히 했어요."
+        }
+      ]
+    },
+    {
+      "id": "particle-보다",
+      "dedupeKey": "particle:보다",
+      "kind": "particle",
+      "form": "보다",
+      "forms": ["보다"],
+      "meaning": "than",
+      "usage": "Marks the comparison standard.",
+      "contrastsWith": ["particle:만큼", "particle:처럼같이"],
+      "tags": ["particles", "comparison"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘이 어제보다 더 추워요.",
+          "en": "Today is colder than yesterday.",
+          "audioText": "오늘이 어제보다 더 추워요."
+        }
+      ]
+    }
+  ],
+  "grammar": [
+    {
+      "id": "grammar-go-isseoyo",
+      "dedupeKey": "grammar:go-isseoyo",
+      "kind": "grammar",
+      "title": "Present progressive",
+      "pattern": "V-고 있어요",
+      "meaning": "be doing; am/is/are doing",
+      "formation": [
+        "Take the verb stem.",
+        "Add -고 있어요.",
+        "Use it for an action in progress right now."
+      ],
+      "tags": ["grammar", "progressive", "routine"],
+      "sourceRefIds": ["chat-screens-progressive"],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저는 한국어를 공부하고 있어요.",
+          "en": "I am studying Korean.",
+          "audioText": "저는 한국어를 공부하고 있어요."
+        },
+        {
+          "ko": "친구는 커피를 마시고 있어요.",
+          "en": "My friend is drinking coffee.",
+          "audioText": "친구는 커피를 마시고 있어요."
+        }
+      ],
+      "pitfalls": [
+        "Do not mix this up with the plain present if the lesson specifically targets an action in progress.",
+        "Keep object particles in strict mode."
+      ]
+    },
+    {
+      "id": "grammar-subakke-eopda",
+      "dedupeKey": "grammar:subakke-eopda",
+      "kind": "grammar",
+      "title": "No choice but to",
+      "pattern": "V-(으)ㄹ 수밖에 없어요",
+      "meaning": "have no choice but to; cannot help but",
+      "formation": [
+        "Take the verb stem.",
+        "Attach -(으)ㄹ 수밖에 없어요.",
+        "Use it when circumstances leave no other option."
+      ],
+      "tags": ["grammar", "necessity", "밖에"],
+      "sourceRefIds": ["chat-note-subakke"],
+      "inferred": true,
+      "examples": [
+        {
+          "ko": "시험이 있어서 공부할 수밖에 없어요.",
+          "en": "Because I have an exam, I have no choice but to study.",
+          "audioText": "시험이 있어서 공부할 수밖에 없어요."
+        }
+      ],
+      "pitfalls": [
+        "Do not treat this as the same as simple ability or possibility.",
+        "The 밖에 here contributes the meaning of there being no other alternative."
+      ]
+    },
+    {
+      "id": "grammar-time-action-pattern",
+      "dedupeKey": "grammar:time-action-pattern",
+      "kind": "grammar",
+      "title": "Place-time-object-action sentence pattern",
+      "pattern": "[장소]에서 [시간]에 [목적어]를/을 [동사]아요/어요",
+      "meaning": "a beginner blueprint for describing where, when, and what you do",
+      "formation": [
+        "Use 에서 for place of action.",
+        "Use 에 for time.",
+        "Use 을/를 for the direct object.",
+        "Finish with a polite verb."
+      ],
+      "tags": ["grammar", "sentence-pattern", "time", "place"],
+      "sourceRefIds": ["chat-screens-progressive", "lessons-pdf-particles-vocab"],
+      "inferred": true,
+      "examples": [
+        {
+          "ko": "저는 도서관에서 세 시에 책을 읽어요.",
+          "en": "I read a book at the library at 3 o'clock.",
+          "audioText": "저는 도서관에서 세 시에 책을 읽어요."
+        }
+      ],
+      "pitfalls": [
+        "Do not use 에 for the action location.",
+        "Keep the object particle when the target pattern includes it."
+      ]
+    },
+    {
+      "id": "grammar-boreo-gada",
+      "dedupeKey": "grammar:boreo-gada",
+      "kind": "grammar",
+      "title": "Go to see; go to do",
+      "pattern": "V-러 가요 / 오다",
+      "meaning": "go in order to do; come in order to do",
+      "formation": [
+        "Take the verb stem and attach -러.",
+        "Follow with 가요 or 와요."
+      ],
+      "tags": ["grammar", "purpose", "routine"],
+      "sourceRefIds": ["chat-screens-progressive"],
+      "inferred": true,
+      "examples": [
+        {
+          "ko": "친구를 보러 카페에 가요.",
+          "en": "I go to the cafe to see a friend.",
+          "audioText": "친구를 보러 카페에 가요."
+        }
+      ],
+      "pitfalls": [
+        "The destination still takes 에.",
+        "The person you are going to see still takes 을/를."
+      ]
+    }
+  ],
+  "distractorGroups": [
+    {
+      "id": "dg-topic-vs-subject",
+      "kind": "particle",
+      "members": ["은/는", "이/가"],
+      "rules": [
+        "Use for topic-subject confusion only.",
+        "Prefer stems where both are superficially plausible."
+      ]
+    },
+    {
+      "id": "dg-object-vs-topic-vs-subject",
+      "kind": "particle",
+      "members": ["을/를", "은/는", "이/가"],
+      "rules": [
+        "Only for noun slot questions.",
+        "All options must be noun+particle chunks."
+      ]
+    },
+    {
+      "id": "dg-e-vs-eseo",
+      "kind": "particle",
+      "members": ["에", "에서"],
+      "rules": [
+        "Use with destination/static-location vs action-location contexts."
+      ]
+    },
+    {
+      "id": "dg-recipient-vs-source",
+      "kind": "particle",
+      "members": ["에게/한테/께", "에게서/한테서"],
+      "rules": [
+        "Use with give/receive/ask contexts involving people."
+      ]
+    },
+    {
+      "id": "dg-only-family",
+      "kind": "particle",
+      "members": ["도", "만", "밖에"],
+      "rules": [
+        "밖에 options should usually be paired with negative meaning in explanations."
+      ]
+    },
+    {
+      "id": "dg-comparison-family",
+      "kind": "particle",
+      "members": ["보다", "만큼", "처럼/같이"],
+      "rules": [
+        "Use when the learner is comparing similarity, degree, or standard."
+      ]
+    },
+    {
+      "id": "dg-progressive-nearby",
+      "kind": "grammar-form",
+      "members": ["먹고 있어요", "먹어요", "먹었어요", "먹으러 가요"],
+      "rules": [
+        "All options should be same-verb nearby beginner forms."
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "mcq-001",
+      "dedupeKey": "exercise:mcq:progressive:study-001",
+      "type": "mcq",
+      "choiceKind": "grammar-form",
+      "tags": ["mcq", "progressive", "grammar"],
+      "sourceRefIds": ["chat-screens-progressive"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the best Korean for “I am studying Korean right now.”",
+        "stemKo": "“I am studying Korean right now.”에 가장 알맞은 한국어를 고르세요.",
+        "audioText": "저는 지금 한국어를 공부하고 있어요."
+      },
+      "choices": [
+        {
+          "id": "a",
+          "text": "저는 지금 한국어를 공부하고 있어요.",
+          "isCorrect": true,
+          "why": "Progressive action in progress right now."
+        },
+        {
+          "id": "b",
+          "text": "저는 지금 한국어를 공부해요.",
+          "isCorrect": false,
+          "why": "Possible in some contexts, but not the best target for an action happening right now in this lesson."
+        },
+        {
+          "id": "c",
+          "text": "저는 지금 한국어를 공부했어요.",
+          "isCorrect": false,
+          "why": "Past tense."
+        },
+        {
+          "id": "d",
+          "text": "저는 지금 한국어를 공부하러 가요.",
+          "isCorrect": false,
+          "why": "Means going in order to study, not currently studying."
+        }
+      ],
+      "explanation": "The target meaning is a current action in progress, so V-고 있어요 is the best match.",
+      "naturalnessNote": "The plain present can sometimes describe habits or near-future intention, but this drill targets progressive aspect."
+    },
+    {
+      "id": "mcq-002",
+      "dedupeKey": "exercise:mcq:particle:e-vs-eseo-001",
+      "type": "mcq",
+      "choiceKind": "particle",
+      "tags": ["mcq", "particles", "place"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fill the blank: 도서관___ 공부해요.",
+        "stemKo": "도서관___ 공부해요.",
+        "audioText": "도서관에서 공부해요."
+      },
+      "choices": [
+        { "id": "a", "text": "에", "isCorrect": false, "why": "에 is not the action-location particle here." },
+        { "id": "b", "text": "에서", "isCorrect": true, "why": "공부하다 is an action, so use 에서 for where the action happens." },
+        { "id": "c", "text": "으로", "isCorrect": false, "why": "으로 is direction or means." },
+        { "id": "d", "text": "까지", "isCorrect": false, "why": "까지 marks an end point." }
+      ],
+      "distractorGroupId": "dg-e-vs-eseo",
+      "explanation": "에서 marks the place where an action happens."
+    },
+    {
+      "id": "mcq-003",
+      "dedupeKey": "exercise:mcq:particle:only-family-001",
+      "type": "mcq",
+      "choiceKind": "particle",
+      "tags": ["mcq", "particles", "restriction"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab", "chat-note-subakke"],
+      "inferred": true,
+      "prompt": {
+        "stem": "Which option best completes the idea “I only have 1,000 won left”?",
+        "audioText": "천 원밖에 안 남았어요."
+      },
+      "choices": [
+        { "id": "a", "text": "천 원도 안 남았어요.", "isCorrect": false, "why": "도 means also, not only." },
+        { "id": "b", "text": "천 원만 안 남았어요.", "isCorrect": false, "why": "This wording is not the intended meaning." },
+        { "id": "c", "text": "천 원밖에 안 남았어요.", "isCorrect": true, "why": "밖에 + negative gives the target meaning of only/nothing but." },
+        { "id": "d", "text": "천 원보다 안 남았어요.", "isCorrect": false, "why": "보다 is comparison, not restriction." }
+      ],
+      "distractorGroupId": "dg-only-family",
+      "explanation": "밖에 is used with a negative predicate to express ‘only / nothing but’.",
+      "particleNote": "밖에 usually needs a negative form such as 안, 못, 없어요."
+    },
+    {
+      "id": "mcq-004",
+      "dedupeKey": "exercise:mcq:comparison:001",
+      "type": "mcq",
+      "choiceKind": "particle",
+      "tags": ["mcq", "particles", "comparison"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the best chunk for “as hard as you.”",
+        "audioText": "너만큼"
+      },
+      "choices": [
+        { "id": "a", "text": "너보다", "isCorrect": false, "why": "보다 means than." },
+        { "id": "b", "text": "너만큼", "isCorrect": true, "why": "만큼 means as much/as...as." },
+        { "id": "c", "text": "너처럼", "isCorrect": false, "why": "처럼 means like, similar to." },
+        { "id": "d", "text": "너까지", "isCorrect": false, "why": "까지 means until/to." }
+      ],
+      "distractorGroupId": "dg-comparison-family",
+      "explanation": "만큼 matches equal degree: as hard as you."
+    },
+    {
+      "id": "mcq-005",
+      "dedupeKey": "exercise:mcq:recipient-source-001",
+      "type": "mcq",
+      "choiceKind": "particle",
+      "tags": ["mcq", "particles", "people"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fill the blank: 친구___ 편지를 받았어요.",
+        "audioText": "친구에게서 편지를 받았어요."
+      },
+      "choices": [
+        { "id": "a", "text": "에게", "isCorrect": false, "why": "에게 marks the recipient or target person." },
+        { "id": "b", "text": "에게서", "isCorrect": true, "why": "에게서 marks the source person you received something from." },
+        { "id": "c", "text": "에", "isCorrect": false, "why": "에 is not used for source person here." },
+        { "id": "d", "text": "으로", "isCorrect": false, "why": "으로 marks means or direction." }
+      ],
+      "distractorGroupId": "dg-recipient-vs-source",
+      "explanation": "받다 takes a source person with 에게서/한테서."
+    },
+    {
+      "id": "mcq-006",
+      "dedupeKey": "exercise:mcq:subakke-meaning-001",
+      "type": "mcq",
+      "choiceKind": "phrase-meaning",
+      "tags": ["mcq", "grammar", "necessity"],
+      "sourceRefIds": ["chat-note-subakke"],
+      "inferred": true,
+      "prompt": {
+        "stem": "What does 공부할 수밖에 없어요 mean?",
+        "audioText": "공부할 수밖에 없어요."
+      },
+      "choices": [
+        { "id": "a", "text": "I want to study.", "isCorrect": false, "why": "That would be 공부하고 싶어요." },
+        { "id": "b", "text": "I can study.", "isCorrect": false, "why": "That would be 공부할 수 있어요." },
+        { "id": "c", "text": "I have no choice but to study.", "isCorrect": true, "why": "This construction expresses unavoidable necessity." },
+        { "id": "d", "text": "I studied already.", "isCorrect": false, "why": "That would require past tense." }
+      ],
+      "explanation": "V-(으)ㄹ 수밖에 없어요 expresses that circumstances leave no alternative."
+    },
+    {
+      "id": "fill-001",
+      "dedupeKey": "exercise:fill:e-vs-eseo-001",
+      "type": "fillBlank",
+      "answerPresentation": "particle",
+      "tags": ["fillBlank", "particles", "place"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "저는 도서관___ 공부해요.",
+        "audioText": "저는 도서관에서 공부해요."
+      },
+      "acceptedAnswers": {
+        "strict": ["에서"],
+        "relaxed": ["에서"]
+      },
+      "modelAnswer": "에서",
+      "explanation": "Use 에서 for the location where the action happens."
+    },
+    {
+      "id": "fill-002",
+      "dedupeKey": "exercise:fill:progressive-001",
+      "type": "fillBlank",
+      "answerPresentation": "phrase",
+      "tags": ["fillBlank", "grammar", "progressive"],
+      "sourceRefIds": ["chat-screens-progressive"],
+      "inferred": false,
+      "prompt": {
+        "stem": "저는 지금 한국어를 __________.",
+        "audioText": "저는 지금 한국어를 공부하고 있어요."
+      },
+      "acceptedAnswers": {
+        "strict": ["공부하고 있어요"],
+        "relaxed": ["공부하고 있어요", "공부 중이에요"]
+      },
+      "modelAnswer": "공부하고 있어요",
+      "explanation": "The target lesson form is V-고 있어요 for an action in progress."
+    },
+    {
+      "id": "fill-003",
+      "dedupeKey": "exercise:fill:recipient-source-001",
+      "type": "fillBlank",
+      "answerPresentation": "particle",
+      "tags": ["fillBlank", "particles", "people"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "친구___ 선물을 줬어요.",
+        "audioText": "친구에게 선물을 줬어요."
+      },
+      "acceptedAnswers": {
+        "strict": ["에게", "한테"],
+        "relaxed": ["에게", "한테"]
+      },
+      "modelAnswer": "에게",
+      "explanation": "Use 에게/한테 for the person receiving the gift.",
+      "particleNote": "께 is possible if the recipient is someone you speak to honorifically."
+    },
+    {
+      "id": "fill-004",
+      "dedupeKey": "exercise:fill:buteo-kkaji-001",
+      "type": "fillBlank",
+      "answerPresentation": "phrase",
+      "tags": ["fillBlank", "particles", "time"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "아침___ 저녁___ 일해요.",
+        "audioText": "아침부터 저녁까지 일해요."
+      },
+      "acceptedAnswers": {
+        "strict": ["부터 저녁까지", "부터 저녁 까지"],
+        "relaxed": ["부터 저녁까지"]
+      },
+      "modelAnswer": "부터 저녁까지",
+      "explanation": "Use 부터 for the starting point and 까지 for the end point."
+    },
+    {
+      "id": "fill-005",
+      "dedupeKey": "exercise:fill:subakke-001",
+      "type": "fillBlank",
+      "answerPresentation": "phrase",
+      "tags": ["fillBlank", "grammar", "necessity"],
+      "sourceRefIds": ["chat-note-subakke"],
+      "inferred": true,
+      "prompt": {
+        "stem": "시험이 있어서 공부할 __________.",
+        "audioText": "시험이 있어서 공부할 수밖에 없어요."
+      },
+      "acceptedAnswers": {
+        "strict": ["수밖에 없어요"],
+        "relaxed": ["수밖에 없어요"]
+      },
+      "modelAnswer": "수밖에 없어요",
+      "explanation": "This completes the unavoidable-necessity construction."
+    },
+    {
+      "id": "sb-001",
+      "dedupeKey": "exercise:sb:time-place-action-001",
+      "type": "sentenceBuilder",
+      "tags": ["sentenceBuilder", "time", "place", "pattern"],
+      "sourceRefIds": ["chat-screens-progressive", "lessons-pdf-particles-vocab"],
+      "inferred": true,
+      "prompt": {
+        "stem": "Build: “I read a book at the library at 3 o'clock.”",
+        "audioText": "저는 도서관에서 세 시에 책을 읽어요."
+      },
+      "tokens": ["저는", "도서관에서", "세 시에", "책을", "읽어요"],
+      "targetMeaning": "I read a book at the library at 3 o'clock.",
+      "acceptedAnswers": {
+        "strict": ["저는 도서관에서 세 시에 책을 읽어요."],
+        "relaxed": ["도서관에서 세 시에 책을 읽어요.", "저는 도서관에서 세 시에 책 읽어요."]
+      },
+      "modelAnswer": "저는 도서관에서 세 시에 책을 읽어요.",
+      "explanation": "에서 marks action location, 에 marks time, and 을 marks the direct object."
+    },
+    {
+      "id": "sb-002",
+      "dedupeKey": "exercise:sb:progressive-001",
+      "type": "sentenceBuilder",
+      "tags": ["sentenceBuilder", "progressive", "routine"],
+      "sourceRefIds": ["chat-screens-progressive"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Build: “My friend is drinking coffee now.”",
+        "audioText": "친구는 지금 커피를 마시고 있어요."
+      },
+      "tokens": ["친구는", "지금", "커피를", "마시고 있어요"],
+      "targetMeaning": "My friend is drinking coffee now.",
+      "acceptedAnswers": {
+        "strict": ["친구는 지금 커피를 마시고 있어요."],
+        "relaxed": ["지금 친구는 커피를 마시고 있어요.", "친구는 지금 커피 마시고 있어요."]
+      },
+      "modelAnswer": "친구는 지금 커피를 마시고 있어요.",
+      "explanation": "Use topic + time adverb + object + progressive form."
+    },
+    {
+      "id": "corr-001",
+      "dedupeKey": "exercise:corr:e-vs-eseo-001",
+      "type": "correction",
+      "tags": ["correction", "particles", "place"],
+      "sourceRefIds": ["lessons-pdf-particles-vocab"],
+      "inferred": false,
+      "prompt": {
+        "stem": "Correct the sentence.",
+        "audioText": "도서관에 공부해요."
+      },
+      "incorrect": "도서관에 공부해요.",
+      "corrected": "도서관에서 공부해요.",
+      "acceptedAnswers": {
+        "strict": ["도서관에서 공부해요."],
+        "relaxed": ["도서관에서 공부해요."]
+      },
+      "explanation": "공부하다 is an action, so use 에서 rather than 에."
+    }
+  ]
+}

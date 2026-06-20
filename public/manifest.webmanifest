@@ -1,0 +1,9 @@
+{
+  "name": "Kuiz",
+  "short_name": "Kuiz",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6faf7",
+  "theme_color": "#f6faf7",
+  "icons": []
+}
