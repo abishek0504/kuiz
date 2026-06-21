@@ -89,6 +89,22 @@ describe("content pack schema", () => {
     }
   });
 
+  test("full-sentence mcqs do not reuse generic fallback distractors", () => {
+    const distractorCounts = new Map<string, number>();
+
+    for (const exercise of parsed.exercises) {
+      if (exercise.type !== "mcq" || exercise.choiceKind !== "full-sentence-meaning") continue;
+      for (const choice of exercise.choices) {
+        if (!choice.isCorrect) {
+          distractorCounts.set(choice.text, (distractorCounts.get(choice.text) ?? 0) + 1);
+        }
+      }
+    }
+
+    const repeated = [...distractorCounts.entries()].filter(([, count]) => count > 2);
+    expect(repeated).toEqual([]);
+  });
+
   test("audio text fields are Korean-only", () => {
     const hasHangul = /[가-힣]/u;
     const hasEnglish = /[A-Za-z]/u;

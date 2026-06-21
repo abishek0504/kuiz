@@ -11,9 +11,41 @@ type HomeScreenProps = {
   entries: EntryRecord[];
   exercises: ExerciseRecord[];
   settings: UserSettings;
-  onSettingsChange: (patch: Partial<UserSettings>) => void;
+  onSettingsChange: (patch: Partial<UserSettings>) => void | Promise<void>;
   onStartQuiz: () => void;
 };
+
+const practicePath: Array<{
+  phase: string;
+  title: string;
+  description: string;
+  categoryId: PracticeCategoryId;
+}> = [
+  {
+    phase: "Input",
+    title: "Read and listen for meaning",
+    description: "Start broad so vocab, particles, and grammar appear in real prompts.",
+    categoryId: "all",
+  },
+  {
+    phase: "Notice",
+    title: "Isolate the form",
+    description: "Focus on particles and the job each one performs in the sentence.",
+    categoryId: "particles",
+  },
+  {
+    phase: "Produce",
+    title: "Build integrated sentences",
+    description: "Use mixed practice for sentence building, corrections, and combined patterns.",
+    categoryId: "mixed",
+  },
+  {
+    phase: "Fluency",
+    title: "Return to the full deck",
+    description: "Interleave known material so review is not just one grammar point at a time.",
+    categoryId: "all",
+  },
+];
 
 export function HomeScreen({
   packs,
@@ -27,6 +59,17 @@ export function HomeScreen({
 
   function selectCategory(categoryId: PracticeCategoryId) {
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
+  }
+
+  async function startCategory(categoryId: PracticeCategoryId) {
+    await onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
+    onStartQuiz();
+  }
+
+  function exerciseCountForCategory(categoryId: PracticeCategoryId): number {
+    const tags = tagsForPracticeCategory(categoryId);
+    if (tags.length === 0) return exercises.length;
+    return exercises.filter((exercise) => exercise.tags.some((tag) => tags.includes(tag))).length;
   }
 
   return (
@@ -52,6 +95,28 @@ export function HomeScreen({
       <button type="button" className="primary-button full-width" onClick={onStartQuiz}>
         Start quiz
       </button>
+      <section className="plain-section">
+        <div className="section-title-row">
+          <div>
+            <h2>Practice path</h2>
+            <p className="section-help">
+              A balanced session moves from meaning, to form, to production, then back to fluency.
+            </p>
+          </div>
+        </div>
+        <div className="path-grid">
+          {practicePath.map((step) => (
+            <article className="path-card" key={`${step.phase}-${step.categoryId}`}>
+              <span className="path-phase">{step.phase}</span>
+              <h3>{step.title}</h3>
+              <p>{step.description}</p>
+              <button type="button" className="secondary-button" onClick={() => void startCategory(step.categoryId)}>
+                Practice {exerciseCountForCategory(step.categoryId)}
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
       <section className="plain-section">
         <div className="section-title-row">
           <div>

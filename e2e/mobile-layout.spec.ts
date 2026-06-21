@@ -32,3 +32,12 @@ test("home study focus uses Korean categories instead of raw tags", async ({ pag
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
 });
+
+test("practice path opens mixed production in sentence builder", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("heading", { name: "Practice path" })).toBeVisible({ timeout: 20000 });
+
+  await page.locator(".path-card").filter({ hasText: "Produce" }).getByRole("button", { name: /Practice/ }).click();
+
+  await expect(page.getByRole("tab", { name: "Sentence builder" })).toHaveAttribute("aria-selected", "true");
+});

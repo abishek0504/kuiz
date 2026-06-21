@@ -2,7 +2,7 @@
   "schema": "kuiz-pack@1",
   "pack": {
     "packId": "starter.core.v1",
-    "version": "1.2.3",
+    "version": "1.2.4",
     "title": "Kuiz Starter Core Pack",
     "locale": "en-CA",
     "createdAt": "2026-06-18",
@@ -9690,7 +9690,7 @@
       "id": "legacy-mcq-c-like-dog",
       "dedupeKey": "exercise:mcq:legacy:c-like-dog",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -9710,25 +9710,25 @@
           "id": "a",
           "text": "I like dogs.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ???? ???? means liking dogs/puppies."
         },
         {
           "id": "b",
-          "text": "I like cats.",
+          "text": "I dislike dogs.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses ????."
         },
         {
           "id": "c",
-          "text": "I go to the cafe.",
+          "text": "I like cats.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes ??? to ???."
         },
         {
           "id": "d",
-          "text": "I study at the cafe.",
+          "text": "I have a dog.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes ???? to possession."
         }
       ],
       "explanation": "강아지 is the thing liked, so it uses 를."
@@ -9737,7 +9737,7 @@
       "id": "legacy-mcq-c-like-cats",
       "dedupeKey": "exercise:mcq:legacy:c-like-cats",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -9757,25 +9757,25 @@
           "id": "a",
           "text": "I like cats.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ???? ???? means liking cats."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I dislike cats.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses ????."
         },
         {
           "id": "c",
-          "text": "I go to the cafe.",
+          "text": "I like dogs.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes ??? to ???."
         },
         {
           "id": "d",
-          "text": "I study at the cafe.",
+          "text": "I have a cat.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes ???? to possession."
         }
       ],
       "explanation": "고양이 is the object of 좋아해요, so it uses 를."
@@ -9784,7 +9784,7 @@
       "id": "legacy-mcq-c-cafe-e",
       "dedupeKey": "exercise:mcq:legacy:c-cafe-e",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -9804,25 +9804,25 @@
           "id": "a",
           "text": "I go to the cafe.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? marks the destination with ??."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I study at the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That would use ?? with an action at the cafe."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I come from the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes direction/source."
         },
         {
           "id": "d",
-          "text": "I study at the cafe.",
+          "text": "I am at the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the verb from going to being there."
         }
       ],
       "explanation": "에 marks the destination."
@@ -9831,7 +9831,7 @@
       "id": "legacy-mcq-c-cafe-eseo",
       "dedupeKey": "exercise:mcq:legacy:c-cafe-eseo",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -9851,25 +9851,25 @@
           "id": "a",
           "text": "I study at the cafe.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? marks the place where ???? happens."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I go to the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes action location into destination."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I study at home.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the place."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I drink coffee at the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the action."
         }
       ],
       "explanation": "에서 marks where the action happens."
@@ -10254,7 +10254,7 @@
       "id": "legacy-mcq-c-hante-give",
       "dedupeKey": "exercise:mcq:legacy:c-hante-give",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10274,25 +10274,25 @@
           "id": "a",
           "text": "I give a gift to Noona.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? marks the recipient of ??."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I receive a gift from Noona.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses giving and receiving."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I give a gift to a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the recipient."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "Noona gives a gift to me.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes who is giving."
         }
       ],
       "explanation": "한테 marks the person receiving something."
@@ -10301,7 +10301,7 @@
       "id": "legacy-mcq-c-hanteseo-receive",
       "dedupeKey": "exercise:mcq:legacy:c-hanteseo-receive",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10321,25 +10321,25 @@
           "id": "a",
           "text": "I received a gift from a friend.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? marks who the gift came from."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I gave a gift to a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses the direction."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I received a gift from Noona.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the source."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "A friend received a gift from me.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the receiver."
         }
       ],
       "explanation": "한테서 marks who something comes from."
@@ -10348,7 +10348,7 @@
       "id": "legacy-mcq-c-buteo-kkaji",
       "dedupeKey": "exercise:mcq:legacy:c-buteo-kkaji",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10368,25 +10368,25 @@
           "id": "a",
           "text": "I work from morning until evening.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??...?? marks the range from start to end."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I work from evening until morning.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses the time range."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I only work in the morning.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That removes the end point."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I rest from morning until evening.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the verb."
         }
       ],
       "explanation": "부터 marks the start. 까지 marks the end."
@@ -10395,7 +10395,7 @@
       "id": "legacy-mcq-c-eseobuteo",
       "dedupeKey": "exercise:mcq:legacy:c-eseobuteo",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10415,25 +10415,25 @@
           "id": "a",
           "text": "I walk from school to home.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ????...?? marks the route range."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I walk from home to school.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses the route."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I walk from school to the cafe.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the destination."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I go from school to home by bus.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the method from walking."
         }
       ],
       "explanation": "에서부터 marks the starting place. 까지 marks the endpoint."
@@ -10442,7 +10442,7 @@
       "id": "legacy-mcq-c-euro-bus",
       "dedupeKey": "exercise:mcq:legacy:c-euro-bus",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10462,25 +10462,25 @@
           "id": "a",
           "text": "I go by bus.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? marks the means of transportation."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I go to the bus.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That treats ?? as a destination, not a means."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I go by subway.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the transportation."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I walk to the bus stop.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes both action and destination."
         }
       ],
       "explanation": "으로/로 can mean by means of transportation."
@@ -10489,7 +10489,7 @@
       "id": "legacy-mcq-c-man",
       "dedupeKey": "exercise:mcq:legacy:c-man",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10509,25 +10509,25 @@
           "id": "a",
           "text": "I only drink coffee.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? limits the object to coffee."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I also drink coffee.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That would be ???."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I only drink tea.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the object."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I drink coffee with a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That adds company instead of limiting the object."
         }
       ],
       "explanation": "만 means only."
@@ -10536,7 +10536,7 @@
       "id": "legacy-mcq-c-bakke",
       "dedupeKey": "exercise:mcq:legacy:c-bakke",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10556,25 +10556,25 @@
           "id": "a",
           "text": "There is nothing but coffee.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? with a negative means only/nothing but."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "There is no coffee at all.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That removes the ?nothing but? meaning."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "There is coffee too.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That would be closer to ??? ???."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I only drink coffee.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes existence into drinking."
         }
       ],
       "explanation": "밖에 is used with a negative verb."
@@ -10583,7 +10583,7 @@
       "id": "legacy-mcq-c-gachi",
       "dedupeKey": "exercise:mcq:legacy:c-gachi",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10603,25 +10603,25 @@
           "id": "a",
           "text": "I study together with a friend.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? ?? means together with."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I study for a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes company into purpose/benefit."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I study after meeting a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes togetherness into sequence."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I study alone.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That contradicts ??."
         }
       ],
       "explanation": "같이 means together with."
@@ -10630,7 +10630,7 @@
       "id": "legacy-mcq-c-wagwa",
       "dedupeKey": "exercise:mcq:legacy:c-wagwa",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10650,25 +10650,25 @@
           "id": "a",
           "text": "I like dogs and cats.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? links the two liked nouns."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I like dogs but not cats.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That adds contrast/negation not present."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I like dogs more than cats.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That adds comparison not present."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I go with a dog and a cat.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the verb."
         }
       ],
       "explanation": "와 connects nouns after a vowel-ending noun."
@@ -10677,7 +10677,7 @@
       "id": "legacy-mcq-c-hago",
       "dedupeKey": "exercise:mcq:legacy:c-hago",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10697,25 +10697,25 @@
           "id": "a",
           "text": "I drink coffee with a friend.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? marks the person you do the action with."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I drink coffee and tea.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That treats ?? as listing objects, not company here."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I give coffee to a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the action and particle role."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I receive coffee from a friend.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That reverses direction and action."
         }
       ],
       "explanation": "하고 can mean with or and."
@@ -10724,7 +10724,7 @@
       "id": "legacy-mcq-c-irang",
       "dedupeKey": "exercise:mcq:legacy:c-irang",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "particles",
@@ -10744,25 +10744,25 @@
           "id": "a",
           "text": "I watch a movie with Noona.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? marks who you do the action with."
         },
         {
           "id": "b",
-          "text": "I like dogs.",
+          "text": "I watch a movie for Noona.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes company into purpose/benefit."
         },
         {
           "id": "c",
-          "text": "I like cats.",
+          "text": "I see Noona after the movie.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That changes the relationship into sequence."
         },
         {
           "id": "d",
-          "text": "I go to the cafe.",
+          "text": "I watch a movie alone.",
           "isCorrect": false,
-          "why": "This is another particles item."
+          "why": "That contradicts ?."
         }
       ],
       "explanation": "랑/이랑 is casual spoken with/and."

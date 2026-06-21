@@ -29,6 +29,12 @@ function exerciseMatchesMode(exercise: ExerciseRecord, mode: QuizMode): boolean 
   return exercise.type === mode;
 }
 
+function preferredModeForFocusTags(focusTags: string[]): QuizMode {
+  if (focusTags.some((tag) => tag === "sentencebuilder" || tag === "sentence-builder")) return "sentenceBuilder";
+  if (focusTags.includes("correction")) return "correction";
+  return "mcq";
+}
+
 function getModelAnswer(exercise: ExerciseRecord): string {
   if (exercise.type === "mcq") return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
   if (exercise.type === "correction") return exercise.corrected;
@@ -51,7 +57,7 @@ function answerDetails(exercise: ExerciseRecord): Pick<FeedbackState, "modelAnsw
 }
 
 export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreenProps) {
-  const [mode, setMode] = useState<QuizMode>("mcq");
+  const [mode, setMode] = useState<QuizMode>(() => preferredModeForFocusTags(settings.focusTags ?? []));
   const [index, setIndex] = useState(0);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
   const [input, setInput] = useState("");
@@ -79,6 +85,10 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
     setInput("");
     setFeedback(undefined);
   }, [mode]);
+
+  useEffect(() => {
+    setMode(preferredModeForFocusTags(settings.focusTags ?? []));
+  }, [settings.focusTags]);
 
   useEffect(() => {
     setSelectedChoiceId(null);
