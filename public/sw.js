@@ -1,4 +1,4 @@
-const CACHE_NAME = "kuiz-app-v1";
+const CACHE_NAME = "kuiz-app-v2";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -25,6 +25,25 @@ self.addEventListener("fetch", (event) => {
 
   const requestUrl = new URL(request.url);
   if (requestUrl.origin !== self.location.origin) return;
+  if (requestUrl.pathname.endsWith("/sw.js")) return;
+
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const responseCopy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseCopy.clone());
+              cache.put("./index.html", responseCopy);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached ?? caches.match("./index.html"))),
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(request).then((cached) => {
@@ -39,9 +58,6 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() => {
-          if (request.mode === "navigate") {
-            return caches.match("./index.html");
-          }
           return Response.error();
         });
     }),

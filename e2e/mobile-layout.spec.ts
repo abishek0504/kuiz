@@ -33,6 +33,19 @@ test("home study focus uses Korean categories instead of raw tags", async ({ pag
   await expect(page.getByText("native-numbers")).toHaveCount(0);
 });
 
+test("quiz focus uses learner categories, not raw internal tags", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+
+  const focus = page.locator('[aria-label="Practice focus"]');
+  await expect(focus.getByRole("button", { name: "숫자·시간" })).toBeVisible({ timeout: 20000 });
+  await focus.getByRole("button", { name: "숫자·시간" }).click();
+
+  await expect(focus.getByRole("button", { name: "숫자·시간" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByText("sino-numbers")).toHaveCount(0);
+  await expect(page.getByText("native-numbers")).toHaveCount(0);
+});
+
 test("practice path opens mixed production in sentence builder", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Practice path" })).toBeVisible({ timeout: 20000 });

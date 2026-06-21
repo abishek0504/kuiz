@@ -17,11 +17,15 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 
 - Study focus lanes are learner-facing categories: `전체`, `어휘`, `숫자·시간`, `문법`, `조사`, `연결어`, and `혼합`.
 - `혼합` means integrated sentence practice: sentence builder, correction, time/action, and multi-tag sentence patterns.
+- Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
+- MCQ source data must not put the correct answer first; UI ordering also shuffles deterministically as a second layer of protection.
+- Distractors should encode a plausible misconception in `why`, not just be random wrong answers.
 - Number distractors must stay in the same number system and be near enough to require real recall.
 - Grammar references should explain separate particle jobs instead of inventing fake monolithic templates.
 - Audio should remain Korean-only.
 - Progress, mistakes, and import history stay local-first.
+- Imported grammar, particle, and connector lessons must contain output or repair tasks, not MCQs only.
 
 ## Next Product Direction
 
@@ -29,4 +33,4 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Add minimal-dialogue and scenario practice for interaction, especially particles and connectors in context.
 - Add native-speaker naturalness notes for register, politeness, and when a literal English translation is misleading.
 - Add a smarter session planner that picks a balanced mix from due reviews, weak categories, and mixed sentence work.
-- Expand import validation so future lesson JSON must include examples, misconception-based distractors, and at least one production task per new grammar point.
+- Expand import validation from the current quality gate into a fuller rubric: each new grammar point should include input examples, a misconception-based MCQ, a production task, a repair task, and a naturalness/register note.

@@ -15,5 +15,12 @@
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vitest.config.ts", "playwright.config.ts", "scripts", "src/schemas/**/*.ts"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "scripts",
+    "src/schemas/**/*.ts",
+    "src/importExport/quality.ts"
+  ]
 }

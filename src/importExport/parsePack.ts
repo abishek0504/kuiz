@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import { ContentPackSchema, type ContentPack } from "../schemas/contentPack";
+import { validateContentQuality } from "./quality";
 
 export type ParsePackResult =
   | {
@@ -15,6 +16,10 @@ export function parsePack(raw: string): ParsePackResult {
   try {
     const parsedJson = JSON.parse(raw);
     const pack = ContentPackSchema.parse(parsedJson);
+    const qualityErrors = validateContentQuality(pack);
+    if (qualityErrors.length > 0) {
+      return { ok: false, errors: qualityErrors };
+    }
     return { ok: true, pack };
   } catch (error) {
     if (error instanceof ZodError) {

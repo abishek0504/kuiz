@@ -37,9 +37,15 @@ Rules:
 - Mark "inferred": true when something is reasonably inferred but not explicitly visible.
 - Prefer context-rich practice over trivial translation drills.
 - MCQ options must be homogeneous: particle options with particles, sentence meanings with sentence meanings, grammar forms with grammar forms.
+- MCQs must use exactly four choices, and the first choice must not be the correct answer.
+- Every incorrect MCQ choice needs a "why" field that names the learner misconception.
+- Never use bare numeric filler choices such as "1", "2", or "3".
+- Full-sentence MCQs must use full-sentence choices, never one-word translation choices.
 - Fill blanks, corrections, conjugations, and sentence builders need acceptedAnswers and model answers.
 - Keep full particles in model answers by default.
+- When lesson material includes grammar, particles, or connectors, include at least one production or repair task. Do not output MCQs only.
 - Include numbers, time/date expressions, vocab, particles, grammar, corrections, conjugations, and sentence production when present in the lesson material.
+- Use concrete Korean examples. Do not invent placeholder templates like "[place]에서 [time]에 ...".
 
 CURRENT_SNAPSHOT:
 ${JSON.stringify(snapshot, null, 2)}

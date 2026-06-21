@@ -9,6 +9,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 - Local-first storage with IndexedDB via Dexie, so study progress, review state, mistakes, and settings stay on the device.
 - Zod-validated content packs with import preview, dedupe checks, rollback snapshots, and transactional merge.
+- Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, or grammar-only flashcard dumps.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults.
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
@@ -18,9 +19,9 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ## Screenshots
 
-| iPhone Quiz | iPad Focus | Desktop Import |
+| iPhone Quiz Focus | Desktop Quiz Focus | Desktop Import |
 |---|---|---|
-| ![Kuiz mobile quiz](docs/screenshots/kuiz-mobile.png) | ![Kuiz iPad focus](docs/screenshots/kuiz-ipad.png) | ![Kuiz library import](docs/screenshots/kuiz-library.png) |
+| ![Kuiz iPhone quiz focus](docs/screenshots/quiz-focus-iphone.png) | ![Kuiz desktop quiz focus](docs/screenshots/quiz-focus-desktop.png) | ![Kuiz library import](docs/screenshots/kuiz-library.png) |
 
 ## Tech Stack
 
@@ -41,7 +42,7 @@ Quiz modes include multiple choice, fill-in-the-blank, sentence builder, and cor
 
 ### Import Content
 
-Content packs live in `content-packs/` and must use schema `kuiz-pack@1`. The starter pack contains lesson-PDF-derived particles, vocabulary, numbers, time/date expressions, routine practice, grammar patterns, corrections, and sentence-production exercises. The Library screen lets users paste JSON, validate it, preview create/update/skip/conflict counts, and merge transactionally into IndexedDB.
+Content packs live in `content-packs/` and must use schema `kuiz-pack@1`. The starter pack contains lesson-PDF-derived particles, vocabulary, numbers, time/date expressions, routine practice, grammar patterns, corrections, and sentence-production exercises. The Library screen lets users paste JSON, validate schema and content quality, preview create/update/skip/conflict counts, and merge transactionally into IndexedDB.
 
 The Library screen also includes a `Copy ChatGPT update prompt` workflow. Copy the prompt, paste it into chat with new lesson notes or PDF text, ask for JSON only, then paste the returned pack into `Paste JSON update`.
 

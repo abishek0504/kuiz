@@ -6,7 +6,13 @@ import { db } from "../../db/db";
 import type { ExerciseRecord, UserSettings } from "../../db/schema";
 import { checkAnswer } from "../../engine/answerCheck";
 import { orderChoices } from "../../engine/choiceOrder";
-import { labelForTag } from "../../engine/practiceCategories";
+import {
+  categoryMatchesSelectedTags,
+  labelForTag,
+  practiceCategories,
+  tagsForPracticeCategory,
+  type PracticeCategoryId,
+} from "../../engine/practiceCategories";
 import { initialReviewState, review, type ReviewState } from "../../engine/scheduler";
 import { planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
@@ -18,6 +24,16 @@ const quizModes: Array<{ id: QuizMode; label: string }> = [
   { id: "sentenceBuilder", label: "Sentence builder" },
   { id: "correction", label: "Corrections" },
 ];
+
+const technicalTags = new Set([
+  "mcq",
+  "fillBlank",
+  "sentenceBuilder",
+  "sentence-builder",
+  "correction",
+  "conjugation",
+  "card",
+]);
 
 type QuizScreenProps = {
   exercises: ExerciseRecord[];
@@ -83,11 +99,20 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   const exercise =
     sessionExercises.find((candidate) => candidate.id === activeExerciseId) ??
     sessionExercises[index % Math.max(1, sessionExercises.length)];
-  const tagSummary = exercise?.tags.slice(0, 3).map(labelForTag).join(" · ");
+  const tagSummary = exercise?.tags
+    .filter((tag) => !technicalTags.has(tag))
+    .slice(0, 3)
+    .map(labelForTag)
+    .join(" · ");
   const displayedChoices = useMemo(
     () => (exercise?.type === "mcq" ? orderChoices(exercise.choices, exercise.id) : []),
     [exercise],
   );
+  const selectedTags = settings.focusTags ?? [];
+
+  function selectFocus(categoryId: PracticeCategoryId) {
+    onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
+  }
 
   useEffect(() => {
     setIndex(0);
@@ -99,6 +124,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   useEffect(() => {
     setMode(preferredModeForFocusTags(settings.focusTags ?? []));
+    setIndex(0);
+    setActiveExerciseId(null);
+    setSelectedChoiceId(null);
+    setInput("");
+    setFeedback(undefined);
   }, [settings.focusTags]);
 
   useEffect(() => {
@@ -192,6 +222,22 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   return (
     <section className="quiz-layout">
+      <div className="quiz-focus-strip" aria-label="Practice focus">
+        {practiceCategories.map((category) => {
+          const active = categoryMatchesSelectedTags(category, selectedTags);
+          return (
+            <button
+              type="button"
+              className={active ? "focus-pill active" : "focus-pill"}
+              aria-pressed={active}
+              key={category.id}
+              onClick={() => selectFocus(category.id)}
+            >
+              {category.label}
+            </button>
+          );
+        })}
+      </div>
       <ChipTabs label="Quiz modes" items={quizModes} current={mode} onChange={setMode} />
       <article className="quiz-card">
         <div className="quiz-meta">

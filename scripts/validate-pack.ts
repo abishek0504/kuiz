@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { ContentPackSchema } from "../src/schemas/contentPack";
+import { validateContentQuality } from "../src/importExport/quality";
 
 function expandArg(arg: string): string[] {
   if (!arg.includes("*")) return [arg];
@@ -19,5 +20,9 @@ if (paths.length === 0) {
 
 for (const path of paths) {
   const parsed = ContentPackSchema.parse(JSON.parse(readFileSync(path, "utf8")));
+  const qualityErrors = validateContentQuality(parsed);
+  if (qualityErrors.length > 0) {
+    throw new Error(`${path} failed quality validation:\n${qualityErrors.join("\n")}`);
+  }
   console.log(`${path}: ${parsed.pack.packId} ok (${parsed.exercises.length} exercises)`);
 }

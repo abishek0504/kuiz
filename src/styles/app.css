@@ -240,6 +240,35 @@ button:disabled {
   background: var(--accent-soft);
 }
 
+.quiz-focus-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 1px 2px;
+  scrollbar-width: none;
+}
+
+.quiz-focus-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.focus-pill {
+  min-height: 36px;
+  white-space: nowrap;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 12px;
+  color: var(--accent-strong);
+  background: var(--surface);
+  font-weight: 800;
+}
+
+.focus-pill.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(33, 123, 77, 0.14);
+}
+
 .quiz-card,
 .plain-section,
 .reference-item {

@@ -98,6 +98,13 @@ describe("content pack schema", () => {
     }
   });
 
+  test("starter mcq source order does not reveal the answer", () => {
+    const mcqs = parsed.exercises.filter((exercise) => exercise.type === "mcq");
+
+    expect(mcqs.length).toBeGreaterThan(100);
+    expect(mcqs.filter((exercise) => exercise.choices[0]?.isCorrect)).toEqual([]);
+  });
+
   test("full-sentence mcqs do not reuse generic fallback distractors", () => {
     const distractorCounts = new Map<string, number>();
 

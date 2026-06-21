@@ -17,14 +17,14 @@ const smallPack = {
       id: "e2e.vocab.apple",
       dedupeKey: "vocab:e2e:apple",
       kind: "vocab",
-      ko: "sagwa",
+      ko: "사과",
       en: "apple",
       pos: "noun",
       romanization: "sagwa",
       tags: ["vocab", "food"],
       sourceRefIds: ["e2e"],
       inferred: false,
-      examples: [{ ko: "sagwa", en: "apple", audioText: "sagwa" }]
+      examples: [{ ko: "사과를 먹어요.", en: "I eat an apple.", audioText: "사과를 먹어요." }]
     }
   ],
   particles: [],
@@ -38,14 +38,14 @@ const smallPack = {
       tags: ["vocab", "food"],
       sourceRefIds: ["e2e"],
       inferred: false,
-      prompt: { stem: "Choose the Korean for apple.", audioText: "sagwa" },
-      explanation: "sagwa means apple.",
+      prompt: { stem: "Choose the Korean for apple.", audioText: "사과" },
+      explanation: "사과 means apple.",
       choiceKind: "phrase-meaning",
       choices: [
-        { id: "correct", text: "sagwa", isCorrect: true, why: "Correct." },
-        { id: "school", text: "hakgyo", isCorrect: false, why: "hakgyo means school." },
-        { id: "time", text: "sigan", isCorrect: false, why: "sigan means time." },
-        { id: "person", text: "saram", isCorrect: false, why: "saram means person." }
+        { id: "school", text: "학교", isCorrect: false, why: "학교 means school." },
+        { id: "correct", text: "사과", isCorrect: true, why: "Correct." },
+        { id: "time", text: "시간", isCorrect: false, why: "시간 means time." },
+        { id: "person", text: "사람", isCorrect: false, why: "사람 means person." }
       ]
     }
   ]
