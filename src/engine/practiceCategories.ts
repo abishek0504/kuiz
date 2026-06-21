@@ -1,4 +1,4 @@
-export type PracticeCategoryId = "mixed" | "vocab" | "numbers" | "grammar" | "particles" | "connectors";
+export type PracticeCategoryId = "all" | "vocab" | "numbers" | "grammar" | "particles" | "connectors" | "mixed";
 
 export type PracticeCategory = {
   id: PracticeCategoryId;
@@ -9,7 +9,7 @@ export type PracticeCategory = {
 
 export const practiceCategories: PracticeCategory[] = [
   {
-    id: "mixed",
+    id: "all",
     label: "전체",
     description: "모든 문제",
     tags: [],
@@ -71,6 +71,20 @@ export const practiceCategories: PracticeCategory[] = [
     description: "그리고, 하지만",
     tags: ["connectors", "connection", "connector", "go", "jiman", "geona", "ani-myeon"],
   },
+  {
+    id: "mixed",
+    label: "혼합",
+    description: "문장 안에서 섞기",
+    tags: [
+      "mixed",
+      "sentencebuilder",
+      "sentence-builder",
+      "correction",
+      "time-action",
+      "time-and-actions",
+      "sentence-pattern",
+    ],
+  },
 ];
 
 const tagLabels: Record<string, string> = {
@@ -119,6 +133,7 @@ const tagLabels: Record<string, string> = {
   "sino-numbers": "일·이·삼",
   time: "시간",
   "time-action": "시간+동작",
+  "time-and-actions": "시간+동작",
   vocab: "어휘",
 };
 
@@ -127,7 +142,7 @@ export function tagsForPracticeCategory(categoryId: PracticeCategoryId): string[
 }
 
 export function categoryMatchesSelectedTags(category: PracticeCategory, selectedTags: string[]): boolean {
-  if (category.id === "mixed") return selectedTags.length === 0;
+  if (category.id === "all") return selectedTags.length === 0;
   if (selectedTags.length === 0) return false;
   return selectedTags.every((tag) => category.tags.includes(tag));
 }

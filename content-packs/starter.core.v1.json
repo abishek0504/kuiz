@@ -2,7 +2,7 @@
   "schema": "kuiz-pack@1",
   "pack": {
     "packId": "starter.core.v1",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "title": "Kuiz Starter Core Pack",
     "locale": "en-CA",
     "createdAt": "2026-06-18",
@@ -9502,7 +9502,7 @@
       "id": "legacy-mcq-c-studying-korean",
       "dedupeKey": "exercise:mcq:legacy:c-studying-korean",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "progressive",
@@ -9522,25 +9522,25 @@
           "id": "a",
           "text": "I am studying Korean right now.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? ??? marks an action in progress now."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I study Korean every day.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That describes a habit, not the current progressive action."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I studied Korean yesterday.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the tense to past."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I am going to study Korean.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the meaning to future intention."
         }
       ],
       "explanation": "지금 means right now. 공부하고 있어요 means am studying."
@@ -9549,7 +9549,7 @@
       "id": "legacy-mcq-c-eat-breakfast",
       "dedupeKey": "exercise:mcq:legacy:c-eat-breakfast",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "progressive",
@@ -9569,25 +9569,25 @@
           "id": "a",
           "text": "I am eating breakfast.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? ??? describes eating in progress."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I ate breakfast.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the tense to past."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I am making breakfast.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the verb from eating to making."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I am eating dinner.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes ?? to dinner."
         }
       ],
       "explanation": "아침을 is the object. 먹고 있어요 means am eating."
@@ -9596,7 +9596,7 @@
       "id": "legacy-mcq-c-listen-music",
       "dedupeKey": "exercise:mcq:legacy:c-listen-music",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "progressive",
@@ -9616,25 +9616,25 @@
           "id": "a",
           "text": "I am listening to music.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? ??? describes listening in progress."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I am reading a book.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the action."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I listen to music every day.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the aspect from current action to habit."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I am studying Korean.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the action and object."
         }
       ],
       "explanation": "음악을 is the object. 듣고 있어요 means am listening."
@@ -9643,7 +9643,7 @@
       "id": "legacy-mcq-c-read-book",
       "dedupeKey": "exercise:mcq:legacy:c-read-book",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "progressive",
@@ -9663,25 +9663,25 @@
           "id": "a",
           "text": "I am reading a book.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? ?? ??? is reading a book now."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I read a book every day.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the aspect to habit."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I am writing a book.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes the verb."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I am listening to music.",
           "isCorrect": false,
-          "why": "This is another progressive item."
+          "why": "That changes both action and object."
         }
       ],
       "explanation": "책을 is the object. 읽고 있어요 means am reading."
@@ -9878,7 +9878,7 @@
       "id": "legacy-mcq-c-noona-boreo",
       "dedupeKey": "exercise:mcq:legacy:c-noona-boreo",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "purpose",
@@ -9898,25 +9898,25 @@
           "id": "a",
           "text": "I go to the cafe to see Noona.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? marks the purpose of going."
         },
         {
           "id": "b",
-          "text": "I go to eat.",
+          "text": "I go to the cafe with Noona.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That would require a with/together particle, not ??."
         },
         {
           "id": "c",
-          "text": "I go to study.",
+          "text": "I go to the cafe after seeing Noona.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into sequence."
         },
         {
           "id": "d",
-          "text": "am studying",
+          "text": "I go to the cafe because of Noona.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into cause."
         }
       ],
       "explanation": "누나를 is the object of 보다. 보러 means in order to see."
@@ -9925,7 +9925,7 @@
       "id": "legacy-mcq-c-bob-eureo",
       "dedupeKey": "exercise:mcq:legacy:c-bob-eureo",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "purpose",
@@ -9945,25 +9945,25 @@
           "id": "a",
           "text": "I go to eat.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? means going in order to eat."
         },
         {
           "id": "b",
-          "text": "I go to the cafe to see Noona.",
+          "text": "I go after eating.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into sequence."
         },
         {
           "id": "c",
-          "text": "I go to study.",
+          "text": "I am eating now.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That removes the going-purpose meaning."
         },
         {
           "id": "d",
-          "text": "am studying",
+          "text": "I cannot go because of food.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into cause and negation."
         }
       ],
       "explanation": "먹 ends in a consonant, so use 으러."
@@ -9972,7 +9972,7 @@
       "id": "legacy-mcq-c-study-eureo",
       "dedupeKey": "exercise:mcq:legacy:c-study-eureo",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "purpose",
@@ -9992,25 +9992,25 @@
           "id": "a",
           "text": "I go to study.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? means going in order to do the action."
         },
         {
           "id": "b",
-          "text": "I go to the cafe to see Noona.",
+          "text": "I am studying now.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That removes the movement-purpose meaning."
         },
         {
           "id": "c",
-          "text": "I go to eat.",
+          "text": "I go after studying.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into sequence."
         },
         {
           "id": "d",
-          "text": "am studying",
+          "text": "I cannot go because of studying.",
           "isCorrect": false,
-          "why": "This is another purpose item."
+          "why": "That changes purpose into cause and negation."
         }
       ],
       "explanation": "공부하다 becomes 공부하러 가요."
@@ -10019,7 +10019,7 @@
       "id": "legacy-mcq-c-go-and",
       "dedupeKey": "exercise:mcq:legacy:c-go-and",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "connectors",
@@ -10039,25 +10039,25 @@
           "id": "a",
           "text": "I go to the cafe and then go home.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? links the two actions in sequence."
         },
         {
           "id": "b",
-          "text": "I cannot go because of rain.",
+          "text": "I go home and then go to the cafe.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That reverses the order."
         },
         {
           "id": "c",
-          "text": "am studying",
+          "text": "I go to the cafe because I am home.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That changes connection into cause."
         },
         {
           "id": "d",
-          "text": "am eating",
+          "text": "I cannot go to the cafe.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That adds negation not present in the Korean."
         }
       ],
       "explanation": "고 connects actions."
@@ -10066,7 +10066,7 @@
       "id": "legacy-mcq-c-gatdaga",
       "dedupeKey": "exercise:mcq:legacy:c-gatdaga",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "connectors",
@@ -10086,25 +10086,25 @@
           "id": "a",
           "text": "I go to the cafe and then go home.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? means going somewhere and then doing the next action."
         },
         {
           "id": "b",
-          "text": "I cannot go because of rain.",
+          "text": "I go home and then go to the cafe.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That reverses the sequence."
         },
         {
           "id": "c",
-          "text": "am studying",
+          "text": "I stay at the cafe.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That removes the later movement home."
         },
         {
           "id": "d",
-          "text": "am eating",
+          "text": "I cannot go because of rain.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That changes the connector and meaning."
         }
       ],
       "explanation": "갔다가 shows going somewhere and then doing another action."
@@ -10113,7 +10113,7 @@
       "id": "legacy-mcq-c-because-rain",
       "dedupeKey": "exercise:mcq:legacy:c-because-rain",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "connectors",
@@ -10133,25 +10133,25 @@
           "id": "a",
           "text": "I cannot go because of rain.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? gives the reason, and ? marks inability."
         },
         {
           "id": "b",
-          "text": "I go to the cafe and then go home.",
+          "text": "I go because it is raining.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That removes ? and changes the outcome."
         },
         {
           "id": "c",
-          "text": "am studying",
+          "text": "I go to the cafe and then go home.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That changes cause into sequence."
         },
         {
           "id": "d",
-          "text": "am eating",
+          "text": "I cannot study because of rain.",
           "isCorrect": false,
-          "why": "This is another connectors item."
+          "why": "That changes the verb."
         }
       ],
       "explanation": "때문에 means because of."
@@ -10160,7 +10160,7 @@
       "id": "legacy-mcq-c-subakke-study",
       "dedupeKey": "exercise:mcq:legacy:c-subakke-study",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "necessity",
@@ -10180,25 +10180,25 @@
           "id": "a",
           "text": "I have no choice but to study.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? ??? means there is no other choice."
         },
         {
           "id": "b",
           "text": "I have no choice but to go.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes the verb."
         },
         {
           "id": "c",
-          "text": "am studying",
+          "text": "I want to study.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes necessity into desire."
         },
         {
           "id": "d",
-          "text": "am eating",
+          "text": "I can study easily.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes no-choice necessity into ability."
         }
       ],
       "explanation": "Use verb stem + ㄹ/을 수밖에 없어요."
@@ -10207,7 +10207,7 @@
       "id": "legacy-mcq-c-subakke-go",
       "dedupeKey": "exercise:mcq:legacy:c-subakke-go",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "necessity",
@@ -10227,25 +10227,25 @@
           "id": "a",
           "text": "I have no choice but to go.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ? ??? ??? means going is the only option."
         },
         {
           "id": "b",
           "text": "I have no choice but to study.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes the verb."
         },
         {
           "id": "c",
-          "text": "am studying",
+          "text": "I want to go.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes necessity into desire."
         },
         {
           "id": "d",
-          "text": "am eating",
+          "text": "I can go easily.",
           "isCorrect": false,
-          "why": "This is another necessity item."
+          "why": "That changes no-choice necessity into ability."
         }
       ],
       "explanation": "가다 becomes 갈 수밖에 없어요."
@@ -10771,7 +10771,7 @@
       "id": "legacy-mcq-c-time-interview",
       "dedupeKey": "exercise:mcq:legacy:c-time-interview",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "time",
@@ -10792,25 +10792,25 @@
           "id": "a",
           "text": "I have an interview at 2:30 PM.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ?? ? ? ?? ?? gives the interview time."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I have an interview at 3:20 PM.",
           "isCorrect": false,
-          "why": "This is another time item."
+          "why": "That swaps the time."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I had an interview yesterday.",
           "isCorrect": false,
-          "why": "This is another time item."
+          "why": "That changes the time expression."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I go to an interview at the cafe.",
           "isCorrect": false,
-          "why": "This is another time item."
+          "why": "That adds a place and changes ???."
         }
       ],
       "explanation": "Hours use native numbers. Minutes use Sino numbers. 에 marks the time."
@@ -10819,7 +10819,7 @@
       "id": "legacy-mcq-c-date-xmas",
       "dedupeKey": "exercise:mcq:legacy:c-date-xmas",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "dates",
@@ -10840,25 +10840,25 @@
           "id": "a",
           "text": "Christmas is December 25.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ??? ???? is December 25."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "Christmas is November 25.",
           "isCorrect": false,
-          "why": "This is another dates item."
+          "why": "That changes the month."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "Christmas is December 15.",
           "isCorrect": false,
-          "why": "This is another dates item."
+          "why": "That changes the day."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "My birthday is December 25.",
           "isCorrect": false,
-          "why": "This is another dates item."
+          "why": "That changes the topic."
         }
       ],
       "explanation": "Dates use Sino numbers with 월 and 일."
@@ -10867,7 +10867,7 @@
       "id": "legacy-mcq-c-time-action",
       "dedupeKey": "exercise:mcq:legacy:c-time-action",
       "type": "mcq",
-      "choiceKind": "phrase-meaning",
+      "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
         "time-and-actions",
@@ -10887,25 +10887,25 @@
           "id": "a",
           "text": "I drink coffee at the cafe at 2 PM.",
           "isCorrect": true,
-          "why": "This matches the Korean prompt."
+          "why": "Correct: ???? marks action place and ?? ? ?? marks time."
         },
         {
           "id": "b",
-          "text": "am studying",
+          "text": "I drink coffee at home at 2 PM.",
           "isCorrect": false,
-          "why": "This is another time and actions item."
+          "why": "That changes the place."
         },
         {
           "id": "c",
-          "text": "am eating",
+          "text": "I drink coffee at the cafe at 12 PM.",
           "isCorrect": false,
-          "why": "This is another time and actions item."
+          "why": "That changes the time."
         },
         {
           "id": "d",
-          "text": "am sleeping",
+          "text": "I study at the cafe at 2 PM.",
           "isCorrect": false,
-          "why": "This is another time and actions item."
+          "why": "That changes the action."
         }
       ],
       "explanation": "Use 에서 for action location and 에 for time."

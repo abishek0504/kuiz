@@ -15,11 +15,14 @@
 - Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
 - Fixed mobile chip selected state so buttons do not stay incorrectly pre-highlighted.
-- Replaced raw Study Focus tags with six learner-facing Korean category lanes: 전체, 어휘, 숫자·시간, 문법, 조사, 연결어.
+- Replaced raw Study Focus tags with learner-facing Korean category lanes: 전체, 어휘, 숫자·시간, 문법, 조사, 연결어, 혼합.
+- Split `전체` from `혼합`: 전체 clears filters for the full deck; 혼합 targets integrated sentence building, correction, and multi-category sentence practice.
 - Mapped quiz and pack metadata tags through Korean display labels so internal slugs like `sino-numbers` are not shown to learners.
 - Added deterministic multiple-choice ordering so stored content can no longer make the correct answer appear first on every question.
 - Revised number MCQs so distractors are plausible same-system nearby numbers instead of obvious 1/2/3 filler choices.
+- Rewrote full-sentence Korean MCQs so answer choices are full-sentence alternatives rather than fragments like "am studying."
 - Reworked placeholder-heavy grammar references into readable Korean example patterns with particle roles explained.
+- Added `docs/LEARNING_DESIGN.md` to ground future product work in CEFR, ACTFL, retrieval-practice research, and Nation's four-strands model.
 - Kept full particle mode enabled by default with strict particle checking.
 - Added Korean-only speech synthesis filtering and `ko-KR` speech defaults.
 - Added JSON import/update workflow with schema validation, duplicate detection, create/update/skip/conflict preview, rollback snapshots, and transactional merge.
@@ -44,6 +47,7 @@ Coverage includes:
 - Particle strictness and full-particle defaults.
 - Distractor homogeneity.
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
+- Separate mixed lane visible on Home.
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Content-pack acceptance checks:
   - no duplicate dedupe keys
@@ -53,6 +57,7 @@ Coverage includes:
   - starter pack covers lesson-PDF scope
   - number MCQs avoid low-number filler distractors
   - grammar references avoid bracket-placeholder templates
+  - full-sentence Korean MCQ prompts use full-sentence choices
 - Mobile layout checks for iPhone viewport.
 
 ## Verification Screenshots

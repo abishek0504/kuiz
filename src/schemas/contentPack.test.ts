@@ -63,6 +63,8 @@ describe("content pack schema", () => {
       /[.!?]$/.test(text.trim()) ||
       /[가-힣].*(요|다|까|죠|네|어|아)[.!?]?$/u.test(text.trim()) ||
       /\s/u.test(text.trim());
+    const hangulSentencePrompt = (text: string) =>
+      /[가-힣]/u.test(text) && /(요|다|까|죠|네)[.!?]?\s*mean\?/u.test(text);
 
     for (const exercise of parsed.exercises) {
       if (exercise.type !== "mcq") continue;
@@ -79,6 +81,10 @@ describe("content pack schema", () => {
       if (/sentence/i.test(exercise.prompt.stem)) {
         const sentenceChoiceCount = choices.filter(sentenceLike).length;
         expect([0, choices.length], exercise.id).toContain(sentenceChoiceCount);
+      }
+
+      if (hangulSentencePrompt(exercise.prompt.stem)) {
+        expect(choices.every(sentenceLike), exercise.id).toBe(true);
       }
     }
   });

@@ -28,6 +28,7 @@ test("home study focus uses Korean categories instead of raw tags", async ({ pag
   await expect(page.getByRole("button", { name: /어휘/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /숫자·시간/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /조사/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /혼합/ })).toBeVisible();
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
 });
