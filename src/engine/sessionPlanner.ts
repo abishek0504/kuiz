@@ -6,7 +6,7 @@ function isDue(card: ReviewState, now: Date): boolean {
 }
 
 function reviewBucket(card: ReviewState | undefined, now: Date): number {
-  if (!card) return 2;
+  if (!card || card.reps === 0) return 2;
   if (isDue(card, now)) return 0;
   if (card.lapses > 0 || card.lastGrade === "again" || card.lastGrade === "hard") return 1;
   return 3;
@@ -44,6 +44,42 @@ export function planSessionExercises(
   });
 }
 
+const balancedTypeOrder: ExerciseRecord["type"][] = [
+  "mcq",
+  "fillBlank",
+  "sentenceBuilder",
+  "correction",
+  "conjugation",
+];
+
+export function planBalancedSessionExercises(
+  exercises: ExerciseRecord[],
+  reviewStates: ReviewState[],
+  now = new Date(),
+): ExerciseRecord[] {
+  const sorted = planSessionExercises(exercises, reviewStates, now);
+  const byType = new Map<ExerciseRecord["type"], ExerciseRecord[]>();
+  for (const exercise of sorted) {
+    byType.set(exercise.type, [...(byType.get(exercise.type) ?? []), exercise]);
+  }
+
+  const planned: ExerciseRecord[] = [];
+  while (planned.length < sorted.length) {
+    let moved = false;
+    for (const type of balancedTypeOrder) {
+      const bucket = byType.get(type);
+      const next = bucket?.shift();
+      if (next) {
+        planned.push(next);
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+
+  return planned;
+}
+
 export function sessionSummary(exercises: ExerciseRecord[], reviewStates: ReviewState[], now = new Date()) {
   const reviewById = new Map(reviewStates.map((state) => [state.cardId, state]));
   let due = 0;
@@ -52,7 +88,7 @@ export function sessionSummary(exercises: ExerciseRecord[], reviewStates: Review
 
   for (const exercise of exercises) {
     const reviewState = reviewById.get(exercise.id);
-    if (!reviewState) {
+    if (!reviewState || reviewState.reps === 0) {
       fresh += 1;
     } else if (isDue(reviewState, now)) {
       due += 1;

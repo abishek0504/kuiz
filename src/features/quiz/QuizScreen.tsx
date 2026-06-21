@@ -14,11 +14,12 @@ import {
   type PracticeCategoryId,
 } from "../../engine/practiceCategories";
 import { initialReviewState, review, type ReviewState } from "../../engine/scheduler";
-import { planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
+import { planBalancedSessionExercises, planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
+  { id: "balanced", label: "Balanced" },
   { id: "mcq", label: "Multiple choice" },
   { id: "fillBlank", label: "Fill blank" },
   { id: "sentenceBuilder", label: "Sentence builder" },
@@ -43,14 +44,9 @@ type QuizScreenProps = {
 };
 
 function exerciseMatchesMode(exercise: ExerciseRecord, mode: QuizMode): boolean {
+  if (mode === "balanced") return true;
   if (mode === "correction") return exercise.type === "correction" || exercise.type === "conjugation";
   return exercise.type === mode;
-}
-
-function preferredModeForFocusTags(focusTags: string[]): QuizMode {
-  if (focusTags.some((tag) => tag === "sentencebuilder" || tag === "sentence-builder")) return "sentenceBuilder";
-  if (focusTags.includes("correction")) return "correction";
-  return "mcq";
 }
 
 function getModelAnswer(exercise: ExerciseRecord): string {
@@ -75,7 +71,7 @@ function answerDetails(exercise: ExerciseRecord): Pick<FeedbackState, "modelAnsw
 }
 
 export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
-  const [mode, setMode] = useState<QuizMode>(() => preferredModeForFocusTags(settings.focusTags ?? []));
+  const [mode, setMode] = useState<QuizMode>("balanced");
   const [index, setIndex] = useState(0);
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
@@ -92,8 +88,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     return matchingFocus.length > 0 ? matchingFocus : matchingMode;
   }, [exercises, mode, settings.focusTags]);
   const sessionExercises = useMemo(
-    () => planSessionExercises(modeExercises, reviewStates),
-    [modeExercises, reviewStates],
+    () =>
+      mode === "balanced"
+        ? planBalancedSessionExercises(modeExercises, reviewStates)
+        : planSessionExercises(modeExercises, reviewStates),
+    [mode, modeExercises, reviewStates],
   );
   const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
   const exercise =
@@ -123,7 +122,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }, [mode]);
 
   useEffect(() => {
-    setMode(preferredModeForFocusTags(settings.focusTags ?? []));
+    setMode("balanced");
     setIndex(0);
     setActiveExerciseId(null);
     setSelectedChoiceId(null);
@@ -157,10 +156,19 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }
 
   function moveNext() {
-    const nextExercise =
-      sessionExercises.find((candidate) => candidate.id !== exercise?.id) ?? sessionExercises[0];
-    setIndex((current) => (sessionExercises.length === 0 ? 0 : (current + 1) % sessionExercises.length));
-    setActiveExerciseId(nextExercise?.id ?? null);
+    if (sessionExercises.length === 0) {
+      setIndex(0);
+      setActiveExerciseId(null);
+      setSelectedChoiceId(null);
+      setInput("");
+      setFeedback(undefined);
+      return;
+    }
+
+    const currentIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
+    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % sessionExercises.length : 0;
+    setIndex(nextIndex);
+    setActiveExerciseId(sessionExercises[nextIndex]?.id ?? null);
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);

@@ -18,6 +18,7 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Study focus lanes are learner-facing categories: `전체`, `어휘`, `숫자·시간`, `문법`, `조사`, `연결어`, and `혼합`.
 - `혼합` means integrated sentence practice: sentence builder, correction, time/action, and multi-tag sentence patterns.
 - Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
+- Balanced is the default quiz mode. Targeted MCQ, blank, build, and repair modes are available, but the default session should interleave recognition, form recall, sentence production, and repair.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
 - MCQ source data must not put the correct answer first; UI ordering also shuffles deterministically as a second layer of protection.
 - Distractors should encode a plausible misconception in `why`, not just be random wrong answers.

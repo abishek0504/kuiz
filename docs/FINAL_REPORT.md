@@ -13,8 +13,11 @@
   - 23 grammar entries
 - Covered particles, vocab, numbers, native/Sino number practice, time/date expressions, routine language, progressive grammar, purpose/necessity patterns, corrections, conjugations, and sentence production.
 - Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
+- Added `Balanced` as the default Quiz session mode so learners move across recognition, blanks, sentence building, repair, and conjugation instead of staying in MCQs by default.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
 - Added adaptive Smart order in Quiz so due reviews and weak items are prioritized before new/future-stable material.
+- Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
+- Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
 - Fixed mobile chip selected state so buttons do not stay incorrectly pre-highlighted.
 - Replaced raw Study Focus tags with learner-facing Korean category lanes: 전체, 어휘, 숫자·시간, 문법, 조사, 연결어, 혼합.
@@ -42,9 +45,9 @@
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 13 test files, 37 tests passing.
+- `npm run test:run`: 13 test files, 39 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 16 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 18 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
@@ -56,8 +59,10 @@ Coverage includes:
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
 - Korean Quiz focus category labels with no raw `sino-numbers` or `native-numbers` text in Quiz.
 - Separate mixed lane visible on Home.
-- Practice Path opens mixed production in Sentence builder.
+- Practice Path opens mixed balanced production.
+- Balanced mode is selected by default and moves from recognition into production on desktop and iPhone viewports.
 - Adaptive Smart order summary is visible in Quiz.
+- Session planner interleaves recognition, blanks, production, repair, and conjugation when those task types are available.
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Starter MCQ source data does not put the correct answer first.
 - Import parser rejects low-quality lesson JSON before preview/merge.
@@ -115,6 +120,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 146 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 147 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
 - The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first, but the app does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.

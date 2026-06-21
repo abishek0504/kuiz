@@ -8,6 +8,7 @@ describe("tab highlighting", () => {
   });
 
   test("quiz chip active state derives from selected mode", () => {
+    expect(isActiveQuizMode("balanced", "balanced")).toBe(true);
     expect(isActiveQuizMode("fillBlank", "fillBlank")).toBe(true);
     expect(isActiveQuizMode("fillBlank", "mcq")).toBe(false);
   });

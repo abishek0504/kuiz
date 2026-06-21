@@ -16,9 +16,25 @@ test("mobile quiz shows prompt and core controls without long initial scrolling"
 test("mode chip highlighting follows selected state", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await expect(page.getByRole("tab", { name: "Balanced" })).toHaveAttribute("aria-selected", "true", {
+    timeout: 20000,
+  });
   await page.getByRole("tab", { name: "Fill blank" }).click();
   await expect(page.getByRole("tab", { name: "Fill blank" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tab", { name: "Multiple choice" })).toHaveAttribute("aria-selected", "false");
+});
+
+test("balanced practice moves from recognition into production", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+
+  await expect(page.getByRole("tab", { name: "Balanced" })).toHaveAttribute("aria-selected", "true", {
+    timeout: 20000,
+  });
+  await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
+  await page.getByRole("button", { name: "Skip" }).click();
+
+  await expect(page.getByLabel("Your answer")).toBeVisible();
 });
 
 test("home study focus uses Korean categories instead of raw tags", async ({ page }) => {
@@ -46,11 +62,15 @@ test("quiz focus uses learner categories, not raw internal tags", async ({ page 
   await expect(page.getByText("native-numbers")).toHaveCount(0);
 });
 
-test("practice path opens mixed production in sentence builder", async ({ page }) => {
+test("practice path opens mixed balanced production", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Practice path" })).toBeVisible({ timeout: 20000 });
 
   await page.locator(".path-card").filter({ hasText: "Produce" }).getByRole("button", { name: /Practice/ }).click();
 
-  await expect(page.getByRole("tab", { name: "Sentence builder" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tab", { name: "Balanced" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /혼합/ })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
 });
