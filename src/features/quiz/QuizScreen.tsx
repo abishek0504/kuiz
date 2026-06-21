@@ -5,6 +5,8 @@ import { StickyFeedback, type FeedbackState } from "../../components/StickyFeedb
 import { db } from "../../db/db";
 import type { ExerciseRecord, UserSettings } from "../../db/schema";
 import { checkAnswer } from "../../engine/answerCheck";
+import { orderChoices } from "../../engine/choiceOrder";
+import { labelForTag } from "../../engine/practiceCategories";
 import { initialReviewState, review } from "../../engine/scheduler";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
@@ -65,6 +67,11 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
     return matchingFocus.length > 0 ? matchingFocus : matchingMode;
   }, [exercises, mode, settings.focusTags]);
   const exercise = modeExercises[index % Math.max(1, modeExercises.length)];
+  const tagSummary = exercise?.tags.slice(0, 3).map(labelForTag).join(" · ");
+  const displayedChoices = useMemo(
+    () => (exercise?.type === "mcq" ? orderChoices(exercise.choices, exercise.id) : []),
+    [exercise],
+  );
 
   useEffect(() => {
     setIndex(0);
@@ -157,7 +164,7 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
           <span data-testid="quiz-index">
             {index + 1} / {modeExercises.length}
           </span>
-          <span>{exercise.tags.slice(0, 3).join(" · ")}</span>
+          <span>{tagSummary}</span>
         </div>
         <h1>{exercise.prompt.stem}</h1>
         {exercise.prompt.stemKo ? <p className="korean-prompt">{exercise.prompt.stemKo}</p> : null}
@@ -191,7 +198,7 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
 
         {exercise.type === "mcq" ? (
           <div className={feedback ? "choice-grid answered" : "choice-grid"} aria-label="Answer choices">
-            {exercise.choices.map((choice) => (
+            {displayedChoices.map((choice) => (
               <button
                 key={choice.id}
                 type="button"

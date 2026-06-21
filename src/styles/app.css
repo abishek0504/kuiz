@@ -451,6 +451,45 @@ button:disabled {
   gap: 8px;
 }
 
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+}
+
+.category-button {
+  min-height: 62px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  color: var(--accent-strong);
+  background: var(--surface-strong);
+  text-align: left;
+  font-weight: 800;
+}
+
+.category-button.active {
+  color: #ffffff;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.category-label {
+  font-size: 1rem;
+}
+
+.category-detail {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.category-button.active .category-detail {
+  color: rgba(255, 255, 255, 0.82);
+}
+
 .section-title-row {
   display: flex;
   align-items: flex-start;

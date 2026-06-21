@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ImportPreviewModal } from "../../components/ImportPreviewModal";
 import { db } from "../../db/db";
 import type { EntryRecord, ExerciseRecord, ImportLogRecord, PackRecord } from "../../db/schema";
+import { labelForTag } from "../../engine/practiceCategories";
 import { exportBackup, restoreBackup } from "../../importExport/exportBackup";
 import { exportAuthoringSnapshot } from "../../importExport/exportSnapshot";
 import { buildAuthoringPrompt } from "../../importExport/authoringPrompt";
@@ -107,7 +108,7 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
               <div className="tag-wrap">
                 {pack.includes.map((tag) => (
                   <span className="tag" key={tag}>
-                    {tag}
+                    {labelForTag(tag)}
                   </span>
                 ))}
               </div>

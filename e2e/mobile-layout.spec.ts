@@ -20,3 +20,14 @@ test("mode chip highlighting follows selected state", async ({ page }) => {
   await expect(page.getByRole("tab", { name: "Fill blank" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tab", { name: "Multiple choice" })).toHaveAttribute("aria-selected", "false");
 });
+
+test("home study focus uses Korean categories instead of raw tags", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByRole("heading", { name: "Study focus" })).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole("button", { name: /어휘/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /숫자·시간/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /조사/ })).toBeVisible();
+  await expect(page.getByText("sino-numbers")).toHaveCount(0);
+  await expect(page.getByText("native-numbers")).toHaveCount(0);
+});

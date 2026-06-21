@@ -15,7 +15,11 @@
 - Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
 - Fixed mobile chip selected state so buttons do not stay incorrectly pre-highlighted.
-- Added editable Study Focus tags on Home; selected focus tags filter quiz content and save locally.
+- Replaced raw Study Focus tags with six learner-facing Korean category lanes: 전체, 어휘, 숫자·시간, 문법, 조사, 연결어.
+- Mapped quiz and pack metadata tags through Korean display labels so internal slugs like `sino-numbers` are not shown to learners.
+- Added deterministic multiple-choice ordering so stored content can no longer make the correct answer appear first on every question.
+- Revised number MCQs so distractors are plausible same-system nearby numbers instead of obvious 1/2/3 filler choices.
+- Reworked placeholder-heavy grammar references into readable Korean example patterns with particle roles explained.
 - Kept full particle mode enabled by default with strict particle checking.
 - Added Korean-only speech synthesis filtering and `ko-KR` speech defaults.
 - Added JSON import/update workflow with schema validation, duplicate detection, create/update/skip/conflict preview, rollback snapshots, and transactional merge.
@@ -28,9 +32,9 @@
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 8 test files, 18 tests passing.
+- `npm run test:run`: 10 test files, 27 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 10 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 12 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
@@ -39,18 +43,24 @@ Coverage includes:
 - Import validation and duplicate-detection preview.
 - Particle strictness and full-particle defaults.
 - Distractor homogeneity.
+- Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
+- Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Content-pack acceptance checks:
   - no duplicate dedupe keys
   - sentence MCQs do not mix one-word choices with sentence choices
   - particle MCQs use particle-sized choices
   - audio text fields are Korean-only
   - starter pack covers lesson-PDF scope
+  - number MCQs avoid low-number filler distractors
+  - grammar references avoid bracket-placeholder templates
 - Mobile layout checks for iPhone viewport.
 
 ## Verification Screenshots
 
+- Desktop Home focus categories: `docs/screenshots/home-desktop.png`
+- iPhone Home focus categories: `docs/screenshots/home-iphone.png`
 - iPhone quiz: `docs/screenshots/kuiz-mobile.png`
-- iPad focus editing: `docs/screenshots/kuiz-ipad.png`
+- iPad focus editing reference: `docs/screenshots/kuiz-ipad.png`
 - Desktop JSON import: `docs/screenshots/kuiz-library.png`
 
 ## Deployment

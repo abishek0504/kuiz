@@ -33,6 +33,31 @@ describe("content pack schema", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
+  test("starter number mcqs avoid low-number filler distractors", () => {
+    for (const exercise of parsed.exercises) {
+      if (exercise.type !== "mcq") continue;
+      if (!exercise.tags.some((tag) => ["number", "numbers", "sino-numbers", "native-numbers"].includes(tag))) {
+        continue;
+      }
+
+      const correct = exercise.choices.find((choice) => choice.isCorrect);
+      const correctValue = Number(correct?.text.match(/^\d+/u)?.[0]);
+      const lowFillers = exercise.choices.filter((choice) => /^(0|1|2|3) \(/u.test(choice.text)).length;
+      const systemLabels = new Set(exercise.choices.map((choice) => choice.text.match(/\(([^)]+)\)$/u)?.[1]));
+
+      expect(systemLabels.size, exercise.id).toBe(1);
+      if (Number.isFinite(correctValue) && correctValue > 5) {
+        expect(lowFillers, exercise.id).toBeLessThan(2);
+      }
+    }
+  });
+
+  test("grammar references use readable Korean examples instead of bracket templates", () => {
+    for (const entry of parsed.grammar) {
+      expect(`${entry.title} ${entry.pattern}`, entry.id).not.toMatch(/\[[^\]]+\]/u);
+    }
+  });
+
   test("starter mcq choices keep same-granularity distractors", () => {
     const sentenceLike = (text: string) =>
       /[.!?]$/.test(text.trim()) ||
