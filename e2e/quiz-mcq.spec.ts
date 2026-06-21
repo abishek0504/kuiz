@@ -5,6 +5,7 @@ test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
   await page.getByRole("tab", { name: "Multiple choice" }).click();
 
+  await expect(page.getByText(/Smart order:/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Next" })).toHaveCount(0);
   await page.locator(".choice").first().click();
 

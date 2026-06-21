@@ -70,7 +70,14 @@ export function App() {
       );
     }
     if (tab === "quiz") {
-      return <QuizScreen exercises={exercises} settings={settings} onSettingsChange={updateSettings} />;
+      return (
+        <QuizScreen
+          exercises={exercises}
+          reviewStates={reviewStates}
+          settings={settings}
+          onSettingsChange={updateSettings}
+        />
+      );
     }
     if (tab === "grammar") {
       return <GrammarScreen entries={entries} />;

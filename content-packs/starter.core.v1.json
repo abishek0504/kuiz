@@ -2,7 +2,7 @@
   "schema": "kuiz-pack@1",
   "pack": {
     "packId": "starter.core.v1",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "title": "Kuiz Starter Core Pack",
     "locale": "en-CA",
     "createdAt": "2026-06-18",
@@ -27,7 +27,9 @@
       "future",
       "connectors",
       "corrections",
-      "sentence-builder"
+      "sentence-builder",
+      "mixed",
+      "scenario"
     ]
   },
   "sourceRefs": [
@@ -60,6 +62,13 @@
       "label": "Korean Grammar Experience Time Lesson PDF",
       "locator": "Attached lesson PDF",
       "inferred": false
+    },
+    {
+      "sourceId": "kuiz-learning-design",
+      "label": "Kuiz learning design principles",
+      "locator": "docs/LEARNING_DESIGN.md",
+      "inferred": true,
+      "note": "Scenario tasks added to balance input, noticing, production, repair, and fluency."
     }
   ],
   "vocab": [
@@ -22219,6 +22228,257 @@
       },
       "modelAnswer": "저는 카페에서 오후 두 시에 커피를 마셔요",
       "explanation": "Use 에서 for location of action and 에 for time."
+    },
+    {
+      "id": "scenario-mixed-library-time-study",
+      "dedupeKey": "exercise:scenario:mixed:library-time-study",
+      "type": "sentenceBuilder",
+      "tags": [
+        "mixed",
+        "scenario",
+        "sentence-builder",
+        "particles",
+        "time",
+        "vocab"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Build the Korean sentence: I study Korean at the library at 3 o'clock.",
+        "stemEn": "I study Korean at the library at 3 o'clock.",
+        "audioText": "저는 도서관에서 세 시에 한국어를 공부해요.",
+        "context": "Use 에서 for the action location, 에 for time, and 를 for the object."
+      },
+      "targetMeaning": "I study Korean at the library at 3 o?clock.",
+      "tokens": [
+        "저는",
+        "도서관에서",
+        "세 시에",
+        "한국어를",
+        "공부해요"
+      ],
+      "acceptedAnswers": {
+        "strict": [
+          "저는 도서관에서 세 시에 한국어를 공부해요."
+        ],
+        "relaxed": [
+          "도서관에서 세 시에 한국어를 공부해요",
+          "저는 세 시에 도서관에서 한국어를 공부해요"
+        ],
+        "regex": [],
+        "notes": "Topic can be omitted; time and place order can vary naturally."
+      },
+      "modelAnswer": "저는 도서관에서 세 시에 한국어를 공부해요.",
+      "explanation": "This combines topic, action place, time, object, and verb as separate roles.",
+      "particleNote": "에서 marks where the studying happens; 에 marks when it happens; 를 marks the object studied.",
+      "naturalnessNote": "저는 can be omitted in conversation if the speaker is obvious."
+    },
+    {
+      "id": "scenario-mixed-cafe-location-repair",
+      "dedupeKey": "exercise:scenario:mixed:cafe-location-repair",
+      "type": "correction",
+      "tags": [
+        "mixed",
+        "scenario",
+        "correction",
+        "particles",
+        "place"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Fix the particle in this sentence.",
+        "stemEn": "I drink coffee at the cafe.",
+        "audioText": "저는 카페에서 커피를 마셔요.",
+        "context": "The cafe is where the action happens, not the destination."
+      },
+      "incorrect": "저는 카페에 커피를 마셔요.",
+      "corrected": "저는 카페에서 커피를 마셔요.",
+      "acceptedAnswers": {
+        "strict": [
+          "저는 카페에서 커피를 마셔요."
+        ],
+        "relaxed": [
+          "카페에서 커피를 마셔요",
+          "저는 카페에서 커피를 마셔요"
+        ],
+        "regex": []
+      },
+      "explanation": "Use ?? for the location of an action like drinking coffee.",
+      "particleNote": "에 is for destination/existence/time; 에서 is for where an action happens."
+    },
+    {
+      "id": "scenario-mixed-gift-source-mcq",
+      "dedupeKey": "exercise:scenario:mixed:gift-source-mcq",
+      "type": "mcq",
+      "tags": [
+        "mixed",
+        "scenario",
+        "particles",
+        "vocab"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Choose the sentence that means \"I received a gift from a friend.\"",
+        "stemEn": "I received a gift from a friend.",
+        "audioText": "친구한테서 선물을 받았어요.",
+        "context": "The direction is from the friend to the speaker."
+      },
+      "choiceKind": "full-sentence-meaning",
+      "choices": [
+        {
+          "id": "a",
+          "text": "친구한테서 선물을 받았어요.",
+          "isCorrect": true,
+          "why": "Correct: 한테서 marks the source/person it came from."
+        },
+        {
+          "id": "b",
+          "text": "친구한테 선물을 줬어요.",
+          "isCorrect": false,
+          "why": "This means you gave a gift to a friend."
+        },
+        {
+          "id": "c",
+          "text": "누나한테서 선물을 받았어요.",
+          "isCorrect": false,
+          "why": "This changes the source from a friend to Noona."
+        },
+        {
+          "id": "d",
+          "text": "친구하고 선물을 샀어요.",
+          "isCorrect": false,
+          "why": "This means you bought a gift with a friend."
+        }
+      ],
+      "explanation": "Receiving needs a source marker such as ???/???, while giving uses ??/??.",
+      "particleNote": "한테서 marks “from a person” in casual speech."
+    },
+    {
+      "id": "scenario-mixed-purpose-school",
+      "dedupeKey": "exercise:scenario:mixed:purpose-school",
+      "type": "sentenceBuilder",
+      "tags": [
+        "mixed",
+        "scenario",
+        "sentence-builder",
+        "purpose",
+        "grammar",
+        "vocab"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Build the Korean sentence: I go to school to study.",
+        "stemEn": "I go to school to study.",
+        "audioText": "저는 공부하러 학교에 가요.",
+        "context": "Use -(으)러 to mark the purpose of going."
+      },
+      "targetMeaning": "I go to school to study.",
+      "tokens": [
+        "저는",
+        "공부하러",
+        "학교에",
+        "가요"
+      ],
+      "acceptedAnswers": {
+        "strict": [
+          "저는 공부하러 학교에 가요."
+        ],
+        "relaxed": [
+          "공부하러 학교에 가요",
+          "저는 학교에 공부하러 가요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "저는 공부하러 학교에 가요.",
+      "explanation": "???? gives the purpose of the movement, and ??? marks the destination.",
+      "particleNote": "에 marks the destination of 가요."
+    },
+    {
+      "id": "scenario-mixed-time-range-work",
+      "dedupeKey": "exercise:scenario:mixed:time-range-work",
+      "type": "fillBlank",
+      "tags": [
+        "mixed",
+        "scenario",
+        "particles",
+        "time",
+        "routine"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Fill the blank: 아침___ 저녁까지 일해요.",
+        "stemEn": "I work from morning until evening.",
+        "audioText": "아침부터 저녁까지 일해요.",
+        "context": "The sentence needs the starting-point particle."
+      },
+      "answerPresentation": "particle",
+      "acceptedAnswers": {
+        "strict": [
+          "부터"
+        ],
+        "relaxed": [
+          "부터"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "부터",
+      "explanation": "부터 marks the starting point of a time range; 까지 marks the endpoint.",
+      "particleNote": "부터 and 까지 work together as from/until."
+    },
+    {
+      "id": "scenario-mixed-connector-sequence",
+      "dedupeKey": "exercise:scenario:mixed:connector-sequence",
+      "type": "correction",
+      "tags": [
+        "mixed",
+        "scenario",
+        "correction",
+        "connectors",
+        "grammar"
+      ],
+      "sourceRefIds": [
+        "kuiz-learning-design",
+        "lessons-pdf-particles-vocab"
+      ],
+      "inferred": true,
+      "prompt": {
+        "stem": "Fix the connector so the sentence means \"I go to the cafe and then go home.\"",
+        "stemEn": "I go to the cafe and then go home.",
+        "audioText": "카페에 가고 집에 가요.",
+        "context": "The sentence links two actions in sequence."
+      },
+      "incorrect": "카페에 가지만 집에 가요.",
+      "corrected": "카페에 가고 집에 가요.",
+      "acceptedAnswers": {
+        "strict": [
+          "카페에 가고 집에 가요."
+        ],
+        "relaxed": [
+          "카페에 가고 집에 가요"
+        ],
+        "regex": []
+      },
+      "explanation": "고 links actions in sequence; 지만 adds contrast like “but.”",
+      "naturalnessNote": "For a stronger “after stopping by” nuance, 카페에 갔다가 집에 가요 is also natural."
     }
   ]
 }

@@ -7,7 +7,8 @@ import type { ExerciseRecord, UserSettings } from "../../db/schema";
 import { checkAnswer } from "../../engine/answerCheck";
 import { orderChoices } from "../../engine/choiceOrder";
 import { labelForTag } from "../../engine/practiceCategories";
-import { initialReviewState, review } from "../../engine/scheduler";
+import { initialReviewState, review, type ReviewState } from "../../engine/scheduler";
+import { planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
 
@@ -20,6 +21,7 @@ const quizModes: Array<{ id: QuizMode; label: string }> = [
 
 type QuizScreenProps = {
   exercises: ExerciseRecord[];
+  reviewStates: ReviewState[];
   settings: UserSettings;
   onSettingsChange: (patch: Partial<UserSettings>) => void;
 };
@@ -56,9 +58,10 @@ function answerDetails(exercise: ExerciseRecord): Pick<FeedbackState, "modelAnsw
   };
 }
 
-export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreenProps) {
+export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
   const [mode, setMode] = useState<QuizMode>(() => preferredModeForFocusTags(settings.focusTags ?? []));
   const [index, setIndex] = useState(0);
+  const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [feedback, setFeedback] = useState<FeedbackState | undefined>();
@@ -72,7 +75,14 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
     );
     return matchingFocus.length > 0 ? matchingFocus : matchingMode;
   }, [exercises, mode, settings.focusTags]);
-  const exercise = modeExercises[index % Math.max(1, modeExercises.length)];
+  const sessionExercises = useMemo(
+    () => planSessionExercises(modeExercises, reviewStates),
+    [modeExercises, reviewStates],
+  );
+  const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
+  const exercise =
+    sessionExercises.find((candidate) => candidate.id === activeExerciseId) ??
+    sessionExercises[index % Math.max(1, sessionExercises.length)];
   const tagSummary = exercise?.tags.slice(0, 3).map(labelForTag).join(" · ");
   const displayedChoices = useMemo(
     () => (exercise?.type === "mcq" ? orderChoices(exercise.choices, exercise.id) : []),
@@ -81,6 +91,7 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
 
   useEffect(() => {
     setIndex(0);
+    setActiveExerciseId(null);
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);
@@ -89,6 +100,16 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
   useEffect(() => {
     setMode(preferredModeForFocusTags(settings.focusTags ?? []));
   }, [settings.focusTags]);
+
+  useEffect(() => {
+    if (sessionExercises.length === 0) {
+      setActiveExerciseId(null);
+      return;
+    }
+    if (!activeExerciseId || !sessionExercises.some((candidate) => candidate.id === activeExerciseId)) {
+      setActiveExerciseId(sessionExercises[0].id);
+    }
+  }, [activeExerciseId, sessionExercises]);
 
   useEffect(() => {
     setSelectedChoiceId(null);
@@ -106,7 +127,10 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
   }
 
   function moveNext() {
-    setIndex((current) => (modeExercises.length === 0 ? 0 : (current + 1) % modeExercises.length));
+    const nextExercise =
+      sessionExercises.find((candidate) => candidate.id !== exercise?.id) ?? sessionExercises[0];
+    setIndex((current) => (sessionExercises.length === 0 ? 0 : (current + 1) % sessionExercises.length));
+    setActiveExerciseId(nextExercise?.id ?? null);
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);
@@ -172,10 +196,13 @@ export function QuizScreen({ exercises, settings, onSettingsChange }: QuizScreen
       <article className="quiz-card">
         <div className="quiz-meta">
           <span data-testid="quiz-index">
-            {index + 1} / {modeExercises.length}
+            {Math.min(index + 1, sessionExercises.length)} / {sessionExercises.length}
           </span>
           <span>{tagSummary}</span>
         </div>
+        <p className="session-summary">
+          Smart order: {summary.due} due, {summary.weak} weak, {summary.fresh} new
+        </p>
         <h1>{exercise.prompt.stem}</h1>
         {exercise.prompt.stemKo ? <p className="korean-prompt">{exercise.prompt.stemKo}</p> : null}
         {exercise.prompt.context ? <p>{exercise.prompt.context}</p> : null}

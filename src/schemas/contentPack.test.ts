@@ -33,6 +33,15 @@ describe("content pack schema", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
+  test("starter pack includes mixed scenario production and repair", () => {
+    const scenarios = parsed.exercises.filter((exercise) => exercise.tags.includes("scenario"));
+    expect(scenarios.length).toBeGreaterThanOrEqual(6);
+    expect(scenarios.every((exercise) => exercise.tags.includes("mixed"))).toBe(true);
+    expect(scenarios.some((exercise) => exercise.type === "sentenceBuilder")).toBe(true);
+    expect(scenarios.some((exercise) => exercise.type === "correction")).toBe(true);
+    expect(parsed.pack.includes).toEqual(expect.arrayContaining(["mixed", "scenario"]));
+  });
+
   test("starter number mcqs avoid low-number filler distractors", () => {
     for (const exercise of parsed.exercises) {
       if (exercise.type !== "mcq") continue;

@@ -7,13 +7,14 @@
 - Added a validated `kuiz-pack@1` seed pack from the lesson PDF and supporting lesson references:
   - 1 starter pack
   - 374 entries
-  - 304 exercises
+  - 310 exercises
   - 41 particle entries
   - 310 vocabulary entries
   - 23 grammar entries
 - Covered particles, vocab, numbers, native/Sino number practice, time/date expressions, routine language, progressive grammar, purpose/necessity patterns, corrections, conjugations, and sentence production.
 - Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
+- Added adaptive Smart order in Quiz so due reviews and weak items are prioritized before new/future-stable material.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
 - Fixed mobile chip selected state so buttons do not stay incorrectly pre-highlighted.
 - Replaced raw Study Focus tags with learner-facing Korean category lanes: 전체, 어휘, 숫자·시간, 문법, 조사, 연결어, 혼합.
@@ -23,6 +24,7 @@
 - Revised number MCQs so distractors are plausible same-system nearby numbers instead of obvious 1/2/3 filler choices.
 - Rewrote full-sentence Korean MCQs so answer choices are full-sentence alternatives rather than fragments like "am studying."
 - Rewrote remaining legacy sentence MCQs that reused generic fallback choices like "I like dogs," "I like cats," and "I go to the cafe."
+- Added scenario-style mixed exercises for integrated sentence building, particle repair, connector repair, time ranges, purpose, and source/recipient distinctions.
 - Reworked placeholder-heavy grammar references into readable Korean example patterns with particle roles explained.
 - Added `docs/LEARNING_DESIGN.md` to ground future product work in CEFR, ACTFL, retrieval-practice research, and Nation's four-strands model.
 - Kept full particle mode enabled by default with strict particle checking.
@@ -37,7 +39,7 @@
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 10 test files, 28 tests passing.
+- `npm run test:run`: 11 test files, 31 tests passing.
 - `npm run build`: production build succeeds.
 - `npm run e2e`: 14 Playwright tests passing across desktop Chromium and iPhone viewport.
 
@@ -51,6 +53,7 @@ Coverage includes:
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
 - Separate mixed lane visible on Home.
 - Practice Path opens mixed production in Sentence builder.
+- Adaptive Smart order summary is visible in Quiz.
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Content-pack acceptance checks:
   - no duplicate dedupe keys
@@ -62,6 +65,7 @@ Coverage includes:
   - grammar references avoid bracket-placeholder templates
   - full-sentence Korean MCQ prompts use full-sentence choices
   - full-sentence MCQs do not reuse generic fallback distractors
+  - starter pack includes mixed scenario production and repair
 - Mobile layout checks for iPhone viewport.
 
 ## Verification Screenshots
@@ -102,6 +106,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 135 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 145 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
 - The service worker caches the app shell and same-origin assets after first load. It does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.
