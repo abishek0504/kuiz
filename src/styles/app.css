@@ -573,6 +573,77 @@ button:disabled {
   margin-top: auto;
 }
 
+.recommendation-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+
+.recommendation-card h2,
+.recommendation-card p {
+  margin: 0;
+}
+
+.recommendation-card h2 {
+  margin-top: 4px;
+}
+
+.recommendation-card p:not(.eyebrow) {
+  color: var(--muted);
+}
+
+.recommendation-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.recommendation-metrics span {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--accent-strong);
+  background: var(--surface);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 9px;
+}
+
+.insight-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-strong);
+}
+
+.insight-card h3 {
+  margin: 0;
+  color: var(--accent-strong);
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.metric-row strong {
+  color: var(--text);
+}
+
 .section-title-row {
   display: flex;
   align-items: flex-start;

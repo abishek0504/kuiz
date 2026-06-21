@@ -40,6 +40,8 @@ test("balanced practice moves from recognition into production", async ({ page }
 test("home study focus uses Korean categories instead of raw tags", async ({ page }) => {
   await page.goto("/");
 
+  await expect(page.getByLabel("Recommended next practice")).toBeVisible({ timeout: 20000 });
+  await expect(page.getByRole("button", { name: "Start recommended" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Study focus" })).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("button", { name: /어휘/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /숫자·시간/ })).toBeVisible();
@@ -47,6 +49,16 @@ test("home study focus uses Korean categories instead of raw tags", async ({ pag
   await expect(page.getByRole("button", { name: /혼합/ })).toBeVisible();
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
+});
+
+test("progress shows category diagnostics", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Stats" }).click();
+
+  await expect(page.getByRole("heading", { name: "Focus diagnostics" })).toBeVisible({ timeout: 20000 });
+  const diagnostics = page.locator(".plain-section").filter({ hasText: "Focus diagnostics" });
+  await expect(diagnostics.getByText("Production").first()).toBeVisible();
+  await expect(diagnostics.getByText("Weak").first()).toBeVisible();
 });
 
 test("quiz focus uses learner categories, not raw internal tags", async ({ page }) => {

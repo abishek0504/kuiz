@@ -15,6 +15,8 @@
 - Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
 - Added `Balanced` as the default Quiz session mode so learners move across recognition, blanks, sentence building, repair, and conjugation instead of staying in MCQs by default.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
+- Added a Recommended next card on Home that starts broad for new learners and later targets categories with due or weak review pressure.
+- Added Progress focus diagnostics that rank learner-facing categories by due reviews, weak answers, fresh items, and production practice.
 - Added adaptive Smart order in Quiz so due reviews and weak items are prioritized before new/future-stable material.
 - Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
 - Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
@@ -45,9 +47,9 @@
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 13 test files, 39 tests passing.
+- `npm run test:run`: 14 test files, 42 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 18 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 20 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
@@ -61,7 +63,10 @@ Coverage includes:
 - Separate mixed lane visible on Home.
 - Practice Path opens mixed balanced production.
 - Balanced mode is selected by default and moves from recognition into production on desktop and iPhone viewports.
+- Home exposes a Recommended next practice card with direct start behavior.
+- Progress exposes focus diagnostics by category.
 - Adaptive Smart order summary is visible in Quiz.
+- Recommendation engine starts new learners with the full balanced deck and targets weak/due learner-facing categories after review history exists.
 - Session planner interleaves recognition, blanks, production, repair, and conjugation when those task types are available.
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Starter MCQ source data does not put the correct answer first.
@@ -86,6 +91,8 @@ Coverage includes:
 - iPhone Home focus categories: `docs/screenshots/home-iphone.png`
 - Desktop Quiz focus categories: `docs/screenshots/quiz-focus-desktop.png`
 - iPhone Quiz focus categories: `docs/screenshots/quiz-focus-iphone.png`
+- Desktop Progress diagnostics: `docs/screenshots/progress-diagnostics-desktop.png`
+- iPhone Progress diagnostics: `docs/screenshots/progress-diagnostics-iphone.png`
 - iPhone quiz: `docs/screenshots/kuiz-mobile.png`
 - iPad focus editing reference: `docs/screenshots/kuiz-ipad.png`
 - Desktop JSON import: `docs/screenshots/kuiz-library.png`
@@ -120,6 +127,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 147 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 148 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
 - The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first, but the app does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.

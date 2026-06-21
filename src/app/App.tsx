@@ -63,6 +63,7 @@ export function App() {
           packs={packs}
           entries={entries}
           exercises={exercises}
+          reviewStates={reviewStates}
           settings={settings}
           onSettingsChange={updateSettings}
           onStartQuiz={() => setTab("quiz")}

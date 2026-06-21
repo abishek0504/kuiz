@@ -11,6 +11,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Zod-validated content packs with import preview, dedupe checks, rollback snapshots, and transactional merge.
 - Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, or grammar-only flashcard dumps.
 - Balanced default quiz sessions interleave recognition, blanks, sentence building, corrections, and conjugation instead of starting learners in MCQ-only practice.
+- Recommendation and progress diagnostics use review pressure by category to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults.
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
@@ -20,9 +21,9 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ## Screenshots
 
-| iPhone Quiz Focus | Desktop Quiz Focus | Desktop Import |
+| iPhone Recommendation | Desktop Quiz Focus | iPhone Diagnostics |
 |---|---|---|
-| ![Kuiz iPhone quiz focus](docs/screenshots/quiz-focus-iphone.png) | ![Kuiz desktop quiz focus](docs/screenshots/quiz-focus-desktop.png) | ![Kuiz library import](docs/screenshots/kuiz-library.png) |
+| ![Kuiz iPhone recommendation](docs/screenshots/home-iphone.png) | ![Kuiz desktop quiz focus](docs/screenshots/quiz-focus-desktop.png) | ![Kuiz iPhone progress diagnostics](docs/screenshots/progress-diagnostics-iphone.png) |
 
 ## Tech Stack
 
@@ -39,7 +40,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ### Study
 
-Quiz modes include a default Balanced session plus targeted multiple choice, fill-in-the-blank, sentence builder, and correction drills. Balanced sessions use the same learner-facing focus categories while rotating through recognition, production, and repair work. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness.
+Quiz modes include a default Balanced session plus targeted multiple choice, fill-in-the-blank, sentence builder, and correction drills. Balanced sessions use the same learner-facing focus categories while rotating through recognition, production, and repair work. The Home recommendation chooses a broad session for new learners and shifts toward due or weak categories once review history exists. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness.
 
 ### Import Content
 

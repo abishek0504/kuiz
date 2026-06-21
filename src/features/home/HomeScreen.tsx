@@ -5,11 +5,14 @@ import {
   tagsForPracticeCategory,
   type PracticeCategoryId,
 } from "../../engine/practiceCategories";
+import { recommendedPractice } from "../../engine/recommendations";
+import type { ReviewState } from "../../engine/scheduler";
 
 type HomeScreenProps = {
   packs: PackRecord[];
   entries: EntryRecord[];
   exercises: ExerciseRecord[];
+  reviewStates: ReviewState[];
   settings: UserSettings;
   onSettingsChange: (patch: Partial<UserSettings>) => void | Promise<void>;
   onStartQuiz: () => void;
@@ -51,11 +54,13 @@ export function HomeScreen({
   packs,
   entries,
   exercises,
+  reviewStates,
   settings,
   onSettingsChange,
   onStartQuiz,
 }: HomeScreenProps) {
   const selectedTags = settings.focusTags ?? [];
+  const recommendation = recommendedPractice(exercises, reviewStates);
 
   function selectCategory(categoryId: PracticeCategoryId) {
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
@@ -95,6 +100,25 @@ export function HomeScreen({
       <button type="button" className="primary-button full-width" onClick={onStartQuiz}>
         Start quiz
       </button>
+      <section className="recommendation-card" aria-label="Recommended next practice">
+        <div>
+          <p className="eyebrow">Recommended next</p>
+          <h2>{recommendation.title}</h2>
+          <p>{recommendation.reason}</p>
+        </div>
+        <div className="recommendation-metrics">
+          <span>{recommendation.insight.due} due</span>
+          <span>{recommendation.insight.weak} weak</span>
+          <span>{recommendation.insight.production} production</span>
+        </div>
+        <button
+          type="button"
+          className="primary-button full-width"
+          onClick={() => void startCategory(recommendation.categoryId)}
+        >
+          Start recommended
+        </button>
+      </section>
       <section className="plain-section">
         <div className="section-title-row">
           <div>
