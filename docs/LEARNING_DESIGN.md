@@ -26,6 +26,7 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Distractors should encode a plausible misconception in `why`, not just be random wrong answers.
 - Number distractors must stay in the same number system and be near enough to require real recall.
 - Grammar references should explain separate particle jobs instead of inventing fake monolithic templates.
+- Feedback should explain the actual Korean sentence roles when possible: topic, subject, object, time, place, source/recipient, connector, predicate, and other useful particle jobs.
 - Audio should remain Korean-only.
 - Progress, mistakes, and import history stay local-first.
 - Imported grammar, particle, and connector lessons must contain output or repair tasks, not MCQs only.

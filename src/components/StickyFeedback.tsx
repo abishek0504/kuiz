@@ -1,6 +1,7 @@
 import { AudioButton } from "./AudioButton";
 import { NaverLookupLink } from "./NaverLookupLink";
 import type { UserSettings } from "../db/schema";
+import type { SentenceBreakdownPart } from "../engine/sentenceBreakdown";
 
 export type FeedbackState = {
   result: "correct" | "incorrect" | "shown";
@@ -8,6 +9,7 @@ export type FeedbackState = {
   explanation?: string;
   particleNote?: string;
   naturalnessNote?: string;
+  sentenceParts?: SentenceBreakdownPart[];
   lookupQuery: string;
   audioText?: string;
 };
@@ -32,6 +34,22 @@ export function StickyFeedback({ feedback, settings }: StickyFeedbackProps) {
         {feedback.explanation ? <p>{feedback.explanation}</p> : null}
         {feedback.particleNote ? <p className="note">Particle note: {feedback.particleNote}</p> : null}
         {feedback.naturalnessNote ? <p className="note">Naturalness: {feedback.naturalnessNote}</p> : null}
+        {feedback.sentenceParts?.length ? (
+          <div className="sentence-breakdown">
+            <h3>Sentence breakdown</h3>
+            <dl>
+              {feedback.sentenceParts.map((part) => (
+                <div key={`${part.role}-${part.text}`}>
+                  <dt>{part.text}</dt>
+                  <dd>
+                    <strong>{part.role}</strong>
+                    <span>{part.note}</span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ) : null}
       </details>
       <AudioButton text={feedback.audioText ?? feedback.modelAnswer} settings={settings} label="Replay" />
     </section>

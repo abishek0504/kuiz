@@ -15,6 +15,7 @@ import {
 } from "../../engine/practiceCategories";
 import { initialReviewState, review, type ReviewState } from "../../engine/scheduler";
 import { planBalancedSessionExercises, planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
+import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
 
@@ -59,14 +60,22 @@ function getLookupQuery(exercise: ExerciseRecord): string {
   return exercise.prompt.audioText ?? getModelAnswer(exercise) ?? exercise.prompt.stem;
 }
 
-function answerDetails(exercise: ExerciseRecord): Pick<FeedbackState, "modelAnswer" | "explanation" | "particleNote" | "naturalnessNote" | "lookupQuery" | "audioText"> {
+function answerDetails(
+  exercise: ExerciseRecord,
+): Pick<
+  FeedbackState,
+  "modelAnswer" | "explanation" | "particleNote" | "naturalnessNote" | "lookupQuery" | "audioText" | "sentenceParts"
+> {
+  const modelAnswer = getModelAnswer(exercise);
+  const audioText = exercise.prompt.audioText ?? modelAnswer;
   return {
-    modelAnswer: getModelAnswer(exercise),
+    modelAnswer,
     explanation: exercise.explanation,
     particleNote: exercise.particleNote,
     naturalnessNote: exercise.naturalnessNote,
     lookupQuery: getLookupQuery(exercise),
-    audioText: exercise.prompt.audioText ?? getModelAnswer(exercise),
+    audioText,
+    sentenceParts: sentenceBreakdown(audioText),
   };
 }
 

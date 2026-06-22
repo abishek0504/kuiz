@@ -49,6 +49,11 @@ test("home study focus uses Korean categories instead of raw tags", async ({ pag
   await expect(page.getByRole("button", { name: /혼합/ })).toBeVisible();
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
+
+  const studyFocus = page.locator(".category-grid");
+  for (const rawTag of ["particles", "vocab", "sino-numbers", "native-numbers", "ayo", "bakke", "buteo", "an"]) {
+    await expect(studyFocus.getByRole("button", { name: rawTag, exact: true })).toHaveCount(0);
+  }
 });
 
 test("progress shows category diagnostics", async ({ page }) => {
@@ -72,6 +77,9 @@ test("quiz focus uses learner categories, not raw internal tags", async ({ page 
   await expect(focus.getByRole("button", { name: "숫자·시간" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
+  for (const rawTag of ["particles", "vocab", "sino-numbers", "native-numbers", "ayo", "bakke", "buteo", "an"]) {
+    await expect(focus.getByRole("button", { name: rawTag, exact: true })).toHaveCount(0);
+  }
 });
 
 test("practice path opens mixed balanced production", async ({ page }) => {

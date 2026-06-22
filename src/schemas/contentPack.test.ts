@@ -67,6 +67,32 @@ describe("content pack schema", () => {
     }
   });
 
+  test("starter pack does not expose replacement-marker question marks", () => {
+    const flagged: string[] = [];
+
+    function visit(value: unknown, path: string) {
+      if (typeof value === "string") {
+        const questionCount = value.match(/\?/gu)?.length ?? 0;
+        const replacementLikeQuestion = value.includes("??") || (questionCount > 0 && !(questionCount === 1 && value.endsWith("?")));
+        if (replacementLikeQuestion) flagged.push(`${path}: ${value}`);
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => visit(item, `${path}.${index}`));
+        return;
+      }
+
+      if (value && typeof value === "object") {
+        Object.entries(value).forEach(([key, item]) => visit(item, `${path}.${key}`));
+      }
+    }
+
+    visit(parsed, "pack");
+
+    expect(flagged).toEqual([]);
+  });
+
   test("starter mcq choices keep same-granularity distractors", () => {
     const sentenceLike = (text: string) =>
       /[.!?]$/.test(text.trim()) ||

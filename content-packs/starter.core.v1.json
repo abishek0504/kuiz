@@ -8022,14 +8022,14 @@
       "id": "grammar-time-action-pattern",
       "dedupeKey": "grammar:time-action-pattern",
       "kind": "grammar",
-      "title": "????? ? ?? ?? ???",
-      "pattern": "??+?? + ??+? + ???+?/? + ??+??/??",
+      "title": "장소·시간·목적어 문장",
+      "pattern": "장소+에서 + 시간+에 + 목적어+을/를 + 동사+아요/어요",
       "meaning": "combine separate particles to say where, when, and what action happens",
       "formation": [
-        "?? + ??: where the action happens.",
-        "?? + ?: when it happens.",
-        "??? + ?/?: what receives the action.",
-        "?? + ??/??: polite present-tense action."
+        "장소 + 에서: where the action happens.",
+        "시간 + 에: when it happens.",
+        "목적어 + 을/를: what receives the action.",
+        "동사 + 아요/어요: polite present-tense action."
       ],
       "tags": [
         "grammar",
@@ -8051,7 +8051,7 @@
       ],
       "pitfalls": [
         "Do not treat this as one memorized template; each particle still has its own job.",
-        "Use ?? for an action location, not ?."
+        "Use 에서 for an action location, not 에."
       ]
     },
     {
@@ -8583,13 +8583,13 @@
       "id": "legacy-grammar-date-pattern",
       "dedupeKey": "grammar:date-pattern",
       "kind": "grammar",
-      "title": "?????? ??? ???????",
-      "pattern": "??+?/? + ? + ? + ???/??",
+      "title": "날짜 말하기와 이에요",
+      "pattern": "주제+은/는 + 월 + 일 + 이에요/예요",
       "meaning": "state the date of an event or topic",
       "formation": [
-        "?? + ?/?: mark the event or topic.",
-        "? + ?: give the month and day with Sino-Korean numbers.",
-        "???/??: complete the date as a polite noun sentence."
+        "주제 + 은/는: mark the event or topic.",
+        "월 + 일: give the month and day with Sino-Korean numbers.",
+        "이에요/예요: complete the date as a polite noun sentence."
       ],
       "examples": [
         {
@@ -8599,7 +8599,7 @@
         }
       ],
       "pitfalls": [],
-      "notes": "?? + ?/?: mark the event or topic. ? + ?: give the month and day with Sino-Korean numbers. ???/??: complete the date as a polite noun sentence.",
+      "notes": "주제 + 은/는 marks the event or topic. 월 + 일 gives the month and day with Sino-Korean numbers. 이에요/예요 completes the date as a polite noun sentence.",
       "tags": [
         "grammar",
         "dates",
@@ -8615,13 +8615,13 @@
       "id": "legacy-grammar-time-action",
       "dedupeKey": "grammar:time-action",
       "kind": "grammar",
-      "title": "???? ?? ? ?? ??? ???",
-      "pattern": "??+?? + ??+? + ???+?/? + ??+??/??",
+      "title": "장소와 시간 넣어 말하기",
+      "pattern": "장소+에서 + 시간+에 + 목적어+을/를 + 동사+아요/어요",
       "meaning": "combine action place, time, object, and polite verb ending",
       "formation": [
-        "?? + ?? marks the action location.",
-        "?? + ? marks when the action happens.",
-        "??? + ?/? marks the object of the verb.",
+        "장소 + 에서 marks the action location.",
+        "시간 + 에 marks when the action happens.",
+        "목적어 + 을/를 marks the object of the verb.",
         "The polite verb ending carries the sentence tense and tone."
       ],
       "examples": [
@@ -8634,7 +8634,7 @@
       "pitfalls": [
         "Keep the particle choice tied to meaning, not to word order alone."
       ],
-      "notes": "?? + ?? marks the action location. ?? + ? marks when the action happens. ??? + ?/? marks the object of the verb. The polite verb ending carries the sentence tense and tone.",
+      "notes": "장소 + 에서 marks the action location. 시간 + 에 marks when the action happens. 목적어 + 을/를 marks the object of the verb. The polite verb ending carries the sentence tense and tone.",
       "tags": [
         "grammar",
         "time-and-actions",
@@ -9549,7 +9549,7 @@
           "id": "d",
           "text": "I am studying Korean right now.",
           "isCorrect": true,
-          "why": "Correct: ? ??? marks an action in progress now."
+          "why": "Correct: 고 있어요 marks an action in progress now."
         }
       ],
       "explanation": "지금 means right now. 공부하고 있어요 means am studying."
@@ -9584,13 +9584,13 @@
           "id": "b",
           "text": "I am eating breakfast.",
           "isCorrect": true,
-          "why": "Correct: ?? ??? describes eating in progress."
+          "why": "Correct: 먹고 있어요 describes eating in progress."
         },
         {
           "id": "c",
           "text": "I am eating dinner.",
           "isCorrect": false,
-          "why": "That changes ?? to dinner."
+          "why": "That changes 아침 to dinner."
         },
         {
           "id": "d",
@@ -9631,7 +9631,7 @@
           "id": "b",
           "text": "I am listening to music.",
           "isCorrect": true,
-          "why": "Correct: ?? ??? describes listening in progress."
+          "why": "Correct: 듣고 있어요 describes listening in progress."
         },
         {
           "id": "c",
@@ -9690,7 +9690,7 @@
           "id": "d",
           "text": "I am reading a book.",
           "isCorrect": true,
-          "why": "Correct: ?? ?? ??? is reading a book now."
+          "why": "Correct: 책을 읽고 있어요 is reading a book now."
         }
       ],
       "explanation": "책을 is the object. 읽고 있어요 means am reading."
@@ -9719,25 +9719,25 @@
           "id": "a",
           "text": "I dislike dogs.",
           "isCorrect": false,
-          "why": "That reverses ????."
+          "why": "That reverses 좋아해요."
         },
         {
           "id": "b",
           "text": "I like cats.",
           "isCorrect": false,
-          "why": "That changes ??? to ???."
+          "why": "That changes 강아지 to 고양이."
         },
         {
           "id": "c",
           "text": "I have a dog.",
           "isCorrect": false,
-          "why": "That changes ???? to possession."
+          "why": "That changes 좋아해요 to possession."
         },
         {
           "id": "d",
           "text": "I like dogs.",
           "isCorrect": true,
-          "why": "Correct: ???? ???? means liking dogs/puppies."
+          "why": "Correct: 강아지를 좋아해요 means liking dogs/puppies."
         }
       ],
       "explanation": "강아지 is the thing liked, so it uses 를."
@@ -9766,25 +9766,25 @@
           "id": "a",
           "text": "I like dogs.",
           "isCorrect": false,
-          "why": "That changes ??? to ???."
+          "why": "That changes 고양이 to 강아지."
         },
         {
           "id": "b",
           "text": "I have a cat.",
           "isCorrect": false,
-          "why": "That changes ???? to possession."
+          "why": "That changes 좋아해요 to possession."
         },
         {
           "id": "c",
           "text": "I dislike cats.",
           "isCorrect": false,
-          "why": "That reverses ????."
+          "why": "That reverses 좋아해요."
         },
         {
           "id": "d",
           "text": "I like cats.",
           "isCorrect": true,
-          "why": "Correct: ???? ???? means liking cats."
+          "why": "Correct: 고양이를 좋아해요 means liking cats."
         }
       ],
       "explanation": "고양이 is the object of 좋아해요, so it uses 를."
@@ -9819,7 +9819,7 @@
           "id": "b",
           "text": "I study at the cafe.",
           "isCorrect": false,
-          "why": "That would use ?? with an action at the cafe."
+          "why": "That would use 에서 with an action at the cafe."
         },
         {
           "id": "c",
@@ -9831,7 +9831,7 @@
           "id": "d",
           "text": "I go to the cafe.",
           "isCorrect": true,
-          "why": "Correct: ? marks the destination with ??."
+          "why": "Correct: 에 marks the destination with 가요."
         }
       ],
       "explanation": "에 marks the destination."
@@ -9872,7 +9872,7 @@
           "id": "c",
           "text": "I study at the cafe.",
           "isCorrect": true,
-          "why": "Correct: ?? marks the place where ???? happens."
+          "why": "Correct: 에서 marks the place where 공부해요 happens."
         },
         {
           "id": "d",
@@ -9913,7 +9913,7 @@
           "id": "b",
           "text": "I go to the cafe with Noona.",
           "isCorrect": false,
-          "why": "That would require a with/together particle, not ??."
+          "why": "That would require a with/together particle, not 를."
         },
         {
           "id": "c",
@@ -9925,7 +9925,7 @@
           "id": "d",
           "text": "I go to the cafe to see Noona.",
           "isCorrect": true,
-          "why": "Correct: ?? marks the purpose of going."
+          "why": "Correct: 보러 marks the purpose of going."
         }
       ],
       "explanation": "누나를 is the object of 보다. 보러 means in order to see."
@@ -9960,7 +9960,7 @@
           "id": "b",
           "text": "I go to eat.",
           "isCorrect": true,
-          "why": "Correct: ??? means going in order to eat."
+          "why": "Correct: 먹으러 means going in order to eat."
         },
         {
           "id": "c",
@@ -10019,7 +10019,7 @@
           "id": "d",
           "text": "I go to study.",
           "isCorrect": true,
-          "why": "Correct: ?? means going in order to do the action."
+          "why": "Correct: 러 means going in order to do the action."
         }
       ],
       "explanation": "공부하다 becomes 공부하러 가요."
@@ -10054,7 +10054,7 @@
           "id": "b",
           "text": "I go to the cafe and then go home.",
           "isCorrect": true,
-          "why": "Correct: ? links the two actions in sequence."
+          "why": "Correct: 고 links the two actions in sequence."
         },
         {
           "id": "c",
@@ -10107,7 +10107,7 @@
           "id": "c",
           "text": "I go to the cafe and then go home.",
           "isCorrect": true,
-          "why": "Correct: ??? means going somewhere and then doing the next action."
+          "why": "Correct: 갔다가 means going somewhere and then doing the next action."
         },
         {
           "id": "d",
@@ -10142,7 +10142,7 @@
           "id": "a",
           "text": "I go because it is raining.",
           "isCorrect": false,
-          "why": "That removes ? and changes the outcome."
+          "why": "That removes 못 and changes the outcome."
         },
         {
           "id": "b",
@@ -10160,7 +10160,7 @@
           "id": "d",
           "text": "I cannot go because of rain.",
           "isCorrect": true,
-          "why": "Correct: ??? gives the reason, and ? marks inability."
+          "why": "Correct: 때문에 gives the reason, and 못 marks inability."
         }
       ],
       "explanation": "때문에 means because of."
@@ -10207,7 +10207,7 @@
           "id": "d",
           "text": "I have no choice but to study.",
           "isCorrect": true,
-          "why": "Correct: ??? ??? means there is no other choice."
+          "why": "Correct: 수밖에 없어요 means there is no other choice."
         }
       ],
       "explanation": "Use verb stem + ㄹ/을 수밖에 없어요."
@@ -10248,7 +10248,7 @@
           "id": "c",
           "text": "I have no choice but to go.",
           "isCorrect": true,
-          "why": "Correct: ? ??? ??? means going is the only option."
+          "why": "Correct: 갈 수밖에 없어요 means going is the only option."
         },
         {
           "id": "d",
@@ -10289,7 +10289,7 @@
           "id": "b",
           "text": "I give a gift to Noona.",
           "isCorrect": true,
-          "why": "Correct: ?? marks the recipient of ??."
+          "why": "Correct: 한테 marks the recipient of 줘요."
         },
         {
           "id": "c",
@@ -10348,7 +10348,7 @@
           "id": "d",
           "text": "I received a gift from a friend.",
           "isCorrect": true,
-          "why": "Correct: ??? marks who the gift came from."
+          "why": "Correct: 한테서 marks who the gift came from."
         }
       ],
       "explanation": "한테서 marks who something comes from."
@@ -10395,7 +10395,7 @@
           "id": "d",
           "text": "I work from morning until evening.",
           "isCorrect": true,
-          "why": "Correct: ??...?? marks the range from start to end."
+          "why": "Correct: 부터...까지 marks the range from start to end."
         }
       ],
       "explanation": "부터 marks the start. 까지 marks the end."
@@ -10442,7 +10442,7 @@
           "id": "d",
           "text": "I walk from school to home.",
           "isCorrect": true,
-          "why": "Correct: ????...?? marks the route range."
+          "why": "Correct: 에서부터...까지 marks the route range."
         }
       ],
       "explanation": "에서부터 marks the starting place. 까지 marks the endpoint."
@@ -10483,13 +10483,13 @@
           "id": "c",
           "text": "I go by bus.",
           "isCorrect": true,
-          "why": "Correct: ??? marks the means of transportation."
+          "why": "Correct: 로 marks the means of transportation."
         },
         {
           "id": "d",
           "text": "I go to the bus.",
           "isCorrect": false,
-          "why": "That treats ?? as a destination, not a means."
+          "why": "That treats 버스 as a destination, not a means."
         }
       ],
       "explanation": "으로/로 can mean by means of transportation."
@@ -10530,13 +10530,13 @@
           "id": "c",
           "text": "I only drink coffee.",
           "isCorrect": true,
-          "why": "Correct: ? limits the object to coffee."
+          "why": "Correct: 만 limits the object to coffee."
         },
         {
           "id": "d",
           "text": "I also drink coffee.",
           "isCorrect": false,
-          "why": "That would be ???."
+          "why": "That would be 커피도 마셔요."
         }
       ],
       "explanation": "만 means only."
@@ -10571,19 +10571,19 @@
           "id": "b",
           "text": "There is coffee too.",
           "isCorrect": false,
-          "why": "That would be closer to ??? ???."
+          "why": "That would be closer to 커피도 있어요."
         },
         {
           "id": "c",
           "text": "There is no coffee at all.",
           "isCorrect": false,
-          "why": "That removes the ?nothing but? meaning."
+          "why": "That removes the nothing-but meaning."
         },
         {
           "id": "d",
           "text": "There is nothing but coffee.",
           "isCorrect": true,
-          "why": "Correct: ?? with a negative means only/nothing but."
+          "why": "Correct: 밖에 with a negative means only/nothing but."
         }
       ],
       "explanation": "밖에 is used with a negative verb."
@@ -10618,7 +10618,7 @@
           "id": "b",
           "text": "I study together with a friend.",
           "isCorrect": true,
-          "why": "Correct: ? ?? means together with."
+          "why": "Correct: 와 같이 means together with."
         },
         {
           "id": "c",
@@ -10630,7 +10630,7 @@
           "id": "d",
           "text": "I study alone.",
           "isCorrect": false,
-          "why": "That contradicts ??."
+          "why": "That contradicts 같이."
         }
       ],
       "explanation": "같이 means together with."
@@ -10665,7 +10665,7 @@
           "id": "b",
           "text": "I like dogs and cats.",
           "isCorrect": true,
-          "why": "Correct: ? links the two liked nouns."
+          "why": "Correct: 와 links the two liked nouns."
         },
         {
           "id": "c",
@@ -10718,13 +10718,13 @@
           "id": "c",
           "text": "I drink coffee and tea.",
           "isCorrect": false,
-          "why": "That treats ?? as listing objects, not company here."
+          "why": "That treats 하고 as listing objects, not company here."
         },
         {
           "id": "d",
           "text": "I drink coffee with a friend.",
           "isCorrect": true,
-          "why": "Correct: ?? marks the person you do the action with."
+          "why": "Correct: 하고 marks the person you do the action with."
         }
       ],
       "explanation": "하고 can mean with or and."
@@ -10759,13 +10759,13 @@
           "id": "b",
           "text": "I watch a movie with Noona.",
           "isCorrect": true,
-          "why": "Correct: ? marks who you do the action with."
+          "why": "Correct: 랑 marks who you do the action with."
         },
         {
           "id": "c",
           "text": "I watch a movie alone.",
           "isCorrect": false,
-          "why": "That contradicts ?."
+          "why": "That contradicts 랑."
         },
         {
           "id": "d",
@@ -10801,7 +10801,7 @@
           "id": "a",
           "text": "I go to an interview at the cafe.",
           "isCorrect": false,
-          "why": "That adds a place and changes ???."
+          "why": "That adds a place and changes 있어요."
         },
         {
           "id": "b",
@@ -10813,7 +10813,7 @@
           "id": "c",
           "text": "I have an interview at 2:30 PM.",
           "isCorrect": true,
-          "why": "Correct: ?? ? ? ?? ?? gives the interview time."
+          "why": "Correct: 오후 두 시 삼십 분 gives the interview time."
         },
         {
           "id": "d",
@@ -10861,7 +10861,7 @@
           "id": "c",
           "text": "Christmas is December 25.",
           "isCorrect": true,
-          "why": "Correct: ??? ???? is December 25."
+          "why": "Correct: 십이월 이십오일 is December 25."
         },
         {
           "id": "d",
@@ -10914,7 +10914,7 @@
           "id": "d",
           "text": "I drink coffee at the cafe at 2 PM.",
           "isCorrect": true,
-          "why": "Correct: ???? marks action place and ?? ? ?? marks time."
+          "why": "Correct: 카페에서 marks action place and 오후 두 시에 marks time."
         }
       ],
       "explanation": "Use 에서 for action location and 에 for time."
@@ -20768,7 +20768,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "2:30 PM = ___ 두 시 삼십 분",
+        "stem": "Build: \"Tomorrow I am going to the cafe to see Noona.\"",
         "audioText": "오후 두 시 삼십 분"
       },
       "acceptedAnswers": {
@@ -20797,7 +20797,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "먹다 polite present = 먹___",
+        "stem": "Build: \"I like dogs and cats.\"",
         "audioText": "먹어요"
       },
       "acceptedAnswers": {
@@ -20825,7 +20825,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "저는 지금 ___ 있어요. (공부하다)",
+        "stem": "Build: \"I have an interview at 2:30 PM.\"",
         "audioText": "저는 지금 공부하고 있어요. (공부하다)"
       },
       "acceptedAnswers": {
@@ -20855,7 +20855,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "친구는 지금 ___ 있어요. (먹다)",
+        "stem": "Build: \"I am studying Korean right now.\"",
         "audioText": "친구는 지금 먹고 있어요. (먹다)"
       },
       "acceptedAnswers": {
@@ -20885,7 +20885,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "엄마는 ___ 있어요. (자다)",
+        "stem": "Build: \"I have no choice but to study.\"",
         "audioText": "엄마는 자고 있어요. (자다)"
       },
       "acceptedAnswers": {
@@ -20915,7 +20915,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "저는 지금 책을 ___ 있어요. (읽다)",
+        "stem": "Build: \"I give a gift to Noona.\"",
         "audioText": "저는 지금 책을 읽고 있어요. (읽다)"
       },
       "acceptedAnswers": {
@@ -20945,7 +20945,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "아빠는 음악을 ___ 있어요. (듣다)",
+        "stem": "Build: \"I work from morning until evening.\"",
         "audioText": "아빠는 음악을 듣고 있어요. (듣다)"
       },
       "acceptedAnswers": {
@@ -20976,7 +20976,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "내일 시험이 있어서 공부할 ___ 없어요.",
+        "stem": "Build: \"I drink coffee at the cafe at 2 PM.\"",
         "audioText": "내일 시험이 있어서 공부할 수밖에 없어요."
       },
       "acceptedAnswers": {
@@ -21940,7 +21940,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?Tomorrow I am going to the cafe to see Noona.?",
+        "stem": "Build: \"Tomorrow I am going to the cafe to see Noona.\"",
         "audioText": "내일 누나를 보러 카페에 가요"
       },
       "tokens": [
@@ -21978,7 +21978,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I like dogs and cats.?",
+        "stem": "Build: \"I like dogs and cats.\"",
         "audioText": "저는 강아지와 고양이를 좋아해요"
       },
       "tokens": [
@@ -22018,7 +22018,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I have an interview at 2:30 PM.?",
+        "stem": "Build: \"I have an interview at 2:30 PM.\"",
         "audioText": "오후 두 시 삼십 분에 인터뷰가 있어요"
       },
       "tokens": [
@@ -22057,7 +22057,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I am studying Korean right now.?",
+        "stem": "Build: \"I am studying Korean right now.\"",
         "audioText": "저는 지금 한국어를 공부하고 있어요"
       },
       "tokens": [
@@ -22095,7 +22095,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I have no choice but to study.?",
+        "stem": "Build: \"I have no choice but to study.\"",
         "audioText": "공부할 수밖에 없어요"
       },
       "tokens": [
@@ -22133,7 +22133,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I give a gift to Noona.?",
+        "stem": "Build: \"I give a gift to Noona.\"",
         "audioText": "누나한테 선물을 줘요"
       },
       "tokens": [
@@ -22169,7 +22169,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I work from morning until evening.?",
+        "stem": "Build: \"I work from morning until evening.\"",
         "audioText": "아침부터 저녁까지 일해요"
       },
       "tokens": [
@@ -22203,7 +22203,7 @@
       ],
       "inferred": false,
       "prompt": {
-        "stem": "Build: ?I drink coffee at the cafe at 2 PM.?",
+        "stem": "Build: \"I drink coffee at the cafe at 2 PM.\"",
         "audioText": "저는 카페에서 오후 두 시에 커피를 마셔요"
       },
       "tokens": [
@@ -22252,7 +22252,7 @@
         "audioText": "저는 도서관에서 세 시에 한국어를 공부해요.",
         "context": "Use 에서 for the action location, 에 for time, and 를 for the object."
       },
-      "targetMeaning": "I study Korean at the library at 3 o?clock.",
+      "targetMeaning": "I study Korean at the library at 3 o'clock.",
       "tokens": [
         "저는",
         "도서관에서",
@@ -22310,7 +22310,7 @@
         ],
         "regex": []
       },
-      "explanation": "Use ?? for the location of an action like drinking coffee.",
+      "explanation": "Use 에서 for the location of an action like drinking coffee.",
       "particleNote": "에 is for destination/existence/time; 에서 is for where an action happens."
     },
     {
@@ -22361,7 +22361,7 @@
           "why": "This changes the source from a friend to Noona."
         }
       ],
-      "explanation": "Receiving needs a source marker such as ???/???, while giving uses ??/??.",
+      "explanation": "Receiving needs a source marker such as 한테서/에게서, while giving uses 한테/에게.",
       "particleNote": "한테서 marks “from a person” in casual speech."
     },
     {
@@ -22405,7 +22405,7 @@
         "regex": []
       },
       "modelAnswer": "저는 공부하러 학교에 가요.",
-      "explanation": "???? gives the purpose of the movement, and ??? marks the destination.",
+      "explanation": "(으)러 gives the purpose of the movement, and 에 marks the destination.",
       "particleNote": "에 marks the destination of 가요."
     },
     {

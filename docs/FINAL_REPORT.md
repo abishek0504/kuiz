@@ -18,6 +18,7 @@
 - Added a Recommended next card on Home that starts broad for new learners and later targets categories with due or weak review pressure.
 - Added Progress focus diagnostics that rank learner-facing categories by due reviews, weak answers, fresh items, and production practice.
 - Added adaptive Smart order in Quiz so due reviews and weak items are prioritized before new/future-stable material.
+- Added Korean sentence-role breakdowns in quiz feedback for common particles, time/place markers, source/recipient markers, connectors, objects, and predicates.
 - Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
 - Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
@@ -41,15 +42,16 @@
 - Added `Copy ChatGPT update prompt` so future lessons can be converted into valid `kuiz-pack@1` JSON, with the prompt now reflecting the same quality gates as the parser.
 - Added local-first persistence for settings, review state, mistakes/lapses, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
+- Bumped the app-shell cache and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
 - Generated Netlify-ready production output in `dist/` with `npm run build`.
 
 ## Tested
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 14 test files, 42 tests passing.
+- `npm run test:run`: 15 test files, 47 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 20 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 22 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
@@ -60,6 +62,8 @@ Coverage includes:
 - Distractor homogeneity.
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
 - Korean Quiz focus category labels with no raw `sino-numbers` or `native-numbers` text in Quiz.
+- Regression checks against raw focus-button labels such as `particles`, `vocab`, `ayo`, `bakke`, `buteo`, and `an`.
+- Sentence breakdown feedback visible after answering a multiple-choice question.
 - Separate mixed lane visible on Home.
 - Practice Path opens mixed balanced production.
 - Balanced mode is selected by default and moves from recognition into production on desktop and iPhone viewports.
@@ -71,7 +75,8 @@ Coverage includes:
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Starter MCQ source data does not put the correct answer first.
 - Import parser rejects low-quality lesson JSON before preview/merge.
-- Service worker update behavior prefers the network for page navigations and falls back to cache offline.
+- Starter pack text has a guard against replacement-marker question marks in lesson titles, prompts, explanations, and feedback.
+- Service worker update behavior prefers the network for page navigations, falls back to cache offline, and activates fresh workers without waiting on stale tabs.
 - Content-pack acceptance checks:
   - no duplicate dedupe keys
   - sentence MCQs do not mix one-word choices with sentence choices
@@ -91,6 +96,7 @@ Coverage includes:
 - iPhone Home focus categories: `docs/screenshots/home-iphone.png`
 - Desktop Quiz focus categories: `docs/screenshots/quiz-focus-desktop.png`
 - iPhone Quiz focus categories: `docs/screenshots/quiz-focus-iphone.png`
+- iPhone quiz feedback sentence breakdown: `docs/screenshots/quiz-feedback-breakdown-iphone.png`
 - Desktop Progress diagnostics: `docs/screenshots/progress-diagnostics-desktop.png`
 - iPhone Progress diagnostics: `docs/screenshots/progress-diagnostics-iphone.png`
 - iPhone quiz: `docs/screenshots/kuiz-mobile.png`
@@ -127,6 +133,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 148 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
-- The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first, but the app does not yet provide a dedicated in-app offline status indicator.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 149 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first and new workers self-activate, but the app does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.

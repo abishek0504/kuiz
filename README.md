@@ -13,6 +13,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Balanced default quiz sessions interleave recognition, blanks, sentence building, corrections, and conjugation instead of starting learners in MCQ-only practice.
 - Recommendation and progress diagnostics use review pressure by category to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
+- Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
 - Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults.
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
 - Simplified FSRS-style scheduler using stability, difficulty, retrievability, lapses, and due dates.
@@ -84,7 +85,7 @@ The latest local production build is generated in `dist/`, which is the Netlify-
 
 GitHub Pages is configured through `.github/workflows/deploy-pages.yml`. The workflow builds with `VITE_BASE=/kuiz/` so Vite assets resolve correctly from the project page URL.
 
-Offline support is enabled in production builds through `public/sw.js`. It caches the app shell and same-origin assets after the first successful load.
+Offline support is enabled in production builds through `public/sw.js`. It caches the app shell and same-origin assets after the first successful load, then activates new service-worker versions without waiting on stale mobile tabs.
 
 ## Final Report
 
