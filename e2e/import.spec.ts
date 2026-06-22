@@ -59,6 +59,7 @@ test("duplicate content import previews skips before merge", async ({ page }) =>
   await page.getByRole("textbox", { name: "Content pack JSON" }).fill(JSON.stringify(smallPack));
   await page.getByRole("button", { name: "Preview import" }).click();
   await expect(page.getByTestId("import-preview")).toBeVisible();
+  await expect(page.locator(".import-detail-grid").getByText("vocab", { exact: true })).toHaveCount(0);
   await page.getByRole("button", { name: "Confirm import" }).click();
 
   await page.getByRole("button", { name: "Paste JSON update" }).click();

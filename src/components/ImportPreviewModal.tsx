@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { db } from "../db/db";
 import { parsePack } from "../importExport/parsePack";
 import { mergeContentPack, previewContentPack, type ImportPreview } from "../importExport/mergePack";
+import { labelForTag } from "../engine/practiceCategories";
 import type { ContentPack } from "../schemas/contentPack";
 import { copyText } from "../utils/clipboard";
 
@@ -22,7 +23,7 @@ export function ImportPreviewModal({ open, onClose, onImported }: ImportPreviewM
   const typeCounts = useMemo(() => {
     const counts = new Map<string, number>();
     for (const exercise of pack?.exercises ?? []) {
-      counts.set(exercise.type, (counts.get(exercise.type) ?? 0) + 1);
+      counts.set(labelForTag(exercise.type), (counts.get(labelForTag(exercise.type)) ?? 0) + 1);
     }
     return [...counts.entries()].sort(([left], [right]) => left.localeCompare(right));
   }, [pack]);
@@ -31,7 +32,8 @@ export function ImportPreviewModal({ open, onClose, onImported }: ImportPreviewM
     for (const exercise of pack?.exercises ?? []) {
       for (const tag of exercise.tags) {
         if (["vocab", "number", "numbers", "grammar", "particles", "connectors", "mixed", "scenario"].includes(tag)) {
-          lanes.set(tag, (lanes.get(tag) ?? 0) + 1);
+          const label = labelForTag(tag);
+          lanes.set(label, (lanes.get(label) ?? 0) + 1);
         }
       }
     }

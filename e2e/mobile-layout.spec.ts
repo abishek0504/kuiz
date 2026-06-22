@@ -63,6 +63,8 @@ test("progress shows category diagnostics", async ({ page }) => {
   const diagnostics = page.locator(".plain-section").filter({ hasText: "Focus diagnostics" });
   await expect(diagnostics.getByText("Production").first()).toBeVisible();
   await expect(diagnostics.getByText("Weak").first()).toBeVisible();
+  await expect(diagnostics.getByText("Misses").first()).toBeVisible();
+  await expect(diagnostics.getByText("Output").first()).toBeVisible();
 });
 
 test("quiz focus uses learner categories, not raw internal tags", async ({ page }) => {

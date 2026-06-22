@@ -11,14 +11,14 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Zod-validated content packs with import preview, dedupe checks, rollback snapshots, and transactional merge.
 - Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, repeated generic choices, or grammar-only flashcard dumps.
 - Recommended quiz sessions interleave scenario input, form noticing, production, repair, due review, and fluency work instead of starting learners in MCQ-only practice.
-- Recommendation and progress diagnostics use review pressure by category to decide whether to stay broad, repair weak lanes, or move into mixed production.
+- Recommendation and progress diagnostics use due reviews, weak answers, logged mistake tags, and production/reception accuracy to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
 - Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults.
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
 - Simplified FSRS-style scheduler using stability, difficulty, retrievability, lapses, and due dates.
 - Production-only service worker and web manifest for offline use after first load.
-- Expanded starter pack: 420 vocab entries, 51 particle entries, 53 grammar entries, and 505 exercises across MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
+- Expanded starter pack: 420 vocab entries, 51 particle entries, 51 grammar entries, and 505 exercises across MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
 - Automated quality gates with unit tests, pack validation, production build, Playwright E2E, and GitHub Actions.
 
 ## Screenshots
@@ -86,7 +86,7 @@ The latest local production build is generated in `dist/`, which is the Netlify-
 
 GitHub Pages is configured through `.github/workflows/deploy-pages.yml`. The workflow builds with `VITE_BASE=/kuiz/` so Vite assets resolve correctly from the project page URL.
 
-Offline support is enabled in production builds through `public/sw.js`. It caches the app shell and same-origin assets after the first successful load, then activates new service-worker versions without waiting on stale mobile tabs.
+Offline support is enabled in production builds through `public/sw.js`. It caches the app shell and same-origin assets after the first successful load, activates new service-worker versions without waiting on stale mobile tabs, and shows a compact offline indicator when the browser loses network access.
 
 ## Final Report
 

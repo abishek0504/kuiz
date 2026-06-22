@@ -1,4 +1,5 @@
 import type { ExerciseRecord } from "../db/schema";
+import { mistakeCount } from "./mistakeAnalytics";
 import type { ReviewState } from "./scheduler";
 
 function isDue(card: ReviewState, now: Date): boolean {
@@ -19,7 +20,8 @@ function reviewScore(card: ReviewState | undefined, now: Date): number {
   const difficultyWeight = card.difficulty * 8;
   const retrievabilityWeight = (1 - card.retrievability) * 80;
   const recentMissWeight = card.lastGrade === "again" ? 80 : card.lastGrade === "hard" ? 35 : 0;
-  return dueAgeMinutes + lapseWeight + difficultyWeight + retrievabilityWeight + recentMissWeight;
+  const mistakeWeight = mistakeCount(card, []) * 45;
+  return dueAgeMinutes + lapseWeight + difficultyWeight + retrievabilityWeight + recentMissWeight + mistakeWeight;
 }
 
 export function planSessionExercises(

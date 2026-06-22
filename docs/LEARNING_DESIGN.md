@@ -24,8 +24,8 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Recommended is the default quiz session. Session intents are recommended, practice, review, sentence, and listening; they should stay learner-facing rather than exposing low-level task slugs.
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.
 - Recommended sessions should include meaning-focused input, form noticing, production or repair, due or weak review, and a fluency item when the content pool allows it.
-- Recommendations must be evidence-based: start broad when there is no review history, then prioritize categories with due or weak review pressure before adding more new material.
-- Progress should show category diagnostics so learners can see why a focus is recommended.
+- Recommendations must be evidence-based: start broad when there is no review history, then prioritize categories with due reviews, weak items, logged misses, and low production/reception accuracy before adding more new material.
+- Progress should show category diagnostics so learners can see why a focus is recommended, including due work, weak items, misses, and input/output accuracy.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
 - MCQ source data must not put the correct answer first; UI ordering also shuffles deterministically as a second layer of protection.
 - Distractors should encode a plausible misconception in `why`, not just be random wrong answers.
@@ -33,7 +33,7 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Grammar references should explain separate particle jobs instead of inventing fake monolithic templates.
 - Feedback should explain the actual Korean sentence roles when possible: topic, subject, object, time, place, source/recipient, connector, predicate, and other useful particle jobs.
 - Audio should remain Korean-only.
-- Progress, mistakes, and import history stay local-first.
+- Progress, mistake tags, last mistake reasons, production/reception accuracy, and import history stay local-first.
 - Imported grammar, particle, and connector lessons must contain output or repair tasks, not MCQs only.
 
 ## Next Product Direction
@@ -41,5 +41,5 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Continue expanding lesson paths that move from input to output: read/listen, notice form, produce sentence, repair mistake, then fluency review.
 - Expand minimal-dialogue and scenario practice for interaction, especially particles and connectors in context.
 - Add native-speaker naturalness notes for register, politeness, and when a literal English translation is misleading.
-- Add a smarter session planner that picks a balanced mix from due reviews, weak categories, and mixed sentence work.
+- Continue tuning the session planner so scenario continuity and native-speaker-reviewed priorities can influence the balanced mix.
 - Expand import validation from the current quality gate into a fuller rubric: each new grammar point should include input examples, a misconception-based MCQ, a production task, a repair task, and a naturalness/register note.

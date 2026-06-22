@@ -10,6 +10,10 @@ export type ReviewState = {
   reps: number;
   lapses: number;
   lastGrade?: ReviewGrade;
+  mistakeTags?: Record<string, number>;
+  lastMistakeReason?: string;
+  productionAccuracy?: number;
+  receptionAccuracy?: number;
 };
 
 function clamp(value: number, min: number, max: number): number {

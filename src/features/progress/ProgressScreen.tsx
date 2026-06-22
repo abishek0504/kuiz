@@ -7,6 +7,10 @@ type ProgressScreenProps = {
   reviewStates: ReviewState[];
 };
 
+function formatAccuracy(value: number | undefined): string {
+  return value === undefined ? "n/a" : `${Math.round(value * 100)}%`;
+}
+
 export function ProgressScreen({ exercises, reviewStates }: ProgressScreenProps) {
   const now = Date.now();
   const due = reviewStates.filter((state) => state.reps > 0 && new Date(state.dueAt).getTime() <= now).length;
@@ -49,7 +53,7 @@ export function ProgressScreen({ exercises, reviewStates }: ProgressScreenProps)
           <div>
             <h2>Focus diagnostics</h2>
             <p className="section-help">
-              Categories are ranked by due reviews, weak answers, fresh items, and production practice.
+              Categories are ranked by due reviews, weak answers, logged misses, accuracy, and production practice.
             </p>
           </div>
         </div>
@@ -72,6 +76,16 @@ export function ProgressScreen({ exercises, reviewStates }: ProgressScreenProps)
               <div className="metric-row">
                 <span>Production</span>
                 <strong>{insight.production}</strong>
+              </div>
+              <div className="metric-row">
+                <span>Misses</span>
+                <strong>{insight.mistakes}</strong>
+              </div>
+              <div className="metric-row accuracy-row">
+                <span>Accuracy</span>
+                <strong>
+                  Output {formatAccuracy(insight.productionAccuracy)} / Input {formatAccuracy(insight.receptionAccuracy)}
+                </strong>
               </div>
             </article>
           ))}

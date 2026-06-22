@@ -124,6 +124,23 @@ describe("session planner", () => {
     ).toEqual({ due: 0, weak: 0, fresh: 1, total: 1 });
   });
 
+  test("prioritizes logged mistakes within the same review bucket", () => {
+    const planned = planSessionExercises(
+      [exercise("stable"), exercise("missed")],
+      [
+        state("stable", { dueAt: "2026-06-28T12:00:00.000Z", lastGrade: "good" }),
+        state("missed", {
+          dueAt: "2026-06-28T12:00:00.000Z",
+          lastGrade: "good",
+          mistakeTags: { particles: 2 },
+        }),
+      ],
+      now,
+    );
+
+    expect(planned.map((item) => item.id)).toEqual(["missed", "stable"]);
+  });
+
   test("balanced sessions interleave recognition, blanks, production, repair, and conjugation", () => {
     const planned = planBalancedSessionExercises(
       [

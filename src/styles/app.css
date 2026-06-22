@@ -45,6 +45,19 @@ button {
   background: var(--accent);
 }
 
+.network-pill {
+  margin-left: auto;
+  margin-right: 8px;
+  border: 1px solid #f0d37b;
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: var(--warning);
+  background: var(--warning-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
 .icon-button {
   display: grid;
   place-items: center;
@@ -739,6 +752,13 @@ button:disabled {
 
 .metric-row strong {
   color: var(--text);
+}
+
+.accuracy-row strong {
+  max-width: 62%;
+  font-size: 0.82rem;
+  line-height: 1.25;
+  text-align: right;
 }
 
 .section-title-row {

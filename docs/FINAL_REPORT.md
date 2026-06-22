@@ -18,9 +18,10 @@
 - Added `Recommended` as the default Quiz session mode so learners move across scenario input, form noticing, production, repair, due review, and fluency instead of staying in MCQs by default.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
 - Added a Recommended next card on Home that starts broad for new learners and later targets categories with due or weak review pressure.
-- Added Progress focus diagnostics that rank learner-facing categories by due reviews, weak answers, fresh items, and production practice.
-- Added adaptive Smart order in Quiz so due reviews and weak items are prioritized before new/future-stable material.
+- Added Progress focus diagnostics that rank learner-facing categories by due reviews, weak answers, fresh items, logged misses, and production/reception accuracy.
+- Added adaptive Smart order in Quiz so due reviews, weak items, and logged mistakes are prioritized before new/future-stable material.
 - Added Korean sentence-role breakdowns in quiz feedback for common particles, time/place markers, source/recipient markers, connectors, objects, and predicates.
+- Added misconception feedback with a `What changed?` line and a `Try similar one` path after answering.
 - Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
 - Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
@@ -46,8 +47,9 @@
 - Added `Copy ChatGPT update prompt` so future lessons can be converted into valid `kuiz-pack@1` JSON, with the prompt now reflecting the same quality gates as the parser.
 - Added a reproducible starter-pack expansion script at `scripts/expand-starter-pack.mjs`.
 - Optimized first-run starter seeding so empty databases install the large static pack directly without import snapshots or unnecessary initial review-state rows.
-- Added local-first persistence for settings, review state, mistakes/lapses, import history, and backups via IndexedDB.
+- Added local-first persistence for settings, review state, mistake tags, last mistake reasons, production/reception accuracy, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
+- Added a compact in-app offline indicator when the browser loses network access.
 - Bumped the app-shell cache and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
 - Generated Netlify-ready production output in `dist/` with `npm run build`.
 
@@ -55,7 +57,7 @@
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates with 505 exercises.
-- `npm run test:run`: 15 test files, 48 tests passing.
+- `npm run test:run`: 16 test files, 53 tests passing.
 - `npm run build`: production build succeeds.
 - `npm run e2e`: 24 Playwright tests passing across desktop Chromium and iPhone viewport.
 
@@ -147,7 +149,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 172 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 173 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
 - The expanded Korean content is designed for native-speaker review, but it has not been native-speaker verified.
-- The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first and new workers self-activate, but the app does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.

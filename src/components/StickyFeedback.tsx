@@ -7,6 +7,7 @@ export type FeedbackState = {
   result: "correct" | "incorrect" | "shown";
   modelAnswer: string;
   explanation?: string;
+  misconception?: string;
   particleNote?: string;
   naturalnessNote?: string;
   sentenceParts?: SentenceBreakdownPart[];
@@ -31,6 +32,7 @@ export function StickyFeedback({ feedback, settings }: StickyFeedbackProps) {
       <p className="model-answer">{feedback.modelAnswer}</p>
       <details className="feedback-details">
         <summary>Why this answer?</summary>
+        {feedback.misconception ? <p className="note">What changed? {feedback.misconception}</p> : null}
         {feedback.explanation ? <p>{feedback.explanation}</p> : null}
         {feedback.particleNote ? <p className="note">Particle note: {feedback.particleNote}</p> : null}
         {feedback.naturalnessNote ? <p className="note">Naturalness: {feedback.naturalnessNote}</p> : null}

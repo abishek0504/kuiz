@@ -21,6 +21,7 @@ test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
 
   await expect(page.getByTestId("feedback-panel")).toBeVisible();
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Try similar one" })).toBeVisible();
 });
 
 test("feedback explains Korean sentence roles", async ({ page }) => {

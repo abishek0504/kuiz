@@ -85,6 +85,27 @@ describe("practice recommendations", () => {
     expect(recommendation.reason).toContain("weak");
   });
 
+  test("uses logged mistakes and accuracy as recommendation evidence", () => {
+    const recommendation = recommendedPractice(
+      [exercise("particles-1", ["particles", "e"]), exercise("numbers-1", ["number", "sino-numbers"])],
+      [
+        state("particles-1", {
+          dueAt: "2026-06-28T12:00:00.000Z",
+          lastGrade: "good",
+          mistakeTags: { particles: 3, e: 3 },
+          receptionAccuracy: 0.62,
+        }),
+        state("numbers-1", { dueAt: "2026-06-28T12:00:00.000Z", lastGrade: "good" }),
+      ],
+      now,
+    );
+
+    expect(recommendation.categoryId).toBe("particles");
+    expect(recommendation.reason).toContain("logged misses");
+    expect(recommendation.reason).toContain("reception 62%");
+    expect(recommendation.insight.categoryPressure).toBeGreaterThan(0);
+  });
+
   test("reports production counts by learner-facing category", () => {
     const insights = categoryInsights(
       [exercise("mixed-1", ["mixed"], "sentenceBuilder"), exercise("numbers-1", ["number"])],

@@ -6,6 +6,7 @@ import { db } from "../../db/db";
 import type { ExerciseRecord, UserSettings } from "../../db/schema";
 import { checkAnswer } from "../../engine/answerCheck";
 import { orderChoices } from "../../engine/choiceOrder";
+import { applyAnswerAnalytics } from "../../engine/mistakeAnalytics";
 import {
   categoryMatchesSelectedTags,
   labelForTag,
@@ -138,6 +139,16 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     [exercise],
   );
   const selectedTags = settings.focusTags ?? [];
+  const similarExercise = useMemo(() => {
+    if (!exercise || !feedback) return undefined;
+    const currentTags = new Set(exercise.tags.filter((tag) => !technicalTags.has(tag)));
+    const candidates = [...sessionExercises, ...modeExercises].filter((candidate) => candidate.id !== exercise.id);
+    return (
+      candidates.find((candidate) => candidate.type === exercise.type && candidate.tags.some((tag) => currentTags.has(tag))) ??
+      candidates.find((candidate) => candidate.tags.some((tag) => currentTags.has(tag))) ??
+      candidates.find((candidate) => candidate.type === exercise.type)
+    );
+  }, [exercise, feedback, modeExercises, sessionExercises]);
 
   function selectFocus(categoryId: PracticeCategoryId) {
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
@@ -179,10 +190,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     }
   }, [exercise?.id]);
 
-  async function gradeCurrent(correct: boolean) {
+  async function gradeCurrent(correct: boolean, reason?: string) {
     if (!exercise) return;
     const existing = (await db.reviewState.get(exercise.id)) ?? initialReviewState(exercise.id);
-    await db.reviewState.put(review(existing, correct ? "good" : "again"));
+    const reviewed = review(existing, correct ? "good" : "again");
+    await db.reviewState.put(applyAnswerAnalytics(reviewed, exercise, correct, reason));
   }
 
   function moveNext() {
@@ -204,15 +216,26 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     setFeedback(undefined);
   }
 
+  function moveToSimilar() {
+    if (!similarExercise) return;
+    const nextIndex = sessionExercises.findIndex((candidate) => candidate.id === similarExercise.id);
+    setIndex(nextIndex >= 0 ? nextIndex : 0);
+    setActiveExerciseId(similarExercise.id);
+    setSelectedChoiceId(null);
+    setInput("");
+    setFeedback(undefined);
+  }
+
   async function handleChoice(choiceId: string) {
     if (!exercise || !isChoiceExercise(exercise) || feedback) return;
     const choice = exercise.choices.find((item) => item.id === choiceId);
     if (!choice) return;
     setSelectedChoiceId(choiceId);
-    await gradeCurrent(choice.isCorrect);
+    await gradeCurrent(choice.isCorrect, choice.isCorrect ? undefined : choice.why);
     setFeedback({
       result: choice.isCorrect ? "correct" : "incorrect",
       ...answerDetails(exercise),
+      misconception: choice.isCorrect ? undefined : choice.why,
       explanation: choice.why ? `${choice.why} ${exercise.explanation ?? ""}`.trim() : exercise.explanation,
     });
   }
@@ -233,10 +256,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       strictness: settings.particleStrictness,
       accepted,
     });
-    await gradeCurrent(result.correct);
+    await gradeCurrent(result.correct, result.correct ? undefined : result.note || exercise.explanation);
     setFeedback({
       result: result.correct ? "correct" : "incorrect",
       ...answerDetails(exercise),
+      misconception: result.correct ? undefined : result.note,
       explanation: [exercise.explanation, result.note].filter(Boolean).join(" "),
     });
   }
@@ -329,9 +353,16 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
               </button>
             </>
           ) : (
-            <button type="button" className="primary-button" onClick={moveNext}>
-              Next
-            </button>
+            <>
+              {similarExercise ? (
+                <button type="button" className="secondary-button" onClick={moveToSimilar}>
+                  Try similar one
+                </button>
+              ) : null}
+              <button type="button" className="primary-button" onClick={moveNext}>
+                Next
+              </button>
+            </>
           )}
         </div>
 

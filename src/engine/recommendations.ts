@@ -5,6 +5,7 @@ import {
   type PracticeCategory,
   type PracticeCategoryId,
 } from "./practiceCategories";
+import { mistakeCount } from "./mistakeAnalytics";
 import type { ReviewState } from "./scheduler";
 import { isProductionExercise } from "./sessionPlanner";
 
@@ -16,6 +17,10 @@ export type CategoryInsight = {
   fresh: number;
   reviewed: number;
   production: number;
+  mistakes: number;
+  productionAccuracy?: number;
+  receptionAccuracy?: number;
+  categoryPressure: number;
   score: number;
 };
 
@@ -57,6 +62,12 @@ export function categoryInsights(
     let fresh = 0;
     let reviewed = 0;
     let production = 0;
+    let mistakes = 0;
+    let productionAccuracyTotal = 0;
+    let productionAccuracyCount = 0;
+    let receptionAccuracyTotal = 0;
+    let receptionAccuracyCount = 0;
+    const categoryTags = tagsForPracticeCategory(category.id);
 
     for (const exercise of matching) {
       const reviewState = reviewById.get(exercise.id);
@@ -65,7 +76,25 @@ export function categoryInsights(
       if (isDue(reviewState, now)) due += 1;
       if (isWeak(reviewState)) weak += 1;
       if (isProductionExercise(exercise)) production += 1;
+      mistakes += mistakeCount(reviewState, category.id === "all" ? [] : categoryTags);
+      if (reviewState?.productionAccuracy !== undefined) {
+        productionAccuracyTotal += reviewState.productionAccuracy;
+        productionAccuracyCount += 1;
+      }
+      if (reviewState?.receptionAccuracy !== undefined) {
+        receptionAccuracyTotal += reviewState.receptionAccuracy;
+        receptionAccuracyCount += 1;
+      }
     }
+
+    const productionAccuracy =
+      productionAccuracyCount > 0 ? Math.round((productionAccuracyTotal / productionAccuracyCount) * 100) / 100 : undefined;
+    const receptionAccuracy =
+      receptionAccuracyCount > 0 ? Math.round((receptionAccuracyTotal / receptionAccuracyCount) * 100) / 100 : undefined;
+    const lowProductionPressure = productionAccuracy === undefined ? 0 : Math.max(0, Math.round((0.82 - productionAccuracy) * 10));
+    const lowReceptionPressure = receptionAccuracy === undefined ? 0 : Math.max(0, Math.round((0.86 - receptionAccuracy) * 8));
+    const categoryPressure =
+      due * 8 + weak * 10 + mistakes * 5 + Math.min(fresh, 8) + lowProductionPressure + lowReceptionPressure;
 
     return {
       category,
@@ -75,9 +104,30 @@ export function categoryInsights(
       fresh,
       reviewed,
       production,
-      score: due * 8 + weak * 10 + Math.min(fresh, 8) + Math.min(production, 6),
+      mistakes,
+      productionAccuracy,
+      receptionAccuracy,
+      categoryPressure,
+      score: categoryPressure + Math.min(production, 6),
     };
   });
+}
+
+function accuracyPhrase(label: string, value: number | undefined): string | undefined {
+  if (value === undefined) return undefined;
+  return `${label} ${Math.round(value * 100)}%`;
+}
+
+function evidenceReason(insight: CategoryInsight): string {
+  return [
+    `${insight.due} due reviews`,
+    `${insight.weak} weak items`,
+    `${insight.mistakes} logged misses`,
+    accuracyPhrase("production", insight.productionAccuracy),
+    accuracyPhrase("reception", insight.receptionAccuracy),
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
 export function recommendedPractice(
@@ -109,11 +159,17 @@ export function recommendedPractice(
     });
   const best = candidates[0] ?? fullDeck;
 
-  if (best.due > 0 || best.weak > 0) {
+  if (
+    best.due > 0 ||
+    best.weak > 0 ||
+    best.mistakes > 0 ||
+    (best.productionAccuracy !== undefined && best.productionAccuracy < 0.82) ||
+    (best.receptionAccuracy !== undefined && best.receptionAccuracy < 0.86)
+  ) {
     return {
       categoryId: best.category.id,
-      title: `Practice ${best.category.label} where mistakes are piling up`,
-      reason: `${best.due} due reviews, ${best.weak} weak items, and ${best.production} production tasks available.`,
+      title: `Practice ${best.category.label} with targeted review`,
+      reason: `${evidenceReason(best)}.`,
       insight: best,
     };
   }
@@ -123,7 +179,7 @@ export function recommendedPractice(
     return {
       categoryId: "mixed",
       title: "Build mixed Korean sentences",
-      reason: `${mixed.production} production tasks are ready, and no single weak lane stands out.`,
+      reason: `${mixed.production} production tasks are ready; ${evidenceReason(mixed)}.`,
       insight: mixed,
     };
   }
