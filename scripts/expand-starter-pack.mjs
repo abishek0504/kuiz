@@ -36,10 +36,15 @@ function addUnique(collection, item) {
   collection.push(item);
 }
 
-pack.pack.version = "1.3.0";
+pack.pack.version = "1.3.1";
 for (const include of ["dialogue", "reading", "listening", "dictation", "ordering", "roleplay", "minimal-pair"]) {
   if (!pack.pack.includes.includes(include)) pack.pack.includes.push(include);
 }
+
+const integratedSentenceGrammarIds = new Set(["grammar-time-action-pattern", "legacy-grammar-time-action"]);
+pack.grammar = pack.grammar.filter(
+  (entry) => !integratedSentenceGrammarIds.has(entry.id) && !entry.tags?.includes("sentence-pattern"),
+);
 
 if (!pack.sourceRefs.some((source) => source.sourceId === sourceId)) {
   pack.sourceRefs.push({

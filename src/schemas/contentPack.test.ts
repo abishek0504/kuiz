@@ -81,6 +81,21 @@ describe("content pack schema", () => {
     }
   });
 
+  test("grammar references do not include integrated sentence-production drills", () => {
+    for (const entry of parsed.grammar) {
+      const referenceText = `${entry.title} ${entry.pattern} ${entry.meaning}`;
+
+      expect(entry.tags, entry.id).not.toContain("sentence-pattern");
+      expect(referenceText, entry.id).not.toMatch(/장소\+에서\s*\+\s*시간\+에/u);
+      expect(referenceText, entry.id).not.toMatch(/목적어\+을\/를\s*\+\s*동사/u);
+    }
+
+    expect(parsed.grammar.some((entry) => entry.pattern === "에서")).toBe(true);
+    expect(parsed.exercises.some((exercise) => exercise.type === "sentenceBuilder" && exercise.tags.includes("mixed"))).toBe(
+      true,
+    );
+  });
+
   test("starter pack does not expose replacement-marker question marks", () => {
     const flagged: string[] = [];
 

@@ -1,7 +1,7 @@
 import starterPackJson from "../../content-packs/starter.core.v1.json";
 import type { KuizDatabase } from "../db/db";
 import type { ContentPack, Entry, Exercise } from "../schemas/contentPack";
-import { mergeContentPack, packEntries, previewContentPack } from "../importExport/mergePack";
+import { dedupeIdentity, mergeContentPack, packEntries, previewContentPack } from "../importExport/mergePack";
 import { simpleHash } from "../engine/normalize";
 
 let starterLoadPromise: Promise<void> | undefined;
@@ -26,7 +26,7 @@ async function loadStarterPackOnce(database: KuizDatabase): Promise<void> {
       database.entries.where("packId").equals(packId).count(),
       database.exercises.where("packId").equals(packId).count(),
     ]);
-    if (entryCount >= starterEntries.length && exerciseCount >= starterPack.exercises.length) return;
+    if (entryCount === starterEntries.length && exerciseCount === starterPack.exercises.length) return;
   }
 
   const [totalEntries, totalExercises] = await Promise.all([
@@ -38,10 +38,20 @@ async function loadStarterPackOnce(database: KuizDatabase): Promise<void> {
     return;
   }
 
-  const preview = await previewContentPack(database, starterPack);
-  const hasChanges = preview.creates.length > 0 || preview.updates.length > 0;
+  const [preview, staleRecords] = await Promise.all([
+    previewContentPack(database, starterPack),
+    findStaleStarterRecords(database, starterPack),
+  ]);
+  const hasChanges =
+    preview.creates.length > 0 ||
+    preview.updates.length > 0 ||
+    existingPack?.version !== starterPack.pack.version ||
+    staleRecords.entryIds.length > 0 ||
+    staleRecords.exerciseIds.length > 0 ||
+    staleRecords.distractorGroupIds.length > 0;
   if (!hasChanges || preview.conflicts.length > 0) return;
   await mergeContentPack(database, starterPack, preview);
+  await pruneStaleStarterRecords(database, staleRecords);
 }
 
 function entrySearchText(entry: Entry): string {
@@ -110,6 +120,66 @@ async function installFreshStarterPack(database: KuizDatabase, starterPack: Cont
         skips: 0,
         conflicts: 0,
       });
+    },
+  );
+}
+
+type StaleStarterRecords = {
+  entryIds: string[];
+  exerciseIds: string[];
+  distractorGroupIds: string[];
+};
+
+async function findStaleStarterRecords(
+  database: KuizDatabase,
+  starterPack: ContentPack,
+): Promise<StaleStarterRecords> {
+  const packId = starterPack.pack.packId;
+  const starterEntries = packEntries(starterPack);
+  const incomingEntryIds = new Set(starterEntries.map((entry) => entry.id));
+  const incomingEntryKeys = new Set(starterEntries.map((entry) => dedupeIdentity(entry)));
+  const incomingExerciseIds = new Set(starterPack.exercises.map((exercise) => exercise.id));
+  const incomingExerciseKeys = new Set(starterPack.exercises.map((exercise) => dedupeIdentity(exercise)));
+  const incomingGroupIds = new Set(starterPack.distractorGroups.map((group) => group.id));
+
+  const [existingEntries, existingExercises, existingGroups] = await Promise.all([
+    database.entries.where("packId").equals(packId).toArray(),
+    database.exercises.where("packId").equals(packId).toArray(),
+    database.distractorGroups.where("packId").equals(packId).toArray(),
+  ]);
+
+  return {
+    entryIds: existingEntries
+      .filter((entry) => !incomingEntryIds.has(entry.id) && !incomingEntryKeys.has(entry.dedupeKey))
+      .map((entry) => entry.id),
+    exerciseIds: existingExercises
+      .filter((exercise) => !incomingExerciseIds.has(exercise.id) && !incomingExerciseKeys.has(exercise.dedupeKey))
+      .map((exercise) => exercise.id),
+    distractorGroupIds: existingGroups.filter((group) => !incomingGroupIds.has(group.id)).map((group) => group.id),
+  };
+}
+
+async function pruneStaleStarterRecords(database: KuizDatabase, staleRecords: StaleStarterRecords): Promise<void> {
+  if (
+    staleRecords.entryIds.length === 0 &&
+    staleRecords.exerciseIds.length === 0 &&
+    staleRecords.distractorGroupIds.length === 0
+  ) {
+    return;
+  }
+
+  await database.transaction(
+    "rw",
+    [database.entries, database.exercises, database.distractorGroups, database.reviewState],
+    async () => {
+      if (staleRecords.entryIds.length > 0) await database.entries.bulkDelete(staleRecords.entryIds);
+      if (staleRecords.exerciseIds.length > 0) {
+        await database.exercises.bulkDelete(staleRecords.exerciseIds);
+        await database.reviewState.bulkDelete(staleRecords.exerciseIds);
+      }
+      if (staleRecords.distractorGroupIds.length > 0) {
+        await database.distractorGroups.bulkDelete(staleRecords.distractorGroupIds);
+      }
     },
   );
 }

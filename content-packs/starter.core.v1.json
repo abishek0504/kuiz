@@ -2,7 +2,7 @@
   "schema": "kuiz-pack@1",
   "pack": {
     "packId": "starter.core.v1",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "title": "Kuiz Starter Core Pack",
     "locale": "en-CA",
     "createdAt": "2026-06-18",
@@ -10865,42 +10865,6 @@
       ]
     },
     {
-      "id": "grammar-time-action-pattern",
-      "dedupeKey": "grammar:time-action-pattern",
-      "kind": "grammar",
-      "title": "장소·시간·목적어 문장",
-      "pattern": "장소+에서 + 시간+에 + 목적어+을/를 + 동사+아요/어요",
-      "meaning": "combine separate particles to say where, when, and what action happens",
-      "formation": [
-        "장소 + 에서: where the action happens.",
-        "시간 + 에: when it happens.",
-        "목적어 + 을/를: what receives the action.",
-        "동사 + 아요/어요: polite present-tense action."
-      ],
-      "tags": [
-        "grammar",
-        "sentence-pattern",
-        "time",
-        "place"
-      ],
-      "sourceRefIds": [
-        "chat-screens-progressive",
-        "lessons-pdf-particles-vocab"
-      ],
-      "inferred": true,
-      "examples": [
-        {
-          "ko": "저는 도서관에서 세 시에 책을 읽어요.",
-          "en": "I read a book at the library at 3 o'clock.",
-          "audioText": "저는 도서관에서 세 시에 책을 읽어요."
-        }
-      ],
-      "pitfalls": [
-        "Do not treat this as one memorized template; each particle still has its own job.",
-        "Use 에서 for an action location, not 에."
-      ]
-    },
-    {
       "id": "grammar-boreo-gada",
       "dedupeKey": "grammar:boreo-gada",
       "kind": "grammar",
@@ -11454,40 +11418,6 @@
       "sourceRefIds": [
         "legacy-v13-html",
         "experience-time-pdf"
-      ],
-      "inferred": false
-    },
-    {
-      "id": "legacy-grammar-time-action",
-      "dedupeKey": "grammar:time-action",
-      "kind": "grammar",
-      "title": "장소와 시간 넣어 말하기",
-      "pattern": "장소+에서 + 시간+에 + 목적어+을/를 + 동사+아요/어요",
-      "meaning": "combine action place, time, object, and polite verb ending",
-      "formation": [
-        "장소 + 에서 marks the action location.",
-        "시간 + 에 marks when the action happens.",
-        "목적어 + 을/를 marks the object of the verb.",
-        "The polite verb ending carries the sentence tense and tone."
-      ],
-      "examples": [
-        {
-          "ko": "저는 카페에서 오후 두 시에 커피를 마셔요.",
-          "en": "I drink coffee at the cafe at 2 PM.",
-          "audioText": "저는 카페에서 오후 두 시에 커피를 마셔요."
-        }
-      ],
-      "pitfalls": [
-        "Keep the particle choice tied to meaning, not to word order alone."
-      ],
-      "notes": "장소 + 에서 marks the action location. 시간 + 에 marks when the action happens. 목적어 + 을/를 marks the object of the verb. The polite verb ending carries the sentence tense and tone.",
-      "tags": [
-        "grammar",
-        "time-and-actions",
-        "time-action"
-      ],
-      "sourceRefIds": [
-        "legacy-v13-html"
       ],
       "inferred": false
     },

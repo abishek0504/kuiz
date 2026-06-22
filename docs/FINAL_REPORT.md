@@ -10,7 +10,7 @@
   - 505 exercises
   - 51 particle entries
   - 420 vocabulary entries
-  - 53 grammar entries
+  - 51 grammar entries
 - Covered particles, vocab, numbers, native/Sino number practice, time/date expressions, routine language, progressive grammar, purpose/necessity patterns, corrections, conjugations, sentence production, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
 - Extended `kuiz-pack@1` in a backward-compatible way with optional skill, level, scenario, register, communicativeGoal, and rubric metadata.
 - Added new exercise types: `dialogue`, `reading`, `listening`, `dictation`, `roleplay`, `ordering`, and `minimalPair`.

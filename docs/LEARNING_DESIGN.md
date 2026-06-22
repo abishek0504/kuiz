@@ -19,7 +19,7 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 ## Current Product Rules
 
 - Study focus lanes are learner-facing categories: `전체`, `어휘`, `숫자·시간`, `문법`, `조사`, `연결어`, and `혼합`.
-- `혼합` means integrated sentence practice: sentence builder, correction, time/action, and multi-tag sentence patterns.
+- `혼합` means integrated sentence practice: sentence builder, correction, time/action, and multi-rule sentence production.
 - Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
 - Recommended is the default quiz session. Session intents are recommended, practice, review, sentence, and listening; they should stay learner-facing rather than exposing low-level task slugs.
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.

@@ -39,7 +39,7 @@ const practicePath: Array<{
   {
     phase: "Produce",
     title: "Build integrated sentences",
-    description: "Use mixed practice for sentence building, corrections, and combined patterns.",
+    description: "Use mixed practice for sentence building, corrections, and multi-rule sentence production.",
     categoryId: "mixed",
   },
   {

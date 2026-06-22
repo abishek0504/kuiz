@@ -120,6 +120,7 @@ button {
 
 .screen-heading h2,
 .plain-section h2,
+.reference-section-heading h2,
 .reference-item h2 {
   margin: 0;
 }
@@ -303,6 +304,22 @@ button:disabled {
   margin: 0;
   font-size: 1.08rem;
   font-weight: 800;
+}
+
+.reference-section {
+  display: grid;
+  gap: 9px;
+}
+
+.reference-section-heading {
+  display: grid;
+  gap: 3px;
+}
+
+.reference-section-heading p,
+.reference-meaning {
+  margin: 0;
+  color: var(--muted);
 }
 
 .goal-line,
