@@ -1,7 +1,13 @@
 import { describe, expect, test } from "vitest";
 import type { ExerciseRecord } from "../db/schema";
 import type { ReviewState } from "./scheduler";
-import { planBalancedSessionExercises, planSessionExercises, sessionSummary } from "./sessionPlanner";
+import {
+  isListeningExercise,
+  planBalancedSessionExercises,
+  planRecommendedSessionExercises,
+  planSessionExercises,
+  sessionSummary,
+} from "./sessionPlanner";
 
 function exercise(id: string, type: ExerciseRecord["type"] = "fillBlank"): ExerciseRecord {
   const base = {
@@ -56,6 +62,25 @@ function exercise(id: string, type: ExerciseRecord["type"] = "fillBlank"): Exerc
       type,
       dictionaryForm: id,
       targetFormLabel: "아요/어요",
+      acceptedAnswers: { strict: [id], relaxed: [], regex: [] },
+      modelAnswer: id,
+    };
+  }
+
+  if (type === "listening") {
+    return {
+      ...base,
+      type,
+      question: id,
+      acceptedAnswers: { strict: [id], relaxed: [], regex: [] },
+      modelAnswer: id,
+    };
+  }
+
+  if (type === "dictation") {
+    return {
+      ...base,
+      type,
       acceptedAnswers: { strict: [id], relaxed: [], regex: [] },
       modelAnswer: id,
     };
@@ -162,5 +187,28 @@ describe("session planner", () => {
       "correction",
       "conjugation",
     ]);
+  });
+
+  test("recommended sessions avoid repeating the same Korean answer across task types", () => {
+    const blank = { ...exercise("blank", "fillBlank"), modelAnswer: "저는 도서관에서 책을 읽어요." } as ExerciseRecord;
+    const build = { ...exercise("build", "sentenceBuilder"), modelAnswer: "저는 도서관에서 책을 읽어요." } as ExerciseRecord;
+    const repair = { ...exercise("repair", "correction"), corrected: "저는 도서관에서 책을 읽어요." } as ExerciseRecord;
+    const other = { ...exercise("other", "sentenceBuilder"), modelAnswer: "내일 세 시에 친구를 만나요." } as ExerciseRecord;
+
+    const planned = planRecommendedSessionExercises([blank, build, repair, other], [], now);
+    const repeated = planned.filter((item) => item.id === "blank" || item.id === "build" || item.id === "repair");
+
+    expect(repeated).toHaveLength(1);
+  });
+
+  test("listening classification only includes actual listening and dictation tasks", () => {
+    const blankWithAudio = {
+      ...exercise("blank-with-audio", "fillBlank"),
+      prompt: { stem: "blank", audioText: "정답을 말해요." },
+    } as ExerciseRecord;
+
+    expect(isListeningExercise(blankWithAudio)).toBe(false);
+    expect(isListeningExercise(exercise("listen", "listening"))).toBe(true);
+    expect(isListeningExercise(exercise("dictate", "dictation"))).toBe(true);
   });
 });

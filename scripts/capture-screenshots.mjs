@@ -108,7 +108,7 @@ try {
 
   await page.goto(baseURL);
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab").nth(4).click();
+  await page.getByRole("tablist", { name: "Session type" }).getByRole("tab").nth(4).click();
   await page.getByRole("button", { name: "Listen" }).waitFor();
   await save(page, "listening-task-iphone.png");
 

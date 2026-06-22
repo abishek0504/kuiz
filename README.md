@@ -11,11 +11,12 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Zod-validated content packs with import preview, dedupe checks, rollback snapshots, and transactional merge.
 - Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, repeated generic choices, or grammar-only flashcard dumps.
 - Recommended quiz sessions interleave scenario input, form noticing, production, repair, due review, and fluency work instead of starting learners in MCQ-only practice.
+- Quiz has separate focus and question-type controls, so learners can study a category with only multiple choice, fill blanks, sentence building, corrections, dialogue, reading, or listening.
 - Recommendation and progress diagnostics use due reviews, weak answers, logged mistake tags, and production/reception accuracy to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
-- Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults.
-- Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
+- Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults; pre-answer audio appears only for listening/dictation so it does not reveal ordinary quiz answers.
+- Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers, plus tolerance for particle spacing and natural time/place word-order swaps before the final verb.
 - Simplified FSRS-style scheduler using stability, difficulty, retrievability, lapses, and due dates.
 - Production-only service worker and web manifest for offline use after first load.
 - Expanded starter pack: 420 vocab entries, 51 particle entries, 51 grammar entries, and 505 exercises across MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
@@ -42,7 +43,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ### Study
 
-Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness.
+Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. A second question-type rail lets learners choose all types or narrow to multiple choice, fill blanks, build, fix, dialogue, reading, or listening. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness and accept natural particle-marked word-order variants when the sentence meaning is unchanged.
 
 ### Import Content
 

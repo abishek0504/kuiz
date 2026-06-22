@@ -15,6 +15,7 @@
 - Extended `kuiz-pack@1` in a backward-compatible way with optional skill, level, scenario, register, communicativeGoal, and rubric metadata.
 - Added new exercise types: `dialogue`, `reading`, `listening`, `dictation`, `roleplay`, `ordering`, and `minimalPair`.
 - Replaced low-level visible Quiz modes with learner-facing session intents: recommended, practice, review, sentence, and listening.
+- Added a separate question-type selector for all types, multiple choice, fill blank, build, fix, dialogue, reading, and listening, so focus category and quiz format are no longer conflated.
 - Added `Recommended` as the default Quiz session mode so learners move across scenario input, form noticing, production, repair, due review, and fluency instead of staying in MCQs by default.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
 - Added a Recommended next card on Home that starts broad for new learners and later targets categories with due or weak review pressure.
@@ -22,7 +23,12 @@
 - Added adaptive Smart order in Quiz so due reviews, weak items, and logged mistakes are prioritized before new/future-stable material.
 - Added Korean sentence-role breakdowns in quiz feedback for common particles, time/place markers, source/recipient markers, connectors, objects, and predicates.
 - Added misconception feedback with a `What changed?` line and a `Try similar one` path after answering.
+- Added answer guidance for typed tasks so fill blanks, builders, corrections, dictation, dialogue, and reading tasks tell the learner what shape of answer is expected.
+- Improved Korean answer checking so strict mode still preserves particles, but accepts particle-spacing variants and natural particle-marked word-order swaps before the final verb, such as time/place order changes.
+- Added full-sentence acceptance for non-sentence fill blanks when the full response contains the correct blank phrase.
 - Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
+- Persisted active Quiz state across bottom-tab navigation, including mode, question type, active item, typed input, selected choice, feedback, and planned session order.
+- Reduced within-session repetition by avoiding duplicate normalized Korean model answers across task types in recommended planning.
 - Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
 - Fixed mobile chip selected state so buttons do not stay incorrectly pre-highlighted.
@@ -32,6 +38,7 @@
 - Added learner-facing Korean focus categories directly to the Quiz screen, with horizontal mobile scrolling instead of a raw tag cloud.
 - Reordered the starter pack MCQ source data so the correct answer is not stored as the first visible choice.
 - Added deterministic multiple-choice ordering in the UI so imported content is also protected from answer-position leakage.
+- Hid pre-answer audio controls for non-listening tasks so audio no longer gives away ordinary MCQ, fill-blank, builder, correction, ordering, or roleplay answers.
 - Revised number MCQs so distractors are plausible same-system nearby numbers instead of obvious 1/2/3 filler choices.
 - Rewrote full-sentence Korean MCQs so answer choices are full-sentence alternatives rather than fragments like "am studying."
 - Rewrote remaining legacy sentence MCQs that reused generic fallback choices like "I like dogs," "I like cats," and "I go to the cafe."
@@ -50,23 +57,28 @@
 - Added local-first persistence for settings, review state, mistake tags, last mistake reasons, production/reception accuracy, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
 - Added a compact in-app offline indicator when the browser loses network access.
-- Bumped the app-shell cache and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
+- Bumped the app-shell cache to `kuiz-app-v5` and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
 - Generated Netlify-ready production output in `dist/` with `npm run build`.
 
 ## Tested
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates with 505 exercises.
-- `npm run test:run`: 16 test files, 53 tests passing.
+- `npm run test:run`: 16 test files, 60 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 24 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 28 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
 - Quiz flow: answer, feedback, Next button, Skip behavior.
+- Question-type selector for direct multiple-choice practice.
+- Quiz session state persists after switching bottom tabs on desktop and iPhone viewport.
 - Multiple choice UI state and non-sticky pre-highlight behavior.
+- Non-listening task audio controls do not reveal the answer before grading.
 - Import validation and duplicate-detection preview.
 - Particle strictness and full-particle defaults.
+- Flexible Korean word order for particle-marked time/place/object chunks while keeping the final verb fixed.
+- Full-sentence responses for fill blanks when the expected blank phrase is present.
 - Distractor homogeneity.
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
 - Korean Quiz focus category labels with no raw `sino-numbers` or `native-numbers` text in Quiz.
@@ -82,6 +94,7 @@ Coverage includes:
 - Adaptive Smart order summary is visible in Quiz.
 - Recommendation engine starts new learners with the full balanced deck and targets weak/due learner-facing categories after review history exists.
 - Session planner interleaves recognition, blanks, production, repair, and conjugation when those task types are available.
+- Recommended session planner avoids repeating the same normalized Korean answer across task types.
 - Deterministic MCQ choice ordering with the correct answer not locked to the first position.
 - Starter MCQ source data does not put the correct answer first.
 - Import parser rejects low-quality lesson JSON before preview/merge.
@@ -149,6 +162,6 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 173 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 175 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
 - The expanded Korean content is designed for native-speaker review, but it has not been native-speaker verified.
 - Browser speech quality depends on the user's installed Korean voices.

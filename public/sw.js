@@ -1,4 +1,4 @@
-const CACHE_NAME = "kuiz-app-v4";
+const CACHE_NAME = "kuiz-app-v5";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (event) => {

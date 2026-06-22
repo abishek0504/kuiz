@@ -4,11 +4,7 @@ async function openNumberMcq(page: import("@playwright/test").Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
   await page.locator('[aria-label="Practice focus"]').getByRole("button").nth(2).click();
-  await page.getByRole("tab").nth(1).click();
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    if ((await page.locator(".choice").count()) > 0) break;
-    await page.getByRole("button", { name: "Skip" }).click();
-  }
+  await page.getByRole("tab", { name: "Multiple choice" }).click();
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
 }
 
@@ -45,4 +41,19 @@ test("skip advances without grading", async ({ page }) => {
   await page.getByRole("button", { name: "Skip" }).click();
   const after = await page.getByTestId("quiz-index").textContent();
   expect(after).not.toBe(before);
+});
+
+test("quiz state survives switching bottom tabs", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.getByRole("tab", { name: "Fill blank" }).click();
+
+  await expect(page.getByLabel("Your answer")).toBeVisible({ timeout: 20000 });
+  const heading = await page.locator(".quiz-card h1").textContent();
+  await page.getByLabel("Your answer").fill("테스트");
+  await page.getByRole("button", { name: "Stats" }).click();
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+
+  await expect(page.locator(".quiz-card h1")).toHaveText(heading ?? "");
+  await expect(page.getByLabel("Your answer")).toHaveValue("테스트");
 });

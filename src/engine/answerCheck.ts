@@ -11,6 +11,7 @@ export type CheckAnswerInput = {
     relaxed?: string[];
     regex?: string[];
   };
+  allowModelFragment?: boolean;
 };
 
 export type CheckAnswerResult = {
@@ -47,8 +48,14 @@ const PARTICLES = [
   "이랑",
 ];
 
+const PARTICLE_SPACING_PATTERN = new RegExp(`\\s+(${PARTICLES.sort((a, b) => b.length - a.length).join("|")})(?=\\s|$)`, "gu");
+
+export function normalizeAnswerKorean(value: string): string {
+  return normalizeKorean(value).replace(PARTICLE_SPACING_PATTERN, "$1");
+}
+
 export function stripOptionalParticles(value: string): string {
-  return normalizeKorean(value)
+  return normalizeAnswerKorean(value)
     .split(" ")
     .map((token) => {
       const matched = PARTICLES
@@ -66,9 +73,33 @@ function acceptedSet(input: CheckAnswerInput): string[] {
   return [input.model, ...base];
 }
 
+function loose(value: string): string {
+  return normalizeAnswerKorean(value).replace(/\s+/g, "");
+}
+
+function sortedTokens(value: string): string[] {
+  return normalizeAnswerKorean(value).split(" ").filter(Boolean).sort((a, b) => a.localeCompare(b, "ko"));
+}
+
+export function hasFlexibleKoreanWordOrder(model: string, submitted: string): boolean {
+  const modelTokens = normalizeAnswerKorean(model).split(" ").filter(Boolean);
+  const submittedTokens = normalizeAnswerKorean(submitted).split(" ").filter(Boolean);
+  if (modelTokens.length < 3 || modelTokens.length !== submittedTokens.length) return false;
+  if (!/[가-힣]/u.test(modelTokens.join("")) || !/[가-힣]/u.test(submittedTokens.join(""))) return false;
+
+  const modelFinal = modelTokens.at(-1);
+  const submittedFinal = submittedTokens.at(-1);
+  if (!modelFinal || modelFinal !== submittedFinal) return false;
+
+  const modelMovable = sortedTokens(modelTokens.slice(0, -1).join(" "));
+  const submittedMovable = sortedTokens(submittedTokens.slice(0, -1).join(" "));
+  return modelMovable.join("\u0000") === submittedMovable.join("\u0000");
+}
+
 export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
-  const submitted = normalizeKorean(input.input);
-  const exactMatches = acceptedSet(input).map(normalizeKorean);
+  const submitted = normalizeAnswerKorean(input.input);
+  const models = acceptedSet(input);
+  const exactMatches = models.map(normalizeAnswerKorean);
 
   if (exactMatches.includes(submitted)) {
     return { correct: true, mode: input.strictness };
@@ -80,9 +111,25 @@ export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
     return { correct: true, mode: input.strictness };
   }
 
+  if (models.some((model) => hasFlexibleKoreanWordOrder(model, submitted))) {
+    return {
+      correct: true,
+      mode: input.strictness,
+      note: "Accepted: the same particle-marked words can move before the final verb in Korean.",
+    };
+  }
+
+  if (input.allowModelFragment && models.some((model) => loose(submitted).includes(loose(model)))) {
+    return {
+      correct: true,
+      mode: input.strictness,
+      note: "Accepted as a full sentence. For this blank, the expected missing part is the model answer.",
+    };
+  }
+
   if (input.strictness === "relaxed") {
     const relaxedSubmitted = stripOptionalParticles(submitted);
-    const relaxedModels = acceptedSet(input).map(stripOptionalParticles);
+    const relaxedModels = models.map(stripOptionalParticles);
     if (relaxedModels.includes(relaxedSubmitted)) {
       return {
         correct: true,

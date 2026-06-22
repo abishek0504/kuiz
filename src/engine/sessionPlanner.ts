@@ -1,5 +1,6 @@
 import type { ExerciseRecord } from "../db/schema";
 import { mistakeCount } from "./mistakeAnalytics";
+import { normalizeKorean } from "./normalize";
 import type { ReviewState } from "./scheduler";
 
 function isDue(card: ReviewState, now: Date): boolean {
@@ -70,7 +71,7 @@ export function isInputExercise(exercise: ExerciseRecord): boolean {
 }
 
 export function isListeningExercise(exercise: ExerciseRecord): boolean {
-  return exercise.type === "listening" || exercise.type === "dictation" || Boolean(exercise.prompt.audioText);
+  return exercise.type === "listening" || exercise.type === "dictation";
 }
 
 export function planBalancedSessionExercises(
@@ -101,11 +102,25 @@ export function planBalancedSessionExercises(
   return planned;
 }
 
-function takeNext(source: ExerciseRecord[], planned: ExerciseRecord[], usedIds: Set<string>) {
-  const next = source.find((exercise) => !usedIds.has(exercise.id));
+function answerKey(exercise: ExerciseRecord): string {
+  if (exercise.type === "mcq" || exercise.type === "minimalPair") {
+    return normalizeKorean(exercise.choices.find((choice) => choice.isCorrect)?.text ?? exercise.prompt.stem);
+  }
+  if (exercise.type === "correction") return normalizeKorean(exercise.corrected);
+  return normalizeKorean(exercise.modelAnswer);
+}
+
+function takeNext(
+  source: ExerciseRecord[],
+  planned: ExerciseRecord[],
+  usedIds: Set<string>,
+  usedAnswerKeys = new Set<string>(),
+) {
+  const next = source.find((exercise) => !usedIds.has(exercise.id) && !usedAnswerKeys.has(answerKey(exercise)));
   if (!next) return;
   planned.push(next);
   usedIds.add(next.id);
+  usedAnswerKeys.add(answerKey(next));
 }
 
 export function planRecommendedSessionExercises(
@@ -132,12 +147,13 @@ export function planRecommendedSessionExercises(
 
   const planned: ExerciseRecord[] = [];
   const usedIds = new Set<string>();
+  const usedAnswerKeys = new Set<string>();
   for (const bucket of [input, input, form, form, production, production, production, dueOrWeak, dueOrWeak, sorted]) {
-    takeNext(bucket, planned, usedIds);
+    takeNext(bucket, planned, usedIds, usedAnswerKeys);
   }
   for (const exercise of sorted) {
     if (planned.length >= 10) break;
-    if (!usedIds.has(exercise.id)) takeNext([exercise], planned, usedIds);
+    if (!usedIds.has(exercise.id)) takeNext([exercise], planned, usedIds, usedAnswerKeys);
   }
   return planned;
 }

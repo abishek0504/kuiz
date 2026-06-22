@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ChipTabs } from "../../components/ChipTabs";
 import { AudioButton } from "../../components/AudioButton";
 import { StickyFeedback, type FeedbackState } from "../../components/StickyFeedback";
@@ -24,7 +24,7 @@ import {
   sessionSummary,
 } from "../../engine/sessionPlanner";
 import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
-import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
+import { isActiveQuizMode, isActiveQuizType, type QuizMode, type QuizTypeFilter } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
@@ -33,6 +33,17 @@ const quizModes: Array<{ id: QuizMode; label: string }> = [
   { id: "review", label: "복습" },
   { id: "sentence", label: "문장" },
   { id: "listening", label: "듣기" },
+];
+
+const questionTypeFilters: Array<{ id: QuizTypeFilter; label: string }> = [
+  { id: "all", label: "All types" },
+  { id: "mcq", label: "Multiple choice" },
+  { id: "fillBlank", label: "Fill blank" },
+  { id: "sentenceBuilder", label: "Build" },
+  { id: "correction", label: "Fix" },
+  { id: "dialogue", label: "Dialogue" },
+  { id: "reading", label: "Reading" },
+  { id: "listening", label: "Listening" },
 ];
 
 const technicalTags = new Set([
@@ -59,11 +70,76 @@ type QuizScreenProps = {
   onSettingsChange: (patch: Partial<UserSettings>) => void;
 };
 
+type PersistedQuizState = {
+  mode: QuizMode;
+  questionType: QuizTypeFilter;
+  index: number;
+  activeExerciseId: string | null;
+  selectedChoiceId: string | null;
+  input: string;
+  feedback?: FeedbackState;
+  sessionPlanIds: string[];
+  filterSignature: string;
+};
+
+const quizSessionStorageKey = "kuiz.quizSession.v2";
+
+function isQuizMode(value: unknown): value is QuizMode {
+  return typeof value === "string" && quizModes.some((mode) => mode.id === value);
+}
+
+function isQuizTypeFilter(value: unknown): value is QuizTypeFilter {
+  return typeof value === "string" && questionTypeFilters.some((filter) => filter.id === value);
+}
+
+function readPersistedQuizState(): PersistedQuizState {
+  if (typeof window === "undefined") return emptyPersistedQuizState();
+  try {
+    const raw = window.localStorage.getItem(quizSessionStorageKey);
+    const parsed = raw ? (JSON.parse(raw) as Partial<PersistedQuizState>) : {};
+    return {
+      mode: isQuizMode(parsed.mode) ? parsed.mode : "recommended",
+      questionType: isQuizTypeFilter(parsed.questionType) ? parsed.questionType : "all",
+      index: typeof parsed.index === "number" && Number.isFinite(parsed.index) ? parsed.index : 0,
+      activeExerciseId: typeof parsed.activeExerciseId === "string" ? parsed.activeExerciseId : null,
+      selectedChoiceId: typeof parsed.selectedChoiceId === "string" ? parsed.selectedChoiceId : null,
+      input: typeof parsed.input === "string" ? parsed.input : "",
+      feedback: parsed.feedback,
+      sessionPlanIds: Array.isArray(parsed.sessionPlanIds)
+        ? parsed.sessionPlanIds.filter((id): id is string => typeof id === "string")
+        : [],
+      filterSignature: typeof parsed.filterSignature === "string" ? parsed.filterSignature : "",
+    };
+  } catch {
+    return emptyPersistedQuizState();
+  }
+}
+
+function emptyPersistedQuizState(): PersistedQuizState {
+  return {
+    mode: "recommended",
+    questionType: "all",
+    index: 0,
+    activeExerciseId: null,
+    selectedChoiceId: null,
+    input: "",
+    sessionPlanIds: [],
+    filterSignature: "",
+  };
+}
+
 function exerciseMatchesMode(exercise: ExerciseRecord, mode: QuizMode): boolean {
   if (mode === "recommended" || mode === "practice" || mode === "review") return true;
   if (mode === "sentence") return isProductionExercise(exercise);
   if (mode === "listening") return isListeningExercise(exercise);
   return true;
+}
+
+function exerciseMatchesQuestionType(exercise: ExerciseRecord, questionType: QuizTypeFilter): boolean {
+  if (questionType === "all") return true;
+  if (questionType === "mcq") return exercise.type === "mcq" || exercise.type === "minimalPair";
+  if (questionType === "listening") return isListeningExercise(exercise);
+  return exercise.type === questionType;
 }
 
 function isChoiceExercise(exercise: ExerciseRecord): exercise is Extract<ExerciseRecord, { type: "mcq" | "minimalPair" }> {
@@ -78,6 +154,32 @@ function getModelAnswer(exercise: ExerciseRecord): string {
 
 function getLookupQuery(exercise: ExerciseRecord): string {
   return exercise.prompt.audioText ?? getModelAnswer(exercise) ?? exercise.prompt.stem;
+}
+
+function getPromptAudioText(exercise: ExerciseRecord): string | undefined {
+  return isListeningExercise(exercise) ? exercise.prompt.audioText : undefined;
+}
+
+function answerInstruction(exercise: ExerciseRecord): string {
+  if (exercise.type === "fillBlank") {
+    if (exercise.answerPresentation === "sentence") return "Type the complete Korean sentence.";
+    if (exercise.answerPresentation === "particle") return "Type only the missing particle or particles.";
+    return "Type only the missing blank. A full sentence is accepted if the blank answer is correct.";
+  }
+  if (exercise.type === "sentenceBuilder") return "Build the full Korean sentence. Particle-marked time and place can move before the final verb.";
+  if (exercise.type === "ordering") return "Tap chunks or type the full Korean sentence in a natural order.";
+  if (exercise.type === "correction") return "Type the corrected full Korean sentence.";
+  if (exercise.type === "conjugation") return "Type the requested Korean form.";
+  if (exercise.type === "dictation") return "Type the Korean sentence you hear.";
+  if (exercise.type === "listening") return "Listen first, then type the Korean answer.";
+  if (exercise.type === "dialogue") return "Type the useful Korean line from the exchange.";
+  if (exercise.type === "reading") return "Answer in Korean using the passage.";
+  if (exercise.type === "roleplay") return "Produce one natural Korean line for the situation.";
+  return "Type your Korean answer.";
+}
+
+function filterSignature(mode: QuizMode, questionType: QuizTypeFilter, focusTags: string[]): string {
+  return JSON.stringify({ mode, questionType, focusTags: [...focusTags].sort() });
 }
 
 function answerDetails(
@@ -100,23 +202,29 @@ function answerDetails(
 }
 
 export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
-  const [mode, setMode] = useState<QuizMode>("recommended");
-  const [index, setIndex] = useState(0);
-  const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
-  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
-  const [input, setInput] = useState("");
-  const [feedback, setFeedback] = useState<FeedbackState | undefined>();
+  const [initialQuizState] = useState(readPersistedQuizState);
+  const [mode, setMode] = useState<QuizMode>(initialQuizState.mode);
+  const [questionType, setQuestionType] = useState<QuizTypeFilter>(initialQuizState.questionType);
+  const [index, setIndex] = useState(initialQuizState.index);
+  const [activeExerciseId, setActiveExerciseId] = useState<string | null>(initialQuizState.activeExerciseId);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(initialQuizState.selectedChoiceId);
+  const [input, setInput] = useState(initialQuizState.input);
+  const [feedback, setFeedback] = useState<FeedbackState | undefined>(initialQuizState.feedback);
+  const [sessionPlanIds, setSessionPlanIds] = useState<string[]>(initialQuizState.sessionPlanIds);
+  const [sessionSignature, setSessionSignature] = useState(initialQuizState.filterSignature);
+  const didMountExercise = useRef(false);
 
   const modeExercises = useMemo(() => {
-    const matchingMode = exercises.filter((exercise) => exerciseMatchesMode(exercise, mode));
+    const matchingMode = questionType === "all" ? exercises.filter((exercise) => exerciseMatchesMode(exercise, mode)) : exercises;
+    const matchingType = matchingMode.filter((exercise) => exerciseMatchesQuestionType(exercise, questionType));
     const focusTags = settings.focusTags ?? [];
-    if (focusTags.length === 0) return matchingMode;
-    const matchingFocus = matchingMode.filter((exercise) =>
+    if (focusTags.length === 0) return matchingType;
+    const matchingFocus = matchingType.filter((exercise) =>
       exercise.tags.some((tag) => focusTags.includes(tag)),
     );
-    return matchingFocus.length > 0 ? matchingFocus : matchingMode;
-  }, [exercises, mode, settings.focusTags]);
-  const sessionExercises = useMemo(
+    return matchingFocus.length > 0 ? matchingFocus : matchingType;
+  }, [exercises, mode, questionType, settings.focusTags]);
+  const plannedExercises = useMemo(
     () =>
       mode === "recommended"
         ? planRecommendedSessionExercises(modeExercises, reviewStates)
@@ -125,6 +233,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
           : planBalancedSessionExercises(modeExercises, reviewStates),
     [mode, modeExercises, reviewStates],
   );
+  const exerciseById = useMemo(() => new Map(modeExercises.map((candidate) => [candidate.id, candidate])), [modeExercises]);
+  const sessionExercises = useMemo(() => {
+    const restored = sessionPlanIds
+      .map((id) => exerciseById.get(id))
+      .filter((candidate): candidate is ExerciseRecord => Boolean(candidate));
+    return restored.length > 0 ? restored : plannedExercises;
+  }, [exerciseById, plannedExercises, sessionPlanIds]);
   const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
   const exercise =
     sessionExercises.find((candidate) => candidate.id === activeExerciseId) ??
@@ -139,6 +254,10 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     [exercise],
   );
   const selectedTags = settings.focusTags ?? [];
+  const currentFilterSignature = useMemo(
+    () => filterSignature(mode, questionType, selectedTags),
+    [mode, questionType, selectedTags],
+  );
   const similarExercise = useMemo(() => {
     if (!exercise || !feedback) return undefined;
     const currentTags = new Set(exercise.tags.filter((tag) => !technicalTags.has(tag)));
@@ -149,27 +268,67 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       candidates.find((candidate) => candidate.type === exercise.type)
     );
   }, [exercise, feedback, modeExercises, sessionExercises]);
+  const promptAudioText = exercise ? getPromptAudioText(exercise) : undefined;
 
   function selectFocus(categoryId: PracticeCategoryId) {
+    setSessionSignature("");
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
   }
 
-  useEffect(() => {
+  function resetInteraction(nextPlanIds: string[]) {
     setIndex(0);
-    setActiveExerciseId(null);
+    setActiveExerciseId(nextPlanIds[0] ?? null);
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);
-  }, [mode]);
+  }
+
+  function handleModeChange(nextMode: QuizMode) {
+    setMode(nextMode);
+    setSessionSignature("");
+  }
+
+  function handleQuestionTypeChange(nextType: QuizTypeFilter) {
+    setQuestionType(nextType);
+    setSessionSignature("");
+  }
 
   useEffect(() => {
-    setMode("recommended");
-    setIndex(0);
-    setActiveExerciseId(null);
-    setSelectedChoiceId(null);
-    setInput("");
-    setFeedback(undefined);
-  }, [settings.focusTags]);
+    if (modeExercises.length === 0) {
+      setSessionPlanIds([]);
+      resetInteraction([]);
+      setSessionSignature(currentFilterSignature);
+      return;
+    }
+
+    const validStoredPlan =
+      sessionSignature === currentFilterSignature &&
+      sessionPlanIds.length > 0 &&
+      sessionPlanIds.some((id) => exerciseById.has(id));
+
+    if (validStoredPlan) return;
+
+    const nextPlanIds = plannedExercises.map((candidate) => candidate.id);
+    setSessionPlanIds(nextPlanIds);
+    resetInteraction(nextPlanIds);
+    setSessionSignature(currentFilterSignature);
+  }, [currentFilterSignature, exerciseById, modeExercises.length, plannedExercises, sessionPlanIds, sessionSignature]);
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined") return;
+    const nextState: PersistedQuizState = {
+      mode,
+      questionType,
+      index,
+      activeExerciseId,
+      selectedChoiceId,
+      input,
+      feedback,
+      sessionPlanIds,
+      filterSignature: sessionSignature,
+    };
+    window.localStorage.setItem(quizSessionStorageKey, JSON.stringify(nextState));
+  }, [activeExerciseId, feedback, index, input, mode, questionType, selectedChoiceId, sessionPlanIds, sessionSignature]);
 
   useEffect(() => {
     if (sessionExercises.length === 0) {
@@ -182,13 +341,17 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }, [activeExerciseId, sessionExercises]);
 
   useEffect(() => {
+    if (!didMountExercise.current) {
+      didMountExercise.current = true;
+      return;
+    }
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);
-    if (settings.autoAudio && exercise?.prompt.audioText) {
-      speakKorean(exercise.prompt.audioText, settings);
+    if (settings.autoAudio && promptAudioText) {
+      speakKorean(promptAudioText, settings);
     }
-  }, [exercise?.id]);
+  }, [exercise?.id, promptAudioText]);
 
   async function gradeCurrent(correct: boolean, reason?: string) {
     if (!exercise) return;
@@ -255,6 +418,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       input,
       strictness: settings.particleStrictness,
       accepted,
+      allowModelFragment: exercise.type === "fillBlank" && exercise.answerPresentation !== "sentence",
     });
     await gradeCurrent(result.correct, result.correct ? undefined : result.note || exercise.explanation);
     setFeedback({
@@ -276,7 +440,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   if (!exercise) {
     return (
       <section className="stack">
-        <ChipTabs label="Session type" items={quizModes} current={mode} onChange={setMode} />
+        <ChipTabs label="Session type" items={quizModes} current={mode} onChange={handleModeChange} />
+        <ChipTabs
+          label="Question type"
+          items={questionTypeFilters}
+          current={questionType}
+          onChange={handleQuestionTypeChange}
+        />
         <div className="empty-state">No exercises found for this mode yet.</div>
       </section>
     );
@@ -300,7 +470,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
           );
         })}
       </div>
-      <ChipTabs label="Session type" items={quizModes} current={mode} onChange={setMode} />
+      <ChipTabs label="Session type" items={quizModes} current={mode} onChange={handleModeChange} />
+      <ChipTabs
+        label="Question type"
+        items={questionTypeFilters}
+        current={questionType}
+        onChange={handleQuestionTypeChange}
+      />
       <article className="quiz-card">
         <div className="quiz-meta">
           <span data-testid="quiz-index">
@@ -334,15 +510,17 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
         {"question" in exercise ? <p className="question-line">{exercise.question}</p> : null}
 
         <div className="quiz-controls">
-          <AudioButton text={exercise.prompt.audioText} settings={settings} />
-          <label className="toggle">
-            <input
-              type="checkbox"
-              checked={settings.autoAudio}
-              onChange={(event) => onSettingsChange({ autoAudio: event.target.checked })}
-            />
-            Auto audio
-          </label>
+          {promptAudioText ? <AudioButton text={promptAudioText} settings={settings} /> : null}
+          {promptAudioText ? (
+            <label className="toggle">
+              <input
+                type="checkbox"
+                checked={settings.autoAudio}
+                onChange={(event) => onSettingsChange({ autoAudio: event.target.checked })}
+              />
+              Auto audio
+            </label>
+          ) : null}
           {!feedback ? (
             <>
               <button type="button" className="secondary-button" onClick={handleShowAnswer}>
@@ -387,6 +565,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
           </div>
         ) : (
           <div className="free-answer">
+            <p className="answer-hint">{answerInstruction(exercise)}</p>
             {"tokens" in exercise && exercise.tokens.length > 0 ? (
               <div className="token-bank">
                 {exercise.tokens.map((token) => (
@@ -441,6 +620,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       <StickyFeedback feedback={feedback} settings={settings} />
       <p className="sr-only">
         Active mode: {quizModes.find((item) => isActiveQuizMode(mode, item.id))?.label ?? mode}
+        {"; "}
+        Active question type: {questionTypeFilters.find((item) => isActiveQuizType(questionType, item.id))?.label ?? questionType}
       </p>
     </section>
   );

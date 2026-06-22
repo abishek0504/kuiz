@@ -22,8 +22,10 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - `혼합` means integrated sentence practice: sentence builder, correction, time/action, and multi-rule sentence production.
 - Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
 - Recommended is the default quiz session. Session intents are recommended, practice, review, sentence, and listening; they should stay learner-facing rather than exposing low-level task slugs.
+- Question type is separate from focus and session intent. A learner can choose a focus such as `조사` or `숫자·시간`, then narrow the exercise format to multiple choice, fill blank, build, fix, dialogue, reading, or listening.
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.
 - Recommended sessions should include meaning-focused input, form noticing, production or repair, due or weak review, and a fluency item when the content pool allows it.
+- Recommended sessions should avoid repeating the exact same normalized Korean answer across task types unless the filtered content pool is too small to do otherwise.
 - Recommendations must be evidence-based: start broad when there is no review history, then prioritize categories with due reviews, weak items, logged misses, and low production/reception accuracy before adding more new material.
 - Progress should show category diagnostics so learners can see why a focus is recommended, including due work, weak items, misses, and input/output accuracy.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
@@ -32,7 +34,8 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Number distractors must stay in the same number system and be near enough to require real recall.
 - Grammar references should explain separate particle jobs instead of inventing fake monolithic templates.
 - Feedback should explain the actual Korean sentence roles when possible: topic, subject, object, time, place, source/recipient, connector, predicate, and other useful particle jobs.
-- Audio should remain Korean-only.
+- Typed Korean checking should preserve required particles and final predicates, while accepting normal particle spacing cleanup and natural particle-marked word-order variants before the final verb.
+- Audio should remain Korean-only. Pre-answer audio should only appear for listening and dictation tasks, not for ordinary prompts where it reveals the answer.
 - Progress, mistake tags, last mistake reasons, production/reception accuracy, and import history stay local-first.
 - Imported grammar, particle, and connector lessons must contain output or repair tasks, not MCQs only.
 

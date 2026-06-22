@@ -5,7 +5,7 @@ test("mobile quiz shows prompt and core controls without long initial scrolling"
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
 
   await expect(page.locator(".quiz-card h1")).toBeVisible({ timeout: 20000 });
-  await expect(page.getByRole("button", { name: "Listen" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Multiple choice" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Show answer" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Skip" })).toBeVisible();
 
@@ -16,7 +16,7 @@ test("mobile quiz shows prompt and core controls without long initial scrolling"
 test("mode chip highlighting follows selected state", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  const tabs = page.getByRole("tab");
+  const tabs = page.getByRole("tablist", { name: "Session type" }).getByRole("tab");
   await expect(tabs.first()).toHaveAttribute("aria-selected", "true", {
     timeout: 20000,
   });
@@ -25,11 +25,23 @@ test("mode chip highlighting follows selected state", async ({ page }) => {
   await expect(tabs.first()).toHaveAttribute("aria-selected", "false");
 });
 
+test("question type selector can choose multiple choice directly", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+
+  const multipleChoice = page.getByRole("tab", { name: "Multiple choice" });
+  await multipleChoice.click();
+
+  await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
+  await expect(multipleChoice).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("button", { name: "Listen" })).toHaveCount(0);
+});
+
 test("recommended practice starts with scenario input", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
 
-  await expect(page.getByRole("tab").first()).toHaveAttribute("aria-selected", "true", {
+  await expect(page.getByRole("tablist", { name: "Session type" }).getByRole("tab").first()).toHaveAttribute("aria-selected", "true", {
     timeout: 20000,
   });
   await expect(page.locator(".dialogue-card, .reading-card, .choice-grid").first()).toBeVisible({ timeout: 20000 });
@@ -89,7 +101,7 @@ test("practice path opens mixed balanced production", async ({ page }) => {
 
   await page.locator(".path-card").filter({ hasText: "Produce" }).getByRole("button", { name: /Practice/ }).click();
 
-  await expect(page.getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tablist", { name: "Session type" }).getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
   await expect(page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /혼합/ })).toHaveAttribute(
     "aria-pressed",
     "true",
@@ -99,7 +111,7 @@ test("practice path opens mixed balanced production", async ({ page }) => {
 test("listening session renders Korean-only audio practice", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab").nth(4).click();
+  await page.getByRole("tablist", { name: "Session type" }).getByRole("tab").nth(4).click();
 
   await expect(page.getByRole("button", { name: "Listen" })).toBeVisible({ timeout: 20000 });
   await expect(page.getByLabel("Your answer")).toBeVisible();
