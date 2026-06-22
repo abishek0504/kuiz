@@ -1,7 +1,7 @@
 import type { KuizDatabase } from "../db/db";
 import type { EntryRecord, ExerciseRecord, PackRecord } from "../db/schema";
 import { exportAllTables } from "../db/db";
-import { fallbackFingerprint, simpleHash } from "../engine/normalize";
+import { fallbackFingerprint, normalizeEnglish, normalizeKorean, simpleHash } from "../engine/normalize";
 import { initialReviewState } from "../engine/scheduler";
 import type { ContentPack, Entry, Exercise } from "../schemas/contentPack";
 
@@ -22,6 +22,31 @@ export function dedupeIdentity(item: Pick<Entry | Exercise, "dedupeKey"> | Parti
   return "dedupeKey" in item && item.dedupeKey ? item.dedupeKey : fallbackFingerprint(item as Partial<Entry>);
 }
 
+function modelAnswerFor(exercise: Exercise): string {
+  if ("modelAnswer" in exercise) return exercise.modelAnswer;
+  if ("corrected" in exercise) return exercise.corrected;
+  if ("choices" in exercise) return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
+  return "";
+}
+
+function semanticIdentities(item: Entry | Exercise): string[] {
+  const primary = dedupeIdentity(item);
+  if ("kind" in item) {
+    if (item.kind === "vocab") {
+      return [primary, `vocab:${normalizeKorean(item.ko)}:${normalizeEnglish(item.en)}`];
+    }
+    if (item.kind === "particle") {
+      return [primary, `particle:${normalizeKorean(item.form)}:${normalizeEnglish(item.meaning)}`];
+    }
+    return [primary, `grammar:${normalizeKorean(item.pattern)}:${normalizeEnglish(item.meaning)}`];
+  }
+
+  return [
+    primary,
+    `exercise:${item.type}:${normalizeKorean(item.prompt.stemKo ?? item.prompt.stem)}:${normalizeKorean(modelAnswerFor(item))}`,
+  ];
+}
+
 function entrySearchText(entry: Entry): string {
   if (entry.kind === "vocab") return `${entry.ko} ${entry.en} ${entry.tags.join(" ")}`;
   if (entry.kind === "particle") return `${entry.form} ${entry.meaning} ${entry.usage} ${entry.tags.join(" ")}`;
@@ -29,15 +54,10 @@ function entrySearchText(entry: Entry): string {
 }
 
 function exerciseSearchText(exercise: Exercise): string {
-  const model =
-    "modelAnswer" in exercise
-      ? exercise.modelAnswer
-      : "corrected" in exercise
-        ? exercise.corrected
-        : exercise.type === "mcq"
-          ? exercise.choices.find((choice) => choice.isCorrect)?.text ?? ""
-          : "";
-  return `${exercise.prompt.stem} ${exercise.prompt.stemKo ?? ""} ${model} ${exercise.tags.join(" ")}`;
+  const model = modelAnswerFor(exercise);
+  const passage = exercise.type === "reading" ? exercise.passage.ko : "";
+  const dialogue = exercise.type === "dialogue" ? exercise.turns.map((turn) => turn.ko).join(" ") : "";
+  return `${exercise.prompt.stem} ${exercise.prompt.stemKo ?? ""} ${passage} ${dialogue} ${model} ${exercise.tags.join(" ")}`;
 }
 
 function toEntryRecord(packId: string, entry: Entry): EntryRecord {
@@ -93,18 +113,22 @@ export async function previewContentPack(
 
   const existingByKey = new Map<string, { id: string; kind: string; hash: string }>();
   for (const entry of existingEntries) {
-    existingByKey.set(dedupeIdentity(entry), {
-      id: entry.id,
-      kind: entry.kind,
-      hash: simpleHash(stripEntryMetadata(entry)),
-    });
+    for (const key of semanticIdentities(stripEntryMetadata(entry))) {
+      existingByKey.set(key, {
+        id: entry.id,
+        kind: entry.kind,
+        hash: simpleHash(stripEntryMetadata(entry)),
+      });
+    }
   }
   for (const exercise of existingExercises) {
-    existingByKey.set(dedupeIdentity(exercise), {
-      id: exercise.id,
-      kind: exercise.type,
-      hash: simpleHash(stripExerciseMetadata(exercise)),
-    });
+    for (const key of semanticIdentities(stripExerciseMetadata(exercise))) {
+      existingByKey.set(key, {
+        id: exercise.id,
+        kind: exercise.type,
+        hash: simpleHash(stripExerciseMetadata(exercise)),
+      });
+    }
   }
 
   const preview: ImportPreview = {
@@ -118,7 +142,7 @@ export async function previewContentPack(
 
   for (const item of [...incomingEntries, ...incomingExercises]) {
     const key = dedupeIdentity(item);
-    const existing = existingByKey.get(key);
+    const existing = semanticIdentities(item).map((candidate) => existingByKey.get(candidate)).find(Boolean);
     if (!existing) {
       preview.creates.push(key);
       continue;
@@ -159,10 +183,14 @@ export async function mergeContentPack(
   ]);
   const existingIdByKey = new Map<string, string>();
   for (const entry of existingEntries) {
-    existingIdByKey.set(dedupeIdentity(entry), entry.id);
+    for (const key of semanticIdentities(stripEntryMetadata(entry))) {
+      existingIdByKey.set(key, entry.id);
+    }
   }
   for (const exercise of existingExercises) {
-    existingIdByKey.set(dedupeIdentity(exercise), exercise.id);
+    for (const key of semanticIdentities(stripExerciseMetadata(exercise))) {
+      existingIdByKey.set(key, exercise.id);
+    }
   }
 
   await database.transaction(
@@ -196,7 +224,7 @@ export async function mergeContentPack(
         .filter((entry) => createKeys.has(dedupeIdentity(entry)) || updateKeys.has(dedupeIdentity(entry)))
         .map((entry) => ({
           ...entry,
-          id: existingIdByKey.get(dedupeIdentity(entry)) ?? entry.id,
+          id: semanticIdentities(entry).map((key) => existingIdByKey.get(key)).find(Boolean) ?? entry.id,
         }))
         .map((entry) => toEntryRecord(packId, entry));
       if (entryRecords.length > 0) {
@@ -207,7 +235,7 @@ export async function mergeContentPack(
         .filter((exercise) => createKeys.has(dedupeIdentity(exercise)) || updateKeys.has(dedupeIdentity(exercise)))
         .map((exercise) => ({
           ...exercise,
-          id: existingIdByKey.get(dedupeIdentity(exercise)) ?? exercise.id,
+          id: semanticIdentities(exercise).map((key) => existingIdByKey.get(key)).find(Boolean) ?? exercise.id,
         }))
         .map((exercise) => toExerciseRecord(packId, exercise));
       if (exerciseRecords.length > 0) {

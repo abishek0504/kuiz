@@ -1,4 +1,4 @@
-import type { ContentPack, Exercise, MCQExercise } from "../schemas/contentPack";
+import type { ContentPack, Exercise, MCQExercise, MinimalPairExercise } from "../schemas/contentPack";
 
 function hasHangul(text: string): boolean {
   return /[가-힣]/u.test(text);
@@ -20,14 +20,16 @@ function isParticleLike(text: string): boolean {
 function modelAnswerFor(exercise: Exercise): string {
   if ("modelAnswer" in exercise) return exercise.modelAnswer;
   if ("corrected" in exercise) return exercise.corrected;
-  if (exercise.type === "mcq") return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
+  if ("choices" in exercise) return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
   return "";
 }
 
-function validateMcq(exercise: MCQExercise, errors: string[]) {
+function validateChoiceExercise(exercise: MCQExercise | MinimalPairExercise, errors: string[]) {
   const label = `exercises.${exercise.id}`;
   const texts = exercise.choices.map((choice) => choice.text.trim());
   const uniqueTexts = new Set(texts.map((text) => text.toLocaleLowerCase()));
+  const correct = exercise.choices.find((choice) => choice.isCorrect)?.text.trim() ?? "";
+  const wrongChoices = exercise.choices.filter((choice) => !choice.isCorrect);
 
   if (exercise.choices.length !== 4) {
     errors.push(`${label}: multiple choice exercises must have exactly 4 choices.`);
@@ -45,6 +47,16 @@ function validateMcq(exercise: MCQExercise, errors: string[]) {
   for (const choice of exercise.choices) {
     if (!choice.isCorrect && !choice.why?.trim()) {
       errors.push(`${label}: every distractor needs a misconception note in "why".`);
+    }
+    if (!choice.isCorrect && /^(wrong|not correct|incorrect)\.?$/iu.test(choice.why?.trim() ?? "")) {
+      errors.push(`${label}: distractor "why" must name a concrete misconception.`);
+    }
+  }
+
+  if (exercise.choiceKind === "full-sentence-meaning" && sentenceLike(correct)) {
+    const muchShorter = wrongChoices.filter((choice) => choice.text.trim().length * 2 < correct.length).length;
+    if (muchShorter >= 3) {
+      errors.push(`${label}: distractors must stay near the same granularity as the correct answer.`);
     }
   }
 
@@ -75,6 +87,9 @@ export function validateContentQuality(pack: ContentPack): string[] {
 
   const audioTexts = [
     ...pack.exercises.map((exercise) => exercise.prompt.audioText),
+    ...pack.exercises.flatMap((exercise) =>
+      exercise.type === "dialogue" ? exercise.turns.map((turn) => turn.audioText ?? turn.ko) : [],
+    ),
     ...entries.flatMap((entry) => entry.examples.map((example) => example.audioText)),
   ].filter((text): text is string => Boolean(text));
 
@@ -91,17 +106,58 @@ export function validateContentQuality(pack: ContentPack): string[] {
   }
 
   for (const exercise of pack.exercises) {
-    if (exercise.type === "mcq") validateMcq(exercise, errors);
+    if (exercise.type === "mcq" || exercise.type === "minimalPair") validateChoiceExercise(exercise, errors);
     if (/\[[^\]]+\]/u.test(`${exercise.prompt.stem} ${exercise.prompt.stemKo ?? ""} ${modelAnswerFor(exercise)}`)) {
       errors.push(`exercises.${exercise.id}: use concrete Korean sentences instead of bracket placeholders.`);
     }
   }
 
+  const repeatedDistractors = new Map<string, number>();
+  for (const exercise of pack.exercises) {
+    if (exercise.type !== "mcq" || exercise.choiceKind !== "full-sentence-meaning") continue;
+    for (const choice of exercise.choices) {
+      if (!choice.isCorrect) {
+        repeatedDistractors.set(choice.text, (repeatedDistractors.get(choice.text) ?? 0) + 1);
+      }
+    }
+  }
+  for (const [choice, count] of repeatedDistractors) {
+    if (count > 2) {
+      errors.push(`choice "${choice}": generic full-sentence distractor is reused ${count} times.`);
+    }
+  }
+
+  function visitStrings(value: unknown, path: string) {
+    if (typeof value === "string") {
+      if (value.includes("??")) {
+        errors.push(`${path}: visible replacement-marker question marks are not allowed.`);
+      }
+      return;
+    }
+    if (Array.isArray(value)) {
+      value.forEach((child, index) => visitStrings(child, `${path}.${index}`));
+      return;
+    }
+    if (value && typeof value === "object") {
+      Object.entries(value).forEach(([key, child]) => visitStrings(child, `${path}.${key}`));
+    }
+  }
+  visitStrings(pack, "pack");
+
   const hasFormFocusedContent =
     pack.particles.length > 0 ||
     pack.grammar.length > 0 ||
     pack.pack.includes.some((tag) => ["particles", "particle", "grammar", "connectors"].includes(tag));
-  const hasProductionTask = pack.exercises.some((exercise) => exercise.type !== "mcq");
+  const hasProductionTask = pack.exercises.some(
+    (exercise) =>
+      exercise.type === "fillBlank" ||
+      exercise.type === "sentenceBuilder" ||
+      exercise.type === "correction" ||
+      exercise.type === "conjugation" ||
+      exercise.type === "dictation" ||
+      exercise.type === "roleplay" ||
+      exercise.type === "ordering",
+  );
   if (hasFormFocusedContent && !hasProductionTask) {
     errors.push("pack: grammar, particle, and connector lessons must include at least one production or repair task.");
   }

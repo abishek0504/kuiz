@@ -45,12 +45,31 @@ export function planSessionExercises(
 }
 
 const balancedTypeOrder: ExerciseRecord["type"][] = [
+  "dialogue",
+  "reading",
+  "listening",
   "mcq",
+  "minimalPair",
   "fillBlank",
   "sentenceBuilder",
   "correction",
+  "roleplay",
+  "ordering",
+  "dictation",
   "conjugation",
 ];
+
+export function isProductionExercise(exercise: ExerciseRecord): boolean {
+  return ["sentenceBuilder", "correction", "conjugation", "dictation", "roleplay", "ordering"].includes(exercise.type);
+}
+
+export function isInputExercise(exercise: ExerciseRecord): boolean {
+  return ["dialogue", "reading", "listening", "mcq"].includes(exercise.type);
+}
+
+export function isListeningExercise(exercise: ExerciseRecord): boolean {
+  return exercise.type === "listening" || exercise.type === "dictation" || Boolean(exercise.prompt.audioText);
+}
 
 export function planBalancedSessionExercises(
   exercises: ExerciseRecord[],
@@ -77,6 +96,47 @@ export function planBalancedSessionExercises(
     if (!moved) break;
   }
 
+  return planned;
+}
+
+function takeNext(source: ExerciseRecord[], planned: ExerciseRecord[], usedIds: Set<string>) {
+  const next = source.find((exercise) => !usedIds.has(exercise.id));
+  if (!next) return;
+  planned.push(next);
+  usedIds.add(next.id);
+}
+
+export function planRecommendedSessionExercises(
+  exercises: ExerciseRecord[],
+  reviewStates: ReviewState[],
+  now = new Date(),
+): ExerciseRecord[] {
+  const sorted = planSessionExercises(exercises, reviewStates, now);
+  const reviewById = new Map(reviewStates.map((state) => [state.cardId, state]));
+  const dueOrWeak = sorted.filter((exercise) => {
+    const reviewState = reviewById.get(exercise.id);
+    return Boolean(
+      reviewState &&
+        reviewState.reps > 0 &&
+        (new Date(reviewState.dueAt).getTime() <= now.getTime() ||
+          reviewState.lapses > 0 ||
+          reviewState.lastGrade === "again" ||
+          reviewState.lastGrade === "hard"),
+    );
+  });
+  const input = sorted.filter(isInputExercise);
+  const form = sorted.filter((exercise) => exercise.type === "fillBlank" || exercise.type === "minimalPair");
+  const production = sorted.filter(isProductionExercise);
+
+  const planned: ExerciseRecord[] = [];
+  const usedIds = new Set<string>();
+  for (const bucket of [input, input, form, form, production, production, production, dueOrWeak, dueOrWeak, sorted]) {
+    takeNext(bucket, planned, usedIds);
+  }
+  for (const exercise of sorted) {
+    if (planned.length >= 10) break;
+    if (!usedIds.has(exercise.id)) takeNext([exercise], planned, usedIds);
+  }
   return planned;
 }
 

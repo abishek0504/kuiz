@@ -14,17 +14,24 @@ import {
   type PracticeCategoryId,
 } from "../../engine/practiceCategories";
 import { initialReviewState, review, type ReviewState } from "../../engine/scheduler";
-import { planBalancedSessionExercises, planSessionExercises, sessionSummary } from "../../engine/sessionPlanner";
+import {
+  isListeningExercise,
+  isProductionExercise,
+  planBalancedSessionExercises,
+  planRecommendedSessionExercises,
+  planSessionExercises,
+  sessionSummary,
+} from "../../engine/sessionPlanner";
 import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
 import { isActiveQuizMode, type QuizMode } from "../../engine/tabs";
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
-  { id: "balanced", label: "Balanced" },
-  { id: "mcq", label: "Multiple choice" },
-  { id: "fillBlank", label: "Fill blank" },
-  { id: "sentenceBuilder", label: "Sentence builder" },
-  { id: "correction", label: "Corrections" },
+  { id: "recommended", label: "추천" },
+  { id: "practice", label: "연습" },
+  { id: "review", label: "복습" },
+  { id: "sentence", label: "문장" },
+  { id: "listening", label: "듣기" },
 ];
 
 const technicalTags = new Set([
@@ -34,6 +41,13 @@ const technicalTags = new Set([
   "sentence-builder",
   "correction",
   "conjugation",
+  "dialogue",
+  "reading",
+  "listening",
+  "dictation",
+  "roleplay",
+  "ordering",
+  "minimalPair",
   "card",
 ]);
 
@@ -45,13 +59,18 @@ type QuizScreenProps = {
 };
 
 function exerciseMatchesMode(exercise: ExerciseRecord, mode: QuizMode): boolean {
-  if (mode === "balanced") return true;
-  if (mode === "correction") return exercise.type === "correction" || exercise.type === "conjugation";
-  return exercise.type === mode;
+  if (mode === "recommended" || mode === "practice" || mode === "review") return true;
+  if (mode === "sentence") return isProductionExercise(exercise);
+  if (mode === "listening") return isListeningExercise(exercise);
+  return true;
+}
+
+function isChoiceExercise(exercise: ExerciseRecord): exercise is Extract<ExerciseRecord, { type: "mcq" | "minimalPair" }> {
+  return exercise.type === "mcq" || exercise.type === "minimalPair";
 }
 
 function getModelAnswer(exercise: ExerciseRecord): string {
-  if (exercise.type === "mcq") return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
+  if (isChoiceExercise(exercise)) return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
   if (exercise.type === "correction") return exercise.corrected;
   return exercise.modelAnswer;
 }
@@ -80,7 +99,7 @@ function answerDetails(
 }
 
 export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
-  const [mode, setMode] = useState<QuizMode>("balanced");
+  const [mode, setMode] = useState<QuizMode>("recommended");
   const [index, setIndex] = useState(0);
   const [activeExerciseId, setActiveExerciseId] = useState<string | null>(null);
   const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
@@ -98,9 +117,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }, [exercises, mode, settings.focusTags]);
   const sessionExercises = useMemo(
     () =>
-      mode === "balanced"
-        ? planBalancedSessionExercises(modeExercises, reviewStates)
-        : planSessionExercises(modeExercises, reviewStates),
+      mode === "recommended"
+        ? planRecommendedSessionExercises(modeExercises, reviewStates)
+        : mode === "review"
+          ? planSessionExercises(modeExercises, reviewStates)
+          : planBalancedSessionExercises(modeExercises, reviewStates),
     [mode, modeExercises, reviewStates],
   );
   const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
@@ -113,7 +134,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     .map(labelForTag)
     .join(" · ");
   const displayedChoices = useMemo(
-    () => (exercise?.type === "mcq" ? orderChoices(exercise.choices, exercise.id) : []),
+    () => (exercise && isChoiceExercise(exercise) ? orderChoices(exercise.choices, exercise.id) : []),
     [exercise],
   );
   const selectedTags = settings.focusTags ?? [];
@@ -131,7 +152,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }, [mode]);
 
   useEffect(() => {
-    setMode("balanced");
+    setMode("recommended");
     setIndex(0);
     setActiveExerciseId(null);
     setSelectedChoiceId(null);
@@ -183,8 +204,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     setFeedback(undefined);
   }
 
-  async function handleMcqChoice(choiceId: string) {
-    if (!exercise || exercise.type !== "mcq" || feedback) return;
+  async function handleChoice(choiceId: string) {
+    if (!exercise || !isChoiceExercise(exercise) || feedback) return;
     const choice = exercise.choices.find((item) => item.id === choiceId);
     if (!choice) return;
     setSelectedChoiceId(choiceId);
@@ -197,7 +218,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }
 
   async function handleCheck() {
-    if (!exercise || exercise.type === "mcq") return;
+    if (!exercise || isChoiceExercise(exercise)) return;
     const accepted =
       "acceptedAnswers" in exercise
         ? {
@@ -231,7 +252,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   if (!exercise) {
     return (
       <section className="stack">
-        <ChipTabs label="Quiz modes" items={quizModes} current={mode} onChange={setMode} />
+        <ChipTabs label="Session type" items={quizModes} current={mode} onChange={setMode} />
         <div className="empty-state">No exercises found for this mode yet.</div>
       </section>
     );
@@ -255,7 +276,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
           );
         })}
       </div>
-      <ChipTabs label="Quiz modes" items={quizModes} current={mode} onChange={setMode} />
+      <ChipTabs label="Session type" items={quizModes} current={mode} onChange={setMode} />
       <article className="quiz-card">
         <div className="quiz-meta">
           <span data-testid="quiz-index">
@@ -269,6 +290,24 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
         <h1>{exercise.prompt.stem}</h1>
         {exercise.prompt.stemKo ? <p className="korean-prompt">{exercise.prompt.stemKo}</p> : null}
         {exercise.prompt.context ? <p>{exercise.prompt.context}</p> : null}
+        {exercise.communicativeGoal ? <p className="goal-line">Goal: {exercise.communicativeGoal}</p> : null}
+        {exercise.type === "dialogue" ? (
+          <div className="dialogue-card" aria-label="Dialogue">
+            {exercise.turns.map((turn, turnIndex) => (
+              <p key={`${turn.speaker}-${turnIndex}`}>
+                <strong>{turn.speaker}</strong>
+                <span>{turn.ko}</span>
+              </p>
+            ))}
+          </div>
+        ) : null}
+        {exercise.type === "reading" ? (
+          <div className="reading-card" aria-label="Reading passage">
+            {exercise.passage.title ? <h2>{exercise.passage.title}</h2> : null}
+            <p>{exercise.passage.ko}</p>
+          </div>
+        ) : null}
+        {"question" in exercise ? <p className="question-line">{exercise.question}</p> : null}
 
         <div className="quiz-controls">
           <AudioButton text={exercise.prompt.audioText} settings={settings} />
@@ -296,7 +335,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
           )}
         </div>
 
-        {exercise.type === "mcq" ? (
+        {isChoiceExercise(exercise) ? (
           <div className={feedback ? "choice-grid answered" : "choice-grid"} aria-label="Answer choices">
             {displayedChoices.map((choice) => (
               <button
@@ -309,7 +348,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
                       : "choice selected incorrect"
                     : "choice"
                 }
-                onClick={() => handleMcqChoice(choice.id)}
+                onClick={() => handleChoice(choice.id)}
               >
                 {choice.text}
               </button>
@@ -331,6 +370,20 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
                 ))}
               </div>
             ) : null}
+            {"chunks" in exercise && exercise.chunks.length > 0 ? (
+              <div className="token-bank" aria-label="Ordering chunks">
+                {exercise.chunks.map((chunk) => (
+                  <button
+                    key={chunk}
+                    type="button"
+                    className="token"
+                    onClick={() => setInput((current) => `${current} ${chunk}`.trim())}
+                  >
+                    {chunk}
+                  </button>
+                ))}
+              </div>
+            ) : null}
             {"incorrect" in exercise ? <p className="incorrect-source">{exercise.incorrect}</p> : null}
             <label className="field-label" htmlFor="free-response">
               Your answer
@@ -346,7 +399,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
                 }
               }}
             />
-            {!feedback ? (
+            {!feedback && input.trim() ? (
               <button type="button" className="primary-button" disabled={!input.trim()} onClick={handleCheck}>
                 Check
               </button>

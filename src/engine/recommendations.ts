@@ -6,6 +6,7 @@ import {
   type PracticeCategoryId,
 } from "./practiceCategories";
 import type { ReviewState } from "./scheduler";
+import { isProductionExercise } from "./sessionPlanner";
 
 export type CategoryInsight = {
   category: PracticeCategory;
@@ -24,10 +25,6 @@ export type PracticeRecommendation = {
   reason: string;
   insight: CategoryInsight;
 };
-
-function isProductionExercise(exercise: ExerciseRecord): boolean {
-  return exercise.type === "sentenceBuilder" || exercise.type === "correction" || exercise.type === "conjugation";
-}
 
 function exerciseMatchesCategory(exercise: ExerciseRecord, categoryId: PracticeCategoryId): boolean {
   const tags = tagsForPracticeCategory(categoryId);
@@ -95,7 +92,7 @@ export function recommendedPractice(
   if (reviewedCount === 0) {
     return {
       categoryId: "all",
-      title: "Balanced full-deck session",
+      title: "Build a balanced Korean baseline",
       reason: "Start broad so Kuiz can collect a signal before narrowing your review.",
       insight: fullDeck,
     };
@@ -115,8 +112,8 @@ export function recommendedPractice(
   if (best.due > 0 || best.weak > 0) {
     return {
       categoryId: best.category.id,
-      title: `${best.category.label} repair session`,
-      reason: `${best.due} due and ${best.weak} weak items need review before adding more new material.`,
+      title: `Practice ${best.category.label} where mistakes are piling up`,
+      reason: `${best.due} due reviews, ${best.weak} weak items, and ${best.production} production tasks available.`,
       insight: best,
     };
   }
@@ -125,15 +122,15 @@ export function recommendedPractice(
   if (mixed) {
     return {
       categoryId: "mixed",
-      title: "Mixed sentence production",
-      reason: "No weak lane stands out, so move from recognition into integrated sentence work.",
+      title: "Build mixed Korean sentences",
+      reason: `${mixed.production} production tasks are ready, and no single weak lane stands out.`,
       insight: mixed,
     };
   }
 
   return {
     categoryId: "all",
-    title: "Balanced full-deck session",
+    title: "Interleave the full Korean deck",
     reason: "Keep the deck interleaved so particles, grammar, vocab, and production stay connected.",
     insight: fullDeck,
   };

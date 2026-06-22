@@ -63,7 +63,7 @@ describe("practice recommendations", () => {
     );
 
     expect(recommendation.categoryId).toBe("all");
-    expect(recommendation.title).toMatch(/Balanced/);
+    expect(recommendation.title).toMatch(/balanced Korean baseline/);
   });
 
   test("targets the category with due and weak review pressure", () => {

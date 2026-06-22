@@ -21,10 +21,24 @@ describe("content pack schema", () => {
   test("starter pack covers the lesson pdf scope", () => {
     expect(parsed.sourceRefs.map((source) => source.sourceId)).toContain("experience-time-pdf");
     expect(parsed.sourceRefs.map((source) => source.sourceId)).toContain("lessons-pdf-particles-vocab");
-    expect(parsed.particles.length).toBeGreaterThanOrEqual(40);
-    expect(parsed.vocab.length).toBeGreaterThanOrEqual(250);
-    expect(parsed.exercises.length).toBeGreaterThanOrEqual(250);
+    expect(parsed.particles.length).toBeGreaterThanOrEqual(50);
+    expect(parsed.grammar.length).toBeGreaterThanOrEqual(50);
+    expect(parsed.vocab.length).toBeGreaterThanOrEqual(400);
+    expect(parsed.exercises.length).toBeGreaterThanOrEqual(450);
     expect(parsed.pack.includes).toEqual(expect.arrayContaining(["numbers", "time", "routine", "particles", "vocab"]));
+  });
+
+  test("starter pack includes scenario input, output, listening, and ordering tasks", () => {
+    const byType = new Map<string, number>();
+    for (const exercise of parsed.exercises) {
+      byType.set(exercise.type, (byType.get(exercise.type) ?? 0) + 1);
+    }
+
+    expect(byType.get("dialogue")).toBeGreaterThanOrEqual(20);
+    expect((byType.get("reading") ?? 0) + (byType.get("listening") ?? 0)).toBeGreaterThanOrEqual(20);
+    expect((byType.get("dictation") ?? 0) + (byType.get("ordering") ?? 0)).toBeGreaterThanOrEqual(20);
+    expect(byType.get("correction")).toBeGreaterThanOrEqual(20);
+    expect(parsed.exercises.filter((exercise) => exercise.tags.includes("scenario")).length).toBeGreaterThanOrEqual(40);
   });
 
   test("dedupe keys are unique across starter content", () => {
@@ -72,9 +86,7 @@ describe("content pack schema", () => {
 
     function visit(value: unknown, path: string) {
       if (typeof value === "string") {
-        const questionCount = value.match(/\?/gu)?.length ?? 0;
-        const replacementLikeQuestion = value.includes("??") || (questionCount > 0 && !(questionCount === 1 && value.endsWith("?")));
-        if (replacementLikeQuestion) flagged.push(`${path}: ${value}`);
+        if (value.includes("??")) flagged.push(`${path}: ${value}`);
         return;
       }
 

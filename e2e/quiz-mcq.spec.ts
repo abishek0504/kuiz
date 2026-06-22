@@ -1,9 +1,19 @@
 import { expect, test } from "@playwright/test";
 
-test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
+async function openNumberMcq(page: import("@playwright/test").Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab", { name: "Multiple choice" }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button").nth(2).click();
+  await page.getByRole("tab").nth(1).click();
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    if ((await page.locator(".choice").count()) > 0) break;
+    await page.getByRole("button", { name: "Skip" }).click();
+  }
+  await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
+}
+
+test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
+  await openNumberMcq(page);
 
   await expect(page.getByText(/Smart order:/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Next" })).toHaveCount(0);
@@ -13,12 +23,12 @@ test("mcq selection reveals sticky feedback and Next", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
 });
 
-test("mcq feedback explains Korean sentence roles", async ({ page }) => {
+test("feedback explains Korean sentence roles", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab", { name: "Multiple choice" }).click();
 
-  await page.locator(".choice").first().click();
+  await expect(page.locator(".quiz-card h1")).toBeVisible({ timeout: 20000 });
+  await page.getByRole("button", { name: "Show answer" }).click();
   await page.getByText("Why this answer?").click();
 
   await expect(page.getByText("Sentence breakdown")).toBeVisible();

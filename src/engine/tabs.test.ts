@@ -8,8 +8,8 @@ describe("tab highlighting", () => {
   });
 
   test("quiz chip active state derives from selected mode", () => {
-    expect(isActiveQuizMode("balanced", "balanced")).toBe(true);
-    expect(isActiveQuizMode("fillBlank", "fillBlank")).toBe(true);
-    expect(isActiveQuizMode("fillBlank", "mcq")).toBe(false);
+    expect(isActiveQuizMode("recommended", "recommended")).toBe(true);
+    expect(isActiveQuizMode("sentence", "sentence")).toBe(true);
+    expect(isActiveQuizMode("sentence", "listening")).toBe(false);
   });
 });

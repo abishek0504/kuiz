@@ -6,14 +6,16 @@
 - Renamed and branded the app as Kuiz.
 - Added a validated `kuiz-pack@1` seed pack from the lesson PDF and supporting lesson references:
   - 1 starter pack
-  - 374 entries
-  - 310 exercises
-  - 41 particle entries
-  - 310 vocabulary entries
-  - 23 grammar entries
-- Covered particles, vocab, numbers, native/Sino number practice, time/date expressions, routine language, progressive grammar, purpose/necessity patterns, corrections, conjugations, and sentence production.
-- Implemented quiz modes for multiple choice, fill blank, sentence builder, corrections, and conjugation practice.
-- Added `Balanced` as the default Quiz session mode so learners move across recognition, blanks, sentence building, repair, and conjugation instead of staying in MCQs by default.
+  - 524 entries
+  - 505 exercises
+  - 51 particle entries
+  - 420 vocabulary entries
+  - 53 grammar entries
+- Covered particles, vocab, numbers, native/Sino number practice, time/date expressions, routine language, progressive grammar, purpose/necessity patterns, corrections, conjugations, sentence production, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
+- Extended `kuiz-pack@1` in a backward-compatible way with optional skill, level, scenario, register, communicativeGoal, and rubric metadata.
+- Added new exercise types: `dialogue`, `reading`, `listening`, `dictation`, `roleplay`, `ordering`, and `minimalPair`.
+- Replaced low-level visible Quiz modes with learner-facing session intents: recommended, practice, review, sentence, and listening.
+- Added `Recommended` as the default Quiz session mode so learners move across scenario input, form noticing, production, repair, due review, and fluency instead of staying in MCQs by default.
 - Added a guided Practice Path on Home so sessions move from meaning input, to form noticing, to integrated production, then fluency review.
 - Added a Recommended next card on Home that starts broad for new learners and later targets categories with due or weak review pressure.
 - Added Progress focus diagnostics that rank learner-facing categories by due reviews, weak answers, fresh items, and production practice.
@@ -38,8 +40,12 @@
 - Kept full particle mode enabled by default with strict particle checking.
 - Added Korean-only speech synthesis filtering and `ko-KR` speech defaults.
 - Added JSON import/update workflow with schema validation, quality validation, duplicate detection, create/update/skip/conflict preview, rollback snapshots, and transactional merge.
-- Added import quality checks for Korean-only audio, non-revealing MCQ source order, no bare numeric filler, same-granularity sentence choices, misconception notes on distractors, bracket-template rejection, and production/repair tasks for grammar or particle lessons.
+- Added import quality checks for Korean-only audio, non-revealing MCQ source order, no bare numeric filler, same-granularity sentence choices, misconception notes on distractors, repeated generic sentence distractors, bracket-template rejection, replacement-marker rejection, and production/repair tasks for grammar or particle lessons.
+- Strengthened duplicate detection with semantic matching over normalized Korean text, exercise type, prompt, and model/correct answer so revised lesson packs update instead of duplicating.
+- Expanded import preview with type counts, major-lane counts, update/skip/conflict samples, and copyable validation errors.
 - Added `Copy ChatGPT update prompt` so future lessons can be converted into valid `kuiz-pack@1` JSON, with the prompt now reflecting the same quality gates as the parser.
+- Added a reproducible starter-pack expansion script at `scripts/expand-starter-pack.mjs`.
+- Optimized first-run starter seeding so empty databases install the large static pack directly without import snapshots or unnecessary initial review-state rows.
 - Added local-first persistence for settings, review state, mistakes/lapses, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
 - Bumped the app-shell cache and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
@@ -48,10 +54,10 @@
 ## Tested
 
 - `npm audit`: 0 vulnerabilities.
-- `npm run validate:pack`: starter pack parses and validates.
-- `npm run test:run`: 15 test files, 47 tests passing.
+- `npm run validate:pack`: starter pack parses and validates with 505 exercises.
+- `npm run test:run`: 15 test files, 48 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 22 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 24 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
@@ -63,10 +69,12 @@ Coverage includes:
 - Korean Study Focus category labels with no raw `sino-numbers` or `native-numbers` text on Home.
 - Korean Quiz focus category labels with no raw `sino-numbers` or `native-numbers` text in Quiz.
 - Regression checks against raw focus-button labels such as `particles`, `vocab`, `ayo`, `bakke`, `buteo`, and `an`.
-- Sentence breakdown feedback visible after answering a multiple-choice question.
+- Sentence breakdown feedback visible after answering or showing a Korean sentence task.
+- Dialogue tasks render and can be answered.
+- Listening/dictation flow exposes Korean-only audio practice.
 - Separate mixed lane visible on Home.
 - Practice Path opens mixed balanced production.
-- Balanced mode is selected by default and moves from recognition into production on desktop and iPhone viewports.
+- Recommended mode is selected by default and starts with scenario input on desktop and iPhone viewports.
 - Home exposes a Recommended next practice card with direct start behavior.
 - Progress exposes focus diagnostics by category.
 - Adaptive Smart order summary is visible in Quiz.
@@ -88,6 +96,9 @@ Coverage includes:
   - full-sentence Korean MCQ prompts use full-sentence choices
   - full-sentence MCQs do not reuse generic fallback distractors
   - starter pack includes mixed scenario production and repair
+  - starter pack includes at least 20 dialogue tasks
+  - starter pack includes at least 20 reading/listening tasks
+  - starter pack includes at least 20 dictation/ordering tasks
 - Mobile layout checks for iPhone viewport.
 
 ## Verification Screenshots
@@ -99,6 +110,9 @@ Coverage includes:
 - iPhone quiz feedback sentence breakdown: `docs/screenshots/quiz-feedback-breakdown-iphone.png`
 - Desktop Progress diagnostics: `docs/screenshots/progress-diagnostics-desktop.png`
 - iPhone Progress diagnostics: `docs/screenshots/progress-diagnostics-iphone.png`
+- iPhone dialogue task: `docs/screenshots/dialogue-task-iphone.png`
+- iPhone listening task: `docs/screenshots/listening-task-iphone.png`
+- Desktop import preview: `docs/screenshots/library-import-desktop.png`
 - iPhone quiz: `docs/screenshots/kuiz-mobile.png`
 - iPad focus editing reference: `docs/screenshots/kuiz-ipad.png`
 - Desktop JSON import: `docs/screenshots/kuiz-library.png`
@@ -133,6 +147,7 @@ GitHub Pages is configured in `.github/workflows/deploy-pages.yml` and builds wi
 
 ## Known Limitations
 
-- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 149 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The bundled starter content makes the first production JavaScript chunk larger than Vite's default warning threshold. The built file is about 172 KB gzipped; future optimization can lazy-load `content-packs/starter.core.v1.json`.
+- The expanded Korean content is designed for native-speaker review, but it has not been native-speaker verified.
 - The service worker caches the app shell and same-origin assets after first load. Navigations now check the network first and new workers self-activate, but the app does not yet provide a dedicated in-app offline status indicator.
 - Browser speech quality depends on the user's installed Korean voices.

@@ -2,6 +2,9 @@ import { z } from "zod";
 
 const Tag = z.string().min(1).max(48);
 const DedupeKey = z.string().min(3).max(120);
+const SkillSchema = z.enum(["reception", "production", "interaction", "mediation", "languageFocus", "fluency"]);
+const LevelSchema = z.enum(["A0", "A1", "A2", "TOPIK1", "TOPIK2"]);
+const RegisterSchema = z.enum(["casual", "polite", "formal", "neutral"]);
 const IsoDate = z.union([
   z.string().datetime(),
   z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
@@ -77,7 +80,7 @@ export const GrammarEntrySchema = EntryBaseSchema.extend({
 
 export const DistractorGroupSchema = z.object({
   id: z.string().min(1),
-  kind: z.enum(["particle", "meaning", "register", "time", "grammar-form"]),
+  kind: z.enum(["particle", "meaning", "register", "time", "grammar-form", "connector", "vocab", "sentence-meaning"]),
   members: z.array(z.string()).min(2),
   rules: z.array(z.string()).default([]),
 });
@@ -95,6 +98,12 @@ const ExerciseBaseSchema = z.object({
     audioText: z.string().optional(),
     context: z.string().optional(),
   }),
+  skill: SkillSchema.optional(),
+  level: LevelSchema.optional(),
+  scenario: z.string().min(1).max(80).optional(),
+  register: RegisterSchema.optional(),
+  communicativeGoal: z.string().min(1).max(160).optional(),
+  rubric: z.array(z.string().min(1).max(180)).optional(),
   explanation: z.string().optional(),
   naturalnessNote: z.string().optional(),
   particleNote: z.string().optional(),
@@ -108,6 +117,8 @@ export const MCQExerciseSchema = ExerciseBaseSchema.extend({
     "phrase-meaning",
     "grammar-form",
     "naturalness",
+    "connector",
+    "vocab",
   ]),
   choices: z
     .array(
@@ -156,12 +167,92 @@ export const ConjugationExerciseSchema = ExerciseBaseSchema.extend({
   modelAnswer: z.string().min(1),
 });
 
+export const DialogueTurnSchema = z.object({
+  speaker: z.string().min(1),
+  ko: z.string().min(1),
+  en: z.string().optional(),
+  audioText: z.string().optional(),
+});
+
+export const DialogueExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("dialogue"),
+  turns: z.array(DialogueTurnSchema).min(2).max(5),
+  question: z.string().min(1),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const ReadingExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("reading"),
+  passage: z.object({
+    title: z.string().optional(),
+    ko: z.string().min(1),
+    en: z.string().optional(),
+  }),
+  question: z.string().min(1),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const ListeningExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("listening"),
+  question: z.string().min(1),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const DictationExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("dictation"),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const RoleplayExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("roleplay"),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const OrderingExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("ordering"),
+  chunks: z.array(z.string().min(1)).min(2),
+  acceptedAnswers: AcceptedAnswersSchema,
+  modelAnswer: z.string().min(1),
+});
+
+export const MinimalPairExerciseSchema = ExerciseBaseSchema.extend({
+  type: z.literal("minimalPair"),
+  contrast: z.string().min(1),
+  choiceKind: z.enum(["particle", "grammar-form", "naturalness", "connector"]),
+  choices: z
+    .array(
+      z.object({
+        id: z.string(),
+        text: z.string(),
+        isCorrect: z.boolean(),
+        why: z.string().optional(),
+      }),
+    )
+    .min(2)
+    .max(5)
+    .refine((choices) => choices.filter((choice) => choice.isCorrect).length === 1, {
+      message: "Minimal-pair exercises must have exactly one correct choice.",
+    }),
+});
+
 export const ExerciseSchema = z.discriminatedUnion("type", [
   MCQExerciseSchema,
   FillBlankExerciseSchema,
   SentenceBuilderExerciseSchema,
   CorrectionExerciseSchema,
   ConjugationExerciseSchema,
+  DialogueExerciseSchema,
+  ReadingExerciseSchema,
+  ListeningExerciseSchema,
+  DictationExerciseSchema,
+  RoleplayExerciseSchema,
+  OrderingExerciseSchema,
+  MinimalPairExerciseSchema,
 ]);
 
 export const ContentPackSchema = z.object({
@@ -195,4 +286,11 @@ export type FillBlankExercise = z.infer<typeof FillBlankExerciseSchema>;
 export type SentenceBuilderExercise = z.infer<typeof SentenceBuilderExerciseSchema>;
 export type CorrectionExercise = z.infer<typeof CorrectionExerciseSchema>;
 export type ConjugationExercise = z.infer<typeof ConjugationExerciseSchema>;
+export type DialogueExercise = z.infer<typeof DialogueExerciseSchema>;
+export type ReadingExercise = z.infer<typeof ReadingExerciseSchema>;
+export type ListeningExercise = z.infer<typeof ListeningExerciseSchema>;
+export type DictationExercise = z.infer<typeof DictationExerciseSchema>;
+export type RoleplayExercise = z.infer<typeof RoleplayExerciseSchema>;
+export type OrderingExercise = z.infer<typeof OrderingExerciseSchema>;
+export type MinimalPairExercise = z.infer<typeof MinimalPairExerciseSchema>;
 export type ContentPack = z.infer<typeof ContentPackSchema>;

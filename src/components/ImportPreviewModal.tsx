@@ -3,6 +3,7 @@ import { db } from "../db/db";
 import { parsePack } from "../importExport/parsePack";
 import { mergeContentPack, previewContentPack, type ImportPreview } from "../importExport/mergePack";
 import type { ContentPack } from "../schemas/contentPack";
+import { copyText } from "../utils/clipboard";
 
 type ImportPreviewModalProps = {
   open: boolean;
@@ -18,6 +19,24 @@ export function ImportPreviewModal({ open, onClose, onImported }: ImportPreviewM
   const [busy, setBusy] = useState(false);
 
   const canConfirm = useMemo(() => Boolean(pack && preview && preview.conflicts.length === 0), [pack, preview]);
+  const typeCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const exercise of pack?.exercises ?? []) {
+      counts.set(exercise.type, (counts.get(exercise.type) ?? 0) + 1);
+    }
+    return [...counts.entries()].sort(([left], [right]) => left.localeCompare(right));
+  }, [pack]);
+  const laneCounts = useMemo(() => {
+    const lanes = new Map<string, number>();
+    for (const exercise of pack?.exercises ?? []) {
+      for (const tag of exercise.tags) {
+        if (["vocab", "number", "numbers", "grammar", "particles", "connectors", "mixed", "scenario"].includes(tag)) {
+          lanes.set(tag, (lanes.get(tag) ?? 0) + 1);
+        }
+      }
+    }
+    return [...lanes.entries()].sort(([left], [right]) => left.localeCompare(right));
+  }, [pack]);
 
   if (!open) return null;
 
@@ -81,27 +100,64 @@ export function ImportPreviewModal({ open, onClose, onImported }: ImportPreviewM
             {errors.map((error) => (
               <p key={error}>{error}</p>
             ))}
+            <button type="button" className="secondary-button" onClick={() => void copyText(errors.join("\n"))}>
+              Copy errors
+            </button>
           </div>
         ) : null}
         {preview ? (
-          <div className="preview-grid" data-testid="import-preview">
-            <div>
-              <strong>{preview.creates.length}</strong>
-              <span>creates</span>
+          <>
+            <div className="preview-grid" data-testid="import-preview">
+              <div>
+                <strong>{preview.creates.length}</strong>
+                <span>creates</span>
+              </div>
+              <div>
+                <strong>{preview.updates.length}</strong>
+                <span>updates</span>
+              </div>
+              <div>
+                <strong>{preview.skips.length}</strong>
+                <span>skips</span>
+              </div>
+              <div>
+                <strong>{preview.conflicts.length}</strong>
+                <span>conflicts</span>
+              </div>
             </div>
-            <div>
-              <strong>{preview.updates.length}</strong>
-              <span>updates</span>
+            <div className="import-detail-grid">
+              <section>
+                <h3>Exercise types</h3>
+                {typeCounts.map(([type, count]) => (
+                  <p key={type}>
+                    <span>{type}</span>
+                    <strong>{count}</strong>
+                  </p>
+                ))}
+              </section>
+              <section>
+                <h3>Major lanes</h3>
+                {laneCounts.map(([lane, count]) => (
+                  <p key={lane}>
+                    <span>{lane}</span>
+                    <strong>{count}</strong>
+                  </p>
+                ))}
+              </section>
             </div>
-            <div>
-              <strong>{preview.skips.length}</strong>
-              <span>skips</span>
+            <div className="import-conflict-table">
+              {(["updates", "skips", "conflicts"] as const).map((kind) =>
+                preview[kind].length > 0 ? (
+                  <section key={kind}>
+                    <h3>{kind}</h3>
+                    {preview[kind].slice(0, 6).map((key) => (
+                      <code key={key}>{key}</code>
+                    ))}
+                  </section>
+                ) : null,
+              )}
             </div>
-            <div>
-              <strong>{preview.conflicts.length}</strong>
-              <span>conflicts</span>
-            </div>
-          </div>
+          </>
         ) : null}
         <div className="button-row">
           <button type="button" className="primary-button" disabled={busy || raw.trim().length === 0} onClick={handlePreview}>

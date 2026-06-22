@@ -3,12 +3,15 @@ export type ChoiceKind =
   | "full-sentence-meaning"
   | "phrase-meaning"
   | "grammar-form"
-  | "naturalness";
+  | "naturalness"
+  | "connector"
+  | "vocab";
 
 export type GeneratedChoice = {
   id: string;
   text: string;
   isCorrect: boolean;
+  why?: string;
 };
 
 export type MakeMcqChoicesInput = {
@@ -26,12 +29,18 @@ function isFullSentenceMeaning(text: string): boolean {
   return /[.!?]$/.test(text.trim()) || /\b(I|You|He|She|They|It|We)\b/.test(text);
 }
 
+function isSameGranularity(options: string[]): boolean {
+  const longest = Math.max(...options.map((option) => option.trim().length));
+  const shortest = Math.min(...options.map((option) => option.trim().length));
+  return shortest * 3 >= longest;
+}
+
 export function optionsAreHomogeneous(options: string[], kind: ChoiceKind): boolean {
   if (kind === "particle") {
     return options.every(isParticleLike);
   }
   if (kind === "full-sentence-meaning") {
-    return options.every(isFullSentenceMeaning);
+    return options.every(isFullSentenceMeaning) && isSameGranularity(options);
   }
   return true;
 }

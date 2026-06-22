@@ -9,8 +9,8 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 - Local-first storage with IndexedDB via Dexie, so study progress, review state, mistakes, and settings stay on the device.
 - Zod-validated content packs with import preview, dedupe checks, rollback snapshots, and transactional merge.
-- Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, or grammar-only flashcard dumps.
-- Balanced default quiz sessions interleave recognition, blanks, sentence building, corrections, and conjugation instead of starting learners in MCQ-only practice.
+- Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, repeated generic choices, or grammar-only flashcard dumps.
+- Recommended quiz sessions interleave scenario input, form noticing, production, repair, due review, and fluency work instead of starting learners in MCQ-only practice.
 - Recommendation and progress diagnostics use review pressure by category to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
@@ -18,13 +18,14 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers.
 - Simplified FSRS-style scheduler using stability, difficulty, retrievability, lapses, and due dates.
 - Production-only service worker and web manifest for offline use after first load.
+- Expanded starter pack: 420 vocab entries, 51 particle entries, 53 grammar entries, and 505 exercises across MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, ordering, roleplay, and minimal-pair practice.
 - Automated quality gates with unit tests, pack validation, production build, Playwright E2E, and GitHub Actions.
 
 ## Screenshots
 
-| iPhone Recommendation | Desktop Quiz Focus | iPhone Diagnostics |
+| iPhone Recommendation | Desktop Quiz Focus | iPhone Feedback |
 |---|---|---|
-| ![Kuiz iPhone recommendation](docs/screenshots/home-iphone.png) | ![Kuiz desktop quiz focus](docs/screenshots/quiz-focus-desktop.png) | ![Kuiz iPhone progress diagnostics](docs/screenshots/progress-diagnostics-iphone.png) |
+| ![Kuiz iPhone recommendation](docs/screenshots/home-iphone.png) | ![Kuiz desktop quiz focus](docs/screenshots/quiz-focus-desktop.png) | ![Kuiz iPhone sentence feedback](docs/screenshots/quiz-feedback-breakdown-iphone.png) |
 
 ## Tech Stack
 
@@ -41,11 +42,11 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ### Study
 
-Quiz modes include a default Balanced session plus targeted multiple choice, fill-in-the-blank, sentence builder, and correction drills. Balanced sessions use the same learner-facing focus categories while rotating through recognition, production, and repair work. The Home recommendation chooses a broad session for new learners and shifts toward due or weak categories once review history exists. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness.
+Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness.
 
 ### Import Content
 
-Content packs live in `content-packs/` and must use schema `kuiz-pack@1`. The starter pack contains lesson-PDF-derived particles, vocabulary, numbers, time/date expressions, routine practice, grammar patterns, corrections, and sentence-production exercises. The Library screen lets users paste JSON, validate schema and content quality, preview create/update/skip/conflict counts, and merge transactionally into IndexedDB.
+Content packs live in `content-packs/` and must use schema `kuiz-pack@1`. The starter pack contains lesson-PDF-derived particles, vocabulary, numbers, time/date expressions, routine practice, grammar patterns, corrections, sentence production, dialogues, readings, listening, dictation, ordering, roleplay, and minimal-pair exercises. The Library screen lets users paste JSON, validate schema and content quality, preview create/update/skip/conflict counts plus type/lane counts, and merge transactionally into IndexedDB.
 
 The Library screen also includes a `Copy ChatGPT update prompt` workflow. Copy the prompt, paste it into chat with new lesson notes or PDF text, ask for JSON only, then paste the returned pack into `Paste JSON update`.
 
