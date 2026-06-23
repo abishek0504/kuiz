@@ -79,10 +79,12 @@ type PersistedQuizState = {
   input: string;
   feedback?: FeedbackState;
   sessionPlanIds: string[];
+  seenExerciseIds: string[];
   filterSignature: string;
 };
 
-const quizSessionStorageKey = "kuiz.quizSession.v2";
+const quizSessionStorageKey = "kuiz.quizSession.v3";
+const sessionSize = 10;
 
 function isQuizMode(value: unknown): value is QuizMode {
   return typeof value === "string" && quizModes.some((mode) => mode.id === value);
@@ -108,6 +110,9 @@ function readPersistedQuizState(): PersistedQuizState {
       sessionPlanIds: Array.isArray(parsed.sessionPlanIds)
         ? parsed.sessionPlanIds.filter((id): id is string => typeof id === "string")
         : [],
+      seenExerciseIds: Array.isArray(parsed.seenExerciseIds)
+        ? parsed.seenExerciseIds.filter((id): id is string => typeof id === "string")
+        : [],
       filterSignature: typeof parsed.filterSignature === "string" ? parsed.filterSignature : "",
     };
   } catch {
@@ -124,6 +129,7 @@ function emptyPersistedQuizState(): PersistedQuizState {
     selectedChoiceId: null,
     input: "",
     sessionPlanIds: [],
+    seenExerciseIds: [],
     filterSignature: "",
   };
 }
@@ -182,6 +188,34 @@ function filterSignature(mode: QuizMode, questionType: QuizTypeFilter, focusTags
   return JSON.stringify({ mode, questionType, focusTags: [...focusTags].sort() });
 }
 
+function planForMode(mode: QuizMode, exercises: ExerciseRecord[], reviewStates: ReviewState[]): ExerciseRecord[] {
+  if (mode === "recommended") return planRecommendedSessionExercises(exercises, reviewStates);
+  if (mode === "review") return planSessionExercises(exercises, reviewStates);
+  return planBalancedSessionExercises(exercises, reviewStates);
+}
+
+function addUniqueId(ids: string[], id: string | undefined): string[] {
+  if (!id || ids.includes(id)) return ids;
+  return [...ids, id];
+}
+
+function buildSessionPlanIds(
+  mode: QuizMode,
+  exercises: ExerciseRecord[],
+  reviewStates: ReviewState[],
+  seenIds: string[],
+): { planIds: string[]; seenIds: string[] } {
+  const seen = new Set(seenIds);
+  const unseenExercises = exercises.filter((exercise) => !seen.has(exercise.id));
+  const source = unseenExercises.length > 0 ? unseenExercises : exercises;
+  const nextSeenIds = unseenExercises.length > 0 ? seenIds : [];
+  const planIds = planForMode(mode, source, reviewStates)
+    .slice(0, sessionSize)
+    .map((exercise) => exercise.id);
+
+  return { planIds, seenIds: nextSeenIds };
+}
+
 function answerDetails(
   exercise: ExerciseRecord,
 ): Pick<
@@ -211,8 +245,27 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   const [input, setInput] = useState(initialQuizState.input);
   const [feedback, setFeedback] = useState<FeedbackState | undefined>(initialQuizState.feedback);
   const [sessionPlanIds, setSessionPlanIds] = useState<string[]>(initialQuizState.sessionPlanIds);
+  const [seenExerciseIds, setSeenExerciseIds] = useState<string[]>(initialQuizState.seenExerciseIds);
   const [sessionSignature, setSessionSignature] = useState(initialQuizState.filterSignature);
-  const didMountExercise = useRef(false);
+  const previousExerciseId = useRef<string | undefined>(undefined);
+
+  function writePersistedQuizState(patch: Partial<PersistedQuizState> = {}) {
+    if (typeof window === "undefined") return;
+    const nextState: PersistedQuizState = {
+      mode,
+      questionType,
+      index,
+      activeExerciseId,
+      selectedChoiceId,
+      input,
+      feedback,
+      sessionPlanIds,
+      seenExerciseIds,
+      filterSignature: sessionSignature,
+      ...patch,
+    };
+    window.localStorage.setItem(quizSessionStorageKey, JSON.stringify(nextState));
+  }
 
   const modeExercises = useMemo(() => {
     const matchingMode = questionType === "all" ? exercises.filter((exercise) => exerciseMatchesMode(exercise, mode)) : exercises;
@@ -224,22 +277,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     );
     return matchingFocus.length > 0 ? matchingFocus : matchingType;
   }, [exercises, mode, questionType, settings.focusTags]);
-  const plannedExercises = useMemo(
-    () =>
-      mode === "recommended"
-        ? planRecommendedSessionExercises(modeExercises, reviewStates)
-        : mode === "review"
-          ? planSessionExercises(modeExercises, reviewStates)
-          : planBalancedSessionExercises(modeExercises, reviewStates),
-    [mode, modeExercises, reviewStates],
-  );
   const exerciseById = useMemo(() => new Map(modeExercises.map((candidate) => [candidate.id, candidate])), [modeExercises]);
   const sessionExercises = useMemo(() => {
     const restored = sessionPlanIds
       .map((id) => exerciseById.get(id))
       .filter((candidate): candidate is ExerciseRecord => Boolean(candidate));
-    return restored.length > 0 ? restored : plannedExercises;
-  }, [exerciseById, plannedExercises, sessionPlanIds]);
+    return restored;
+  }, [exerciseById, sessionPlanIds]);
   const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
   const exercise =
     sessionExercises.find((candidate) => candidate.id === activeExerciseId) ??
@@ -261,17 +305,33 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   const similarExercise = useMemo(() => {
     if (!exercise || !feedback) return undefined;
     const currentTags = new Set(exercise.tags.filter((tag) => !technicalTags.has(tag)));
-    const candidates = [...sessionExercises, ...modeExercises].filter((candidate) => candidate.id !== exercise.id);
-    return (
-      candidates.find((candidate) => candidate.type === exercise.type && candidate.tags.some((tag) => currentTags.has(tag))) ??
-      candidates.find((candidate) => candidate.tags.some((tag) => currentTags.has(tag))) ??
-      candidates.find((candidate) => candidate.type === exercise.type)
-    );
-  }, [exercise, feedback, modeExercises, sessionExercises]);
+    const currentSessionIds = new Set(sessionPlanIds);
+    const seenIds = new Set(seenExerciseIds);
+    const candidates = modeExercises.filter((candidate) => candidate.id !== exercise.id);
+    const scored = candidates
+      .map((candidate) => {
+        const sharedTagCount = candidate.tags.filter((tag) => currentTags.has(tag)).length;
+        const sameType = candidate.type === exercise.type;
+        const score =
+          (sameType ? 100 : 0) +
+          sharedTagCount * 10 +
+          (!currentSessionIds.has(candidate.id) ? 5 : 0) +
+          (!seenIds.has(candidate.id) ? 3 : 0);
+        return { candidate, score, similar: sameType || sharedTagCount > 0 };
+      })
+      .filter((item) => item.similar)
+      .sort((left, right) => {
+        if (right.score !== left.score) return right.score - left.score;
+        return left.candidate.id.localeCompare(right.candidate.id);
+      });
+
+    return scored[0]?.candidate;
+  }, [exercise, feedback, modeExercises, seenExerciseIds, sessionPlanIds]);
   const promptAudioText = exercise ? getPromptAudioText(exercise) : undefined;
 
   function selectFocus(categoryId: PracticeCategoryId) {
     setSessionSignature("");
+    setSeenExerciseIds([]);
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
   }
 
@@ -285,18 +345,23 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   function handleModeChange(nextMode: QuizMode) {
     setMode(nextMode);
+    setSeenExerciseIds([]);
     setSessionSignature("");
   }
 
   function handleQuestionTypeChange(nextType: QuizTypeFilter) {
     setQuestionType(nextType);
+    setSeenExerciseIds([]);
     setSessionSignature("");
   }
 
   useEffect(() => {
+    if (exercises.length === 0) return;
+
     if (modeExercises.length === 0) {
       setSessionPlanIds([]);
       resetInteraction([]);
+      setSeenExerciseIds([]);
       setSessionSignature(currentFilterSignature);
       return;
     }
@@ -308,27 +373,37 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
     if (validStoredPlan) return;
 
-    const nextPlanIds = plannedExercises.map((candidate) => candidate.id);
-    setSessionPlanIds(nextPlanIds);
-    resetInteraction(nextPlanIds);
+    const nextSession = buildSessionPlanIds(mode, modeExercises, reviewStates, seenExerciseIds);
+    setSeenExerciseIds(nextSession.seenIds);
+    setSessionPlanIds(nextSession.planIds);
+    resetInteraction(nextSession.planIds);
     setSessionSignature(currentFilterSignature);
-  }, [currentFilterSignature, exerciseById, modeExercises.length, plannedExercises, sessionPlanIds, sessionSignature]);
+  }, [
+    currentFilterSignature,
+    exerciseById,
+    exercises.length,
+    mode,
+    modeExercises,
+    reviewStates,
+    seenExerciseIds,
+    sessionPlanIds,
+    sessionSignature,
+  ]);
 
   useLayoutEffect(() => {
-    if (typeof window === "undefined") return;
-    const nextState: PersistedQuizState = {
-      mode,
-      questionType,
-      index,
-      activeExerciseId,
-      selectedChoiceId,
-      input,
-      feedback,
-      sessionPlanIds,
-      filterSignature: sessionSignature,
-    };
-    window.localStorage.setItem(quizSessionStorageKey, JSON.stringify(nextState));
-  }, [activeExerciseId, feedback, index, input, mode, questionType, selectedChoiceId, sessionPlanIds, sessionSignature]);
+    writePersistedQuizState();
+  }, [
+    activeExerciseId,
+    feedback,
+    index,
+    input,
+    mode,
+    questionType,
+    selectedChoiceId,
+    seenExerciseIds,
+    sessionPlanIds,
+    sessionSignature,
+  ]);
 
   useEffect(() => {
     if (sessionExercises.length === 0) {
@@ -341,10 +416,14 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   }, [activeExerciseId, sessionExercises]);
 
   useEffect(() => {
-    if (!didMountExercise.current) {
-      didMountExercise.current = true;
+    if (!exercise?.id) return;
+    if (!previousExerciseId.current) {
+      previousExerciseId.current = exercise.id;
       return;
     }
+    if (previousExerciseId.current === exercise.id) return;
+    previousExerciseId.current = exercise.id;
+
     setSelectedChoiceId(null);
     setInput("");
     setFeedback(undefined);
@@ -370,8 +449,18 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       return;
     }
 
+    const nextSeenIds = addUniqueId(seenExerciseIds, exercise?.id);
     const currentIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
-    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % sessionExercises.length : 0;
+    if (currentIndex >= 0 && currentIndex >= sessionExercises.length - 1) {
+      const nextSession = buildSessionPlanIds(mode, modeExercises, reviewStates, nextSeenIds);
+      setSeenExerciseIds(nextSession.seenIds);
+      setSessionPlanIds(nextSession.planIds);
+      resetInteraction(nextSession.planIds);
+      return;
+    }
+
+    const nextIndex = currentIndex >= 0 ? currentIndex + 1 : 0;
+    setSeenExerciseIds(nextSeenIds);
     setIndex(nextIndex);
     setActiveExerciseId(sessionExercises[nextIndex]?.id ?? null);
     setSelectedChoiceId(null);
@@ -382,7 +471,17 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   function moveToSimilar() {
     if (!similarExercise) return;
     const nextIndex = sessionExercises.findIndex((candidate) => candidate.id === similarExercise.id);
-    setIndex(nextIndex >= 0 ? nextIndex : 0);
+    const currentIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
+    if (nextIndex < 0) {
+      const replacementIndex = currentIndex >= 0 ? currentIndex : Math.min(index, sessionPlanIds.length - 1);
+      const nextPlanIds = [...sessionPlanIds];
+      nextPlanIds[Math.max(0, replacementIndex)] = similarExercise.id;
+      setSessionPlanIds(nextPlanIds);
+      setIndex(Math.max(0, replacementIndex));
+    } else {
+      setIndex(nextIndex);
+    }
+    setSeenExerciseIds(addUniqueId(seenExerciseIds, exercise?.id));
     setActiveExerciseId(similarExercise.id);
     setSelectedChoiceId(null);
     setInput("");
@@ -477,7 +576,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
         current={questionType}
         onChange={handleQuestionTypeChange}
       />
-      <article className="quiz-card">
+      <article className="quiz-card" data-testid="quiz-card" data-exercise-id={exercise.id}>
         <div className="quiz-meta">
           <span data-testid="quiz-index">
             {Math.min(index + 1, sessionExercises.length)} / {sessionExercises.length}
@@ -573,7 +672,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
                     key={token}
                     type="button"
                     className="token"
-                    onClick={() => setInput((current) => `${current} ${token}`.trim())}
+                    onClick={() =>
+                      setInput((current) => {
+                        const nextInput = `${current} ${token}`.trim();
+                        writePersistedQuizState({ input: nextInput });
+                        return nextInput;
+                      })
+                    }
                   >
                     {token}
                   </button>
@@ -587,7 +692,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
                     key={chunk}
                     type="button"
                     className="token"
-                    onClick={() => setInput((current) => `${current} ${chunk}`.trim())}
+                    onClick={() =>
+                      setInput((current) => {
+                        const nextInput = `${current} ${chunk}`.trim();
+                        writePersistedQuizState({ input: nextInput });
+                        return nextInput;
+                      })
+                    }
                   >
                     {chunk}
                   </button>
@@ -602,7 +713,10 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
               id="free-response"
               className="text-input"
               value={input}
-              onChange={(event) => setInput(event.target.value)}
+              onChange={(event) => {
+                setInput(event.target.value);
+                writePersistedQuizState({ input: event.target.value });
+              }}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && input.trim()) {
                   void handleCheck();

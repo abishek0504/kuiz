@@ -6,7 +6,7 @@ const mainSource = readFileSync("src/main.tsx", "utf8");
 
 describe("service worker update behavior", () => {
   test("uses a bumped app cache name", () => {
-    expect(source).toContain('const CACHE_NAME = "kuiz-app-v5"');
+    expect(source).toContain('const CACHE_NAME = "kuiz-app-v6"');
   });
 
   test("loads navigations from the network before falling back offline", () => {

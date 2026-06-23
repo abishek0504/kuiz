@@ -12,6 +12,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, repeated generic choices, or grammar-only flashcard dumps.
 - Recommended quiz sessions interleave scenario input, form noticing, production, repair, due review, and fluency work instead of starting learners in MCQ-only practice.
 - Quiz has separate focus and question-type controls, so learners can study a category with only multiple choice, fill blanks, sentence building, corrections, dialogue, reading, or listening.
+- Mini-sessions advance through unseen exercises; finishing a 10-question set creates a fresh batch instead of looping the same cards.
 - Recommendation and progress diagnostics use due reviews, weak answers, logged mistake tags, and production/reception accuracy to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
 - Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
@@ -43,7 +44,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ### Study
 
-Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. A second question-type rail lets learners choose all types or narrow to multiple choice, fill blanks, build, fix, dialogue, reading, or listening. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness and accept natural particle-marked word-order variants when the sentence meaning is unchanged.
+Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. A second question-type rail lets learners choose all types or narrow to multiple choice, fill blanks, build, fix, dialogue, reading, or listening. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Completing a 10-question mini-session moves into the next unseen batch for the same focus/type instead of restarting the same questions. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness and accept natural particle-marked word-order variants when the sentence meaning is unchanged.
 
 ### Import Content
 

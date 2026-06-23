@@ -28,6 +28,8 @@
 - Added full-sentence acceptance for non-sentence fill blanks when the full response contains the correct blank phrase.
 - Fixed session advancement so `Next` and `Skip` move to the next planned item instead of bouncing between the first two planned exercises.
 - Persisted active Quiz state across bottom-tab navigation, including mode, question type, active item, typed input, selected choice, feedback, and planned session order.
+- Fixed mini-session completion so finishing the 10th question builds a fresh batch from unseen exercises instead of wrapping back to the same first question.
+- Updated `Try similar one` to prefer genuinely similar unseen/out-of-session exercises, then replace the current item in the active plan when needed.
 - Reduced within-session repetition by avoiding duplicate normalized Korean model answers across task types in recommended planning.
 - Updated Smart order summaries so unseen initial cards are counted as new/fresh work, not overdue reviews.
 - Separated `Skip` and `Next` behavior: `Skip` is available before grading; `Next` appears only after answering or showing the answer.
@@ -57,7 +59,7 @@
 - Added local-first persistence for settings, review state, mistake tags, last mistake reasons, production/reception accuracy, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
 - Added a compact in-app offline indicator when the browser loses network access.
-- Bumped the app-shell cache to `kuiz-app-v5` and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
+- Bumped the app-shell cache to `kuiz-app-v6` and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
 - Generated Netlify-ready production output in `dist/` with `npm run build`.
 
 ## Tested
@@ -66,13 +68,15 @@
 - `npm run validate:pack`: starter pack parses and validates with 505 exercises.
 - `npm run test:run`: 16 test files, 60 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 28 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 32 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 Coverage includes:
 
 - Quiz flow: answer, feedback, Next button, Skip behavior.
 - Question-type selector for direct multiple-choice practice.
 - Quiz session state persists after switching bottom tabs on desktop and iPhone viewport.
+- Completing a 10-item mini-session advances to a fresh batch instead of restarting the same 10.
+- `Try similar one` moves to a different exercise.
 - Multiple choice UI state and non-sticky pre-highlight behavior.
 - Non-listening task audio controls do not reveal the answer before grading.
 - Import validation and duplicate-detection preview.

@@ -57,3 +57,33 @@ test("quiz state survives switching bottom tabs", async ({ page }) => {
   await expect(page.locator(".quiz-card h1")).toHaveText(heading ?? "");
   await expect(page.getByLabel("Your answer")).toHaveValue("테스트");
 });
+
+test("finishing a mini session advances to a fresh batch", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.getByRole("tab", { name: "Multiple choice" }).click();
+
+  await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
+  const firstSessionIds = new Set<string>();
+  const sessionText = (await page.getByTestId("quiz-index").textContent()) ?? "1 / 10";
+  const sessionTotal = Number(sessionText.split("/").at(1)?.trim() ?? "10");
+
+  for (let count = 0; count < sessionTotal; count += 1) {
+    firstSessionIds.add((await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "");
+    await page.getByRole("button", { name: "Skip" }).click();
+  }
+
+  const nextSessionFirstId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";
+  expect(firstSessionIds.has(nextSessionFirstId)).toBe(false);
+  await expect(page.getByTestId("quiz-index")).toContainText("/");
+});
+
+test("try similar moves to a different exercise", async ({ page }) => {
+  await openNumberMcq(page);
+
+  const initialId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";
+  await page.locator(".choice").first().click();
+  await page.getByRole("button", { name: "Try similar one" }).click();
+
+  await expect(page.getByTestId("quiz-card")).not.toHaveAttribute("data-exercise-id", initialId);
+});

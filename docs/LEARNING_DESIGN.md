@@ -26,6 +26,8 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.
 - Recommended sessions should include meaning-focused input, form noticing, production or repair, due or weak review, and a fluency item when the content pool allows it.
 - Recommended sessions should avoid repeating the exact same normalized Korean answer across task types unless the filtered content pool is too small to do otherwise.
+- Mini-sessions should progress through unseen exercises for the active focus and question type. Finishing a 10-item set should build a new batch from the remaining pool, only resetting once that filtered pool is exhausted.
+- Similar-question practice should prefer same exercise type plus shared learner-facing tags, and should not simply jump back into the same completed card.
 - Recommendations must be evidence-based: start broad when there is no review history, then prioritize categories with due reviews, weak items, logged misses, and low production/reception accuracy before adding more new material.
 - Progress should show category diagnostics so learners can see why a focus is recommended, including due work, weak items, misses, and input/output accuracy.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
