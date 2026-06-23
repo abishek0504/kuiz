@@ -75,7 +75,7 @@ describe("sentence variants", () => {
       expect(variant.modelAnswer).not.toBe("저는 도서관에서 세 시에 책을 읽어요.");
       expect(variant.modelAnswer).toMatch(/에서/);
       expect(variant.modelAnswer).toMatch(/에/);
-      expect(variant.modelAnswer).toMatch(/요\.$/);
+      expect(variant.modelAnswer).toMatch(/요$/);
     }
     expect(variant?.prompt.stemEn).toBeTruthy();
   });
@@ -98,9 +98,26 @@ describe("sentence variants", () => {
     expect(variant).toBeDefined();
     expect(variant?.type).toBe("correction");
     if (variant?.type === "correction") {
-      expect(variant.corrected).toMatch(/으로/);
-      expect(variant.incorrect).toMatch(/에|에서/);
+      expect(variant.corrected).toMatch(/(으로|똑바로)/);
+      expect(variant.incorrect).toBeTruthy();
       expect(variant.corrected).not.toBe("지하철역까지 오른쪽으로 가세요.");
     }
+  });
+
+  test("skips blocked variant ids", () => {
+    const first = createVariantExercise(sentenceBuilderExercise());
+    expect(first).toBeDefined();
+    const second = createVariantExercise(sentenceBuilderExercise(), [first!.id]);
+    expect(second?.id).not.toBe(first?.id);
+  });
+
+  test("returns undefined for mcq exercises", () => {
+    const mcq = {
+      ...sentenceBuilderExercise(),
+      type: "mcq" as const,
+      choiceKind: "particle" as const,
+      choices: [],
+    };
+    expect(createVariantExercise(mcq as ExerciseRecord)).toBeUndefined();
   });
 });

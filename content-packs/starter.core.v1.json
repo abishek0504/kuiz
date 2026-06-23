@@ -12835,6 +12835,7 @@
       },
       "acceptedAnswers": {
         "strict": [
+          "부터 까지",
           "부터 저녁까지",
           "부터 저녁 까지"
         ],
@@ -12985,8 +12986,7 @@
       "choiceKind": "phrase-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13032,8 +13032,7 @@
       "choiceKind": "phrase-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13079,8 +13078,7 @@
       "choiceKind": "phrase-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13126,8 +13124,7 @@
       "choiceKind": "phrase-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13173,8 +13170,7 @@
       "choiceKind": "phrase-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13220,8 +13216,7 @@
       "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13267,8 +13262,7 @@
       "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13314,8 +13308,7 @@
       "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"
@@ -13361,8 +13354,7 @@
       "choiceKind": "full-sentence-meaning",
       "tags": [
         "mcq",
-        "progressive",
-        "card"
+        "progressive"
       ],
       "sourceRefIds": [
         "legacy-v13-html"

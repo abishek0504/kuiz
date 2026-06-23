@@ -73,4 +73,43 @@ describe("particle strictness", () => {
     expect(result.correct).toBe(true);
     expect(result.note).toMatch(/particle sequence/);
   });
+
+  test("rejects wrong particle roles even when word order is close", () => {
+    const result = checkAnswer({
+      model: "저는 도서관에서 세 시에 책을 읽어요.",
+      input: "저는 도서관에 세 시에서 책을 읽어요.",
+      strictness: "strict",
+    });
+    expect(result.correct).toBe(false);
+  });
+
+  test("rejects past tense when target is present", () => {
+    const result = checkAnswer({
+      model: "저는 도서관에서 책을 읽어요.",
+      input: "저는 도서관에서 책을 읽었어요.",
+      strictness: "strict",
+    });
+    expect(result.correct).toBe(false);
+    expect(result.note).toMatch(/tense|ending/i);
+  });
+
+  test("rejects negation when target is affirmative", () => {
+    const result = checkAnswer({
+      model: "저는 도서관에서 책을 읽어요.",
+      input: "저는 도서관에서 책을 안 읽어요.",
+      strictness: "strict",
+    });
+    expect(result.correct).toBe(false);
+    expect(result.note).toMatch(/Negation/i);
+  });
+
+  test("rejects English-only answers for Korean production", () => {
+    const result = checkAnswer({
+      model: "저는 도서관에서 책을 읽어요.",
+      input: "I read a book at the library.",
+      strictness: "strict",
+    });
+    expect(result.correct).toBe(false);
+    expect(result.note).toMatch(/Hangul/i);
+  });
 });

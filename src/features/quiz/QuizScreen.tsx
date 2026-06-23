@@ -3,12 +3,14 @@ import { ChipTabs } from "../../components/ChipTabs";
 import { AudioButton } from "../../components/AudioButton";
 import { StickyFeedback, type FeedbackState } from "../../components/StickyFeedback";
 import { db } from "../../db/db";
-import type { ExerciseRecord, UserSettings } from "../../db/schema";
+import type { EntryRecord, ExerciseRecord, UserSettings } from "../../db/schema";
 import { checkAnswer, extractParticleSequence } from "../../engine/answerCheck";
+import { feedbackModelAnswer, getModelAnswer, getTranslation, type RuntimeExerciseRecord } from "../../engine/quizFeedback";
 import { orderChoices } from "../../engine/choiceOrder";
 import { applyAnswerAnalytics } from "../../engine/mistakeAnalytics";
 import {
   categoryMatchesSelectedTags,
+  isCoreParticleExercise,
   labelForTag,
   practiceCategories,
   tagsForPracticeCategory,
@@ -25,7 +27,16 @@ import {
 } from "../../engine/sessionPlanner";
 import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
 import { isActiveQuizMode, isActiveQuizType, type QuizMode, type QuizTypeFilter } from "../../engine/tabs";
+import {
+  buildRuntimeVocabExercises,
+  countVocabPracticeExercises,
+  isVocabPracticeExercise,
+  shouldAugmentVocabPool,
+  type RuntimeVocabExerciseRecord,
+} from "../../engine/vocabPractice";
 import { createVariantExercise, type VariantExerciseRecord } from "../../engine/variants";
+import { SessionCompletePanel } from "./SessionCompletePanel";
+import { emptyBatchStats, recordBatchAnswer, recordBatchSkip, type SessionBatchStats } from "../../engine/sessionStats";
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
@@ -66,6 +77,7 @@ const technicalTags = new Set([
 ]);
 
 type QuizScreenProps = {
+  entries: EntryRecord[];
   exercises: ExerciseRecord[];
   reviewStates: ReviewState[];
   settings: UserSettings;
@@ -84,11 +96,11 @@ type PersistedQuizState = {
   seenExerciseIds: string[];
   variantExercises: VariantExerciseRecord[];
   filterSignature: string;
+  batchStats: SessionBatchStats;
+  showSessionComplete: boolean;
 };
 
-type RuntimeExerciseRecord = ExerciseRecord | VariantExerciseRecord;
-
-const quizSessionStorageKey = "kuiz.quizSession.v4";
+const quizSessionStorageKey = "kuiz.quizSession.v5";
 const sessionSize = 10;
 
 function isQuizMode(value: unknown): value is QuizMode {
@@ -128,6 +140,25 @@ function readPersistedQuizState(): PersistedQuizState {
           )
         : [],
       filterSignature: typeof parsed.filterSignature === "string" ? parsed.filterSignature : "",
+      batchStats:
+        parsed.batchStats && typeof parsed.batchStats === "object"
+          ? {
+              answered: Number(parsed.batchStats.answered) || 0,
+              correct: Number(parsed.batchStats.correct) || 0,
+              incorrectIds: Array.isArray(parsed.batchStats.incorrectIds)
+                ? parsed.batchStats.incorrectIds.filter((id): id is string => typeof id === "string")
+                : [],
+              tagCorrect:
+                parsed.batchStats.tagCorrect && typeof parsed.batchStats.tagCorrect === "object"
+                  ? (parsed.batchStats.tagCorrect as Record<string, number>)
+                  : {},
+              tagTotal:
+                parsed.batchStats.tagTotal && typeof parsed.batchStats.tagTotal === "object"
+                  ? (parsed.batchStats.tagTotal as Record<string, number>)
+                  : {},
+            }
+          : emptyBatchStats(),
+      showSessionComplete: parsed.showSessionComplete === true,
     };
   } catch {
     return emptyPersistedQuizState();
@@ -146,6 +177,8 @@ function emptyPersistedQuizState(): PersistedQuizState {
     seenExerciseIds: [],
     variantExercises: [],
     filterSignature: "",
+    batchStats: emptyBatchStats(),
+    showSessionComplete: false,
   };
 }
 
@@ -164,15 +197,6 @@ function exerciseMatchesQuestionType(exercise: ExerciseRecord, questionType: Qui
   return exercise.type === questionType;
 }
 
-function isVocabPracticeExercise(exercise: ExerciseRecord): boolean {
-  if (exercise.type === "mcq" && (exercise.choiceKind === "vocab" || exercise.choiceKind === "phrase-meaning")) {
-    return true;
-  }
-  if (exercise.tags.includes("card")) return true;
-  if (exercise.dedupeKey.startsWith("exercise:vocab:")) return true;
-  return exercise.tags.includes("vocab") && !exercise.tags.some((tag) => ["mixed", "scenario", "grammar", "particles"].includes(tag));
-}
-
 function selectedFocusIsVocab(selectedTags: string[]): boolean {
   return selectedTags.includes("vocab") || selectedTags.includes("card");
 }
@@ -181,10 +205,10 @@ function isChoiceExercise(exercise: RuntimeExerciseRecord): exercise is Extract<
   return exercise.type === "mcq" || exercise.type === "minimalPair";
 }
 
-function getModelAnswer(exercise: RuntimeExerciseRecord): string {
-  if (isChoiceExercise(exercise)) return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
-  if (exercise.type === "correction") return exercise.corrected;
-  return exercise.modelAnswer;
+function reviewCardId(exercise: RuntimeExerciseRecord): string {
+  if ("variantOf" in exercise) return exercise.variantOf;
+  if ("runtimeVocabOf" in exercise) return exercise.dedupeKey;
+  return exercise.id;
 }
 
 function getLookupQuery(exercise: RuntimeExerciseRecord): string {
@@ -245,29 +269,6 @@ function buildSessionPlanIds(
   return { planIds, seenIds: nextSeenIds };
 }
 
-function getTranslation(exercise: RuntimeExerciseRecord): string | undefined {
-  if ("variantTranslation" in exercise && exercise.variantTranslation) return exercise.variantTranslation;
-  if (exercise.prompt.stemEn) return exercise.prompt.stemEn;
-  if (exercise.type === "sentenceBuilder") return exercise.targetMeaning;
-  if (exercise.type === "reading") return exercise.passage.en;
-  if (exercise.type === "dialogue") {
-    const translatedTurns = exercise.turns
-      .map((turn) => turn.en)
-      .filter((line): line is string => Boolean(line));
-    return translatedTurns.length > 0 ? translatedTurns.join(" / ") : undefined;
-  }
-  if (isChoiceExercise(exercise) && exercise.choiceKind === "full-sentence-meaning") return getModelAnswer(exercise);
-  return undefined;
-}
-
-function feedbackModelAnswer(exercise: RuntimeExerciseRecord): string {
-  const modelAnswer = getModelAnswer(exercise);
-  if (exercise.type !== "fillBlank" || exercise.answerPresentation === "sentence") return modelAnswer;
-  const particleSequence = extractParticleSequence(modelAnswer);
-  if (!particleSequence || particleSequence === modelAnswer) return modelAnswer;
-  return particleSequence;
-}
-
 function answerDetails(
   exercise: RuntimeExerciseRecord,
 ): Pick<
@@ -295,7 +296,7 @@ function answerDetails(
   };
 }
 
-export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
+export function QuizScreen({ entries, exercises, reviewStates, settings, onSettingsChange }: QuizScreenProps) {
   const [initialQuizState] = useState(readPersistedQuizState);
   const [mode, setMode] = useState<QuizMode>(initialQuizState.mode);
   const [questionType, setQuestionType] = useState<QuizTypeFilter>(initialQuizState.questionType);
@@ -307,7 +308,10 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   const [sessionPlanIds, setSessionPlanIds] = useState<string[]>(initialQuizState.sessionPlanIds);
   const [seenExerciseIds, setSeenExerciseIds] = useState<string[]>(initialQuizState.seenExerciseIds);
   const [variantExercises, setVariantExercises] = useState<VariantExerciseRecord[]>(initialQuizState.variantExercises);
+  const [batchStats, setBatchStats] = useState<SessionBatchStats>(initialQuizState.batchStats);
+  const [showSessionComplete, setShowSessionComplete] = useState(initialQuizState.showSessionComplete);
   const [sessionSignature, setSessionSignature] = useState(initialQuizState.filterSignature);
+  const focusStripRef = useRef<HTMLDivElement | null>(null);
   const previousExerciseId = useRef<string | undefined>(undefined);
 
   function writePersistedQuizState(patch: Partial<PersistedQuizState> = {}) {
@@ -324,12 +328,14 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       seenExerciseIds,
       variantExercises,
       filterSignature: sessionSignature,
+      batchStats,
+      showSessionComplete,
       ...patch,
     };
     window.localStorage.setItem(quizSessionStorageKey, JSON.stringify(nextState));
   }
 
-  const modeExercises = useMemo(() => {
+  const packModeExercises = useMemo(() => {
     const matchingMode = questionType === "all" ? exercises.filter((exercise) => exerciseMatchesMode(exercise, mode)) : exercises;
     const matchingType = matchingMode.filter((exercise) => exerciseMatchesQuestionType(exercise, questionType));
     const focusTags = settings.focusTags ?? [];
@@ -342,8 +348,28 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       const vocabOnly = focused.filter(isVocabPracticeExercise);
       return vocabOnly.length > 0 ? vocabOnly : focused;
     }
+    if (
+      settings.particleCoverage === "core" &&
+      focusTags.some((tag) => ["particles", "particle", "e", "do", "buteo", "bakke", "an"].includes(tag))
+    ) {
+      const coreOnly = focused.filter(isCoreParticleExercise);
+      return coreOnly.length > 0 ? coreOnly : focused;
+    }
     return focused;
-  }, [exercises, mode, questionType, settings.focusTags]);
+  }, [exercises, mode, questionType, settings.focusTags, settings.particleCoverage]);
+
+  const runtimeVocabExercises = useMemo((): RuntimeVocabExerciseRecord[] => {
+    const focusTags = settings.focusTags ?? [];
+    const vocabCount = countVocabPracticeExercises(packModeExercises);
+    if (!shouldAugmentVocabPool(questionType, selectedFocusIsVocab(focusTags), vocabCount)) return [];
+    const existingKeys = new Set(exercises.map((item) => item.dedupeKey));
+    return buildRuntimeVocabExercises(entries, existingKeys);
+  }, [entries, exercises, packModeExercises, questionType, settings.focusTags]);
+
+  const modeExercises = useMemo(() => {
+    if (runtimeVocabExercises.length === 0) return packModeExercises;
+    return [...packModeExercises, ...runtimeVocabExercises];
+  }, [packModeExercises, runtimeVocabExercises]);
   const exerciseById = useMemo(
     () => new Map<RuntimeExerciseRecord["id"], RuntimeExerciseRecord>([...modeExercises, ...variantExercises].map((candidate) => [candidate.id, candidate])),
     [modeExercises, variantExercises],
@@ -408,6 +434,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     setSessionSignature("");
     setSeenExerciseIds([]);
     setVariantExercises([]);
+    setBatchStats(emptyBatchStats());
+    setShowSessionComplete(false);
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
   }
 
@@ -423,6 +451,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     setMode(nextMode);
     setSeenExerciseIds([]);
     setVariantExercises([]);
+    setBatchStats(emptyBatchStats());
+    setShowSessionComplete(false);
     setSessionSignature("");
   }
 
@@ -430,11 +460,41 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     setQuestionType(nextType);
     setSeenExerciseIds([]);
     setVariantExercises([]);
+    setBatchStats(emptyBatchStats());
+    setShowSessionComplete(false);
     setSessionSignature("");
+  }
+
+  function startNextBatch() {
+    const nextSeenIds = addUniqueId(seenExerciseIds, exercise?.id);
+    const nextSession = buildSessionPlanIds(mode, modeExercises, reviewStates, nextSeenIds);
+    setSeenExerciseIds(nextSession.seenIds);
+    setSessionPlanIds(nextSession.planIds);
+    setBatchStats(emptyBatchStats());
+    setShowSessionComplete(false);
+    resetInteraction(nextSession.planIds);
+  }
+
+  function startMissedReview() {
+    const missedIds = Array.from(new Set(batchStats.incorrectIds)).filter((id) => exerciseById.has(id));
+    if (missedIds.length === 0) return;
+    const planIds = missedIds.slice(0, sessionSize);
+    setBatchStats(emptyBatchStats());
+    setShowSessionComplete(false);
+    setSessionPlanIds(planIds);
+    resetInteraction(planIds);
+    setSessionSignature(`${currentFilterSignature}:missed`);
+  }
+
+  function openFocusSelectors() {
+    setShowSessionComplete(false);
+    setFeedback(undefined);
+    focusStripRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   useEffect(() => {
     if (exercises.length === 0) return;
+    if (showSessionComplete) return;
 
     if (modeExercises.length === 0) {
       setSessionPlanIds([]);
@@ -466,6 +526,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     seenExerciseIds,
     sessionPlanIds,
     sessionSignature,
+    showSessionComplete,
   ]);
 
   useLayoutEffect(() => {
@@ -481,7 +542,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     seenExerciseIds,
     sessionPlanIds,
     sessionSignature,
-    variantExercises,
+    batchStats,
+    showSessionComplete,
   ]);
 
   useEffect(() => {
@@ -513,7 +575,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   async function gradeCurrent(correct: boolean, reason?: string) {
     if (!exercise) return;
-    const cardId = "variantOf" in exercise ? exercise.variantOf : exercise.id;
+    setBatchStats((current) => recordBatchAnswer(current, exercise, correct));
+    const cardId = reviewCardId(exercise);
     const existing = (await db.reviewState.get(cardId)) ?? initialReviewState(cardId);
     const reviewed = review(existing, correct ? "good" : "again");
     await db.reviewState.put(applyAnswerAnalytics(reviewed, exercise, correct, reason));
@@ -529,17 +592,23 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       return;
     }
 
+    if (exercise && !feedback) {
+      setBatchStats((current) => recordBatchSkip(current, exercise));
+    }
+
     const nextSeenIds = addUniqueId(seenExerciseIds, exercise?.id);
-    const currentIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
-    if (currentIndex >= 0 && currentIndex >= sessionExercises.length - 1) {
-      const nextSession = buildSessionPlanIds(mode, modeExercises, reviewStates, nextSeenIds);
-      setSeenExerciseIds(nextSession.seenIds);
-      setSessionPlanIds(nextSession.planIds);
-      resetInteraction(nextSession.planIds);
+    const locatedIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
+    const safeIndex = locatedIndex >= 0 ? locatedIndex : index;
+    const atLastItem = sessionExercises.length > 0 && safeIndex >= sessionExercises.length - 1;
+    if (atLastItem) {
+      setShowSessionComplete(true);
+      setFeedback(undefined);
+      setSelectedChoiceId(null);
+      setInput("");
       return;
     }
 
-    const nextIndex = currentIndex >= 0 ? currentIndex + 1 : 0;
+    const nextIndex = safeIndex + 1;
     setSeenExerciseIds(nextSeenIds);
     setIndex(nextIndex);
     setActiveExerciseId(sessionExercises[nextIndex]?.id ?? null);
@@ -623,10 +692,24 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   function handleShowAnswer() {
     if (!exercise) return;
+    setBatchStats((current) => recordBatchAnswer(current, exercise, false));
     setFeedback({
       result: "shown",
       ...answerDetails(exercise),
     });
+  }
+
+  if (showSessionComplete) {
+    return (
+      <section className="stack">
+        <SessionCompletePanel
+          stats={batchStats}
+          onContinue={startNextBatch}
+          onReviewMissed={startMissedReview}
+          onChangeFocus={openFocusSelectors}
+        />
+      </section>
+    );
   }
 
   if (!exercise) {
@@ -646,7 +729,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   return (
     <section className="quiz-layout">
-      <div className="quiz-focus-strip" aria-label="Practice focus">
+      <div className="quiz-focus-strip" aria-label="Practice focus" ref={focusStripRef}>
         {practiceCategories.map((category) => {
           const active = categoryMatchesSelectedTags(category, selectedTags);
           return (

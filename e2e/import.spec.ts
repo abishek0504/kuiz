@@ -20,7 +20,6 @@ const smallPack = {
       ko: "사과",
       en: "apple",
       pos: "noun",
-      romanization: "sagwa",
       tags: ["vocab", "food"],
       sourceRefIds: ["e2e"],
       inferred: false,
@@ -33,14 +32,14 @@ const smallPack = {
   exercises: [
     {
       id: "e2e.mcq.apple",
-      dedupeKey: "exercise:e2e:apple",
+      dedupeKey: "exercise:vocab:apple",
       type: "mcq",
       tags: ["vocab", "food"],
       sourceRefIds: ["e2e"],
       inferred: false,
       prompt: { stem: "Choose the Korean for apple.", audioText: "사과" },
       explanation: "사과 means apple.",
-      choiceKind: "phrase-meaning",
+      choiceKind: "vocab",
       choices: [
         { id: "school", text: "학교", isCorrect: false, why: "학교 means school." },
         { id: "correct", text: "사과", isCorrect: true, why: "Correct." },

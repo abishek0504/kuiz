@@ -108,6 +108,50 @@ export function hasFlexibleKoreanWordOrder(model: string, submitted: string): bo
   return modelMovable.join("\u0000") === submittedMovable.join("\u0000");
 }
 
+function hasHangul(text: string): boolean {
+  return /[가-힣]/u.test(text);
+}
+
+function hasNegation(text: string): boolean {
+  const normalized = normalizeAnswerKorean(text);
+  return normalized.includes("안 ") || normalized.startsWith("안") || normalized.includes("못 ") || normalized.startsWith("못");
+}
+
+function finalPredicateToken(value: string): string | undefined {
+  return normalizeAnswerKorean(value).split(" ").filter(Boolean).at(-1);
+}
+
+function predicateEndingClass(predicate: string): string {
+  if (/었어요|았어요|했어요$/u.test(predicate)) return "past";
+  if (/을 거예요|ㄹ 거예요$/u.test(predicate)) return "future";
+  if (/고 있어요$/u.test(predicate)) return "progressive";
+  if (/어요|아요|여요|세요$/u.test(predicate)) return "present";
+  return predicate;
+}
+
+export function answerGuardNote(model: string, submitted: string): string | undefined {
+  const trimmed = submitted.trim();
+  if (!trimmed) return "Type a Korean answer.";
+
+  if (hasHangul(model) && !hasHangul(trimmed)) {
+    return "Korean production tasks require Hangul answers.";
+  }
+
+  if (hasNegation(model) !== hasNegation(trimmed)) {
+    return "Negation does not match the target sentence.";
+  }
+
+  const modelFinal = finalPredicateToken(model);
+  const submittedFinal = finalPredicateToken(trimmed);
+  if (modelFinal && submittedFinal && modelFinal !== submittedFinal) {
+    if (predicateEndingClass(modelFinal) !== predicateEndingClass(submittedFinal)) {
+      return "The verb ending or tense does not match the target.";
+    }
+  }
+
+  return undefined;
+}
+
 export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
   const submitted = normalizeAnswerKorean(input.input);
   const models = acceptedSet(input);
@@ -135,11 +179,14 @@ export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
   }
 
   if (models.some((model) => hasFlexibleKoreanWordOrder(model, submitted))) {
-    return {
-      correct: true,
-      mode: input.strictness,
-      note: "Accepted: the same particle-marked words can move before the final verb in Korean.",
-    };
+    const guardNote = answerGuardNote(input.model, input.input);
+    if (!guardNote) {
+      return {
+        correct: true,
+        mode: input.strictness,
+        note: "Accepted: the same particle-marked words can move before the final verb in Korean.",
+      };
+    }
   }
 
   if (input.allowModelFragment && models.some((model) => loose(submitted).includes(loose(model)))) {
@@ -162,12 +209,14 @@ export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
     }
   }
 
+  const guardNote = answerGuardNote(input.model, input.input);
   return {
     correct: false,
     mode: input.strictness,
     note:
-      input.strictness === "strict"
+      guardNote ??
+      (input.strictness === "strict"
         ? "Strict mode requires the model particles and spacing."
-        : `Try: ${normalizeSpacing(input.model)}`,
+        : `Try: ${normalizeSpacing(input.model)}`),
   };
 }

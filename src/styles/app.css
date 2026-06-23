@@ -454,6 +454,53 @@ button:disabled {
   border-color: var(--danger);
 }
 
+.session-complete-panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  margin-bottom: calc(68px + env(safe-area-inset-bottom));
+}
+
+.session-complete-panel h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.session-complete-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.session-complete-stats div {
+  display: grid;
+  gap: 2px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--surface-muted);
+}
+
+.session-complete-stats dt {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.session-complete-stats dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.session-complete-actions {
+  display: grid;
+  gap: 8px;
+}
+
 .feedback-topline {
   display: flex;
   align-items: center;

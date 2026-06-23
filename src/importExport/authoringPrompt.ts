@@ -67,7 +67,7 @@ Rules:
 - For sentenceBuilder, ordering, correction, dictation, and roleplay items, include natural alternate acceptedAnswers only when the particles preserve the same roles and the final predicate remains correct.
 - Include stemEn, targetMeaning, passage.en, or dialogue turn en fields when available so Kuiz can show a collapsed translation after the answer.
 - For each new grammar or particle point, include: one explanation entry, one misconception-based MCQ, one production task, one correction/repair task, and one naturalness or register note when relevant.
-- For each new vocab item, include the vocab entry plus at least one phrase-meaning or vocab MCQ. Do not make the learner infer the word only through a long mixed sentence.
+- For each new vocab item, include the vocab entry plus at least one vocab MCQ with choiceKind "vocab" or dedupeKey exercise:vocab:<lemma>. Use prompts like Choose the Korean for "friend" or What does "친구" mean? Do not tag grammar meaning MCQs as vocab.
 - Before returning JSON, audit it for these failures: raw romanization in audioText, correct answer first, numeric filler choices, one-word choices for sentence prompts, MCQ-only grammar packs, duplicate dedupeKeys, placeholder brackets, fake combination rules, and missing blank-only accepted answers.
 
 CURRENT_SNAPSHOT:

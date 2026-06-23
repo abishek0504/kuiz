@@ -1,5 +1,38 @@
 import type { ContentPack, Exercise, MCQExercise, MinimalPairExercise } from "../schemas/contentPack";
 
+function extractBlankParticleSequence(value: string): string | undefined {
+  const particles = [
+    "에서",
+    "에게서",
+    "한테서",
+    "에게",
+    "한테",
+    "부터",
+    "까지",
+    "으로",
+    "로",
+    "에",
+    "을",
+    "를",
+    "은",
+    "는",
+    "이",
+    "가",
+    "도",
+    "만",
+    "밖에",
+  ];
+  const tokens = value
+    .trim()
+    .replace(/\s+/g, " ")
+    .split(" ")
+    .flatMap((token) =>
+      particles.filter((particle) => token === particle || (token.length > particle.length && token.endsWith(particle))),
+    );
+  const uniqueSequence = tokens.filter((particle, index) => particle !== tokens[index - 1]);
+  return uniqueSequence.length >= 2 ? uniqueSequence.join(" ") : undefined;
+}
+
 function hasHangul(text: string): boolean {
   return /[가-힣]/u.test(text);
 }
@@ -120,7 +153,49 @@ export function validateContentQuality(pack: ContentPack): string[] {
   }
 
   for (const exercise of pack.exercises) {
-    if (exercise.type === "mcq" || exercise.type === "minimalPair") validateChoiceExercise(exercise, errors);
+    if (exercise.type === "mcq" || exercise.type === "minimalPair") {
+      validateChoiceExercise(exercise, errors);
+      if (
+        exercise.type === "mcq" &&
+        exercise.choiceKind === "phrase-meaning" &&
+        /^what does .+ mean\?$/i.test(exercise.prompt.stem.trim()) &&
+        exercise.tags.includes("vocab")
+      ) {
+        errors.push(
+          `exercises.${exercise.id}: grammar meaning MCQs must not use the vocab tag; use grammar tags and keep word drills on choiceKind "vocab" or dedupeKey exercise:vocab:<lemma>.`,
+        );
+      }
+      if (
+        exercise.type === "mcq" &&
+        exercise.choiceKind === "phrase-meaning" &&
+        /choose the (?:korean|english) for/i.test(exercise.prompt.stem) &&
+        !exercise.dedupeKey.startsWith("exercise:vocab:")
+      ) {
+        errors.push(
+          `exercises.${exercise.id}: word translation drills should use choiceKind "vocab" or dedupeKey exercise:vocab:<lemma>.`,
+        );
+      }
+    }
+    if (exercise.type === "fillBlank") {
+      const blankRegions = exercise.prompt.stem.match(/_{3,}/g) ?? [];
+      if (blankRegions.length >= 2 && exercise.answerPresentation !== "sentence") {
+        const modelAnswer = modelAnswerFor(exercise);
+        const blankOnly = extractBlankParticleSequence(modelAnswer) ?? modelAnswer.trim();
+        const accepted = [...(exercise.acceptedAnswers?.strict ?? []), ...(exercise.acceptedAnswers?.relaxed ?? [])];
+        const normalizedAccepted = accepted.map((answer) => answer.replace(/\s+/g, " ").trim());
+        const hasBlankOnly = normalizedAccepted.some(
+          (answer) =>
+            answer === blankOnly ||
+            answer.replace(/\s+/g, "") === blankOnly.replace(/\s+/g, "") ||
+            Boolean(extractBlankParticleSequence(modelAnswer) && answer === extractBlankParticleSequence(modelAnswer)),
+        );
+        if (!hasBlankOnly) {
+          errors.push(
+            `exercises.${exercise.id}: multi-blank fillBlank items must include the blank-only accepted answer such as "${blankOnly}".`,
+          );
+        }
+      }
+    }
     if (/\[[^\]]+\]/u.test(`${exercise.prompt.stem} ${exercise.prompt.stemKo ?? ""} ${modelAnswerFor(exercise)}`)) {
       errors.push(`exercises.${exercise.id}: use concrete Korean sentences instead of bracket placeholders.`);
     }

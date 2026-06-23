@@ -5,6 +5,7 @@ import {
   tagsForPracticeCategory,
   type PracticeCategoryId,
 } from "../../engine/practiceCategories";
+import { countVocabPracticeExercises } from "../../engine/vocabPractice";
 import { recommendedPractice } from "../../engine/recommendations";
 import type { ReviewState } from "../../engine/scheduler";
 
@@ -72,6 +73,7 @@ export function HomeScreen({
   }
 
   function exerciseCountForCategory(categoryId: PracticeCategoryId): number {
+    if (categoryId === "vocab") return countVocabPracticeExercises(exercises);
     const tags = tagsForPracticeCategory(categoryId);
     if (tags.length === 0) return exercises.length;
     return exercises.filter((exercise) => exercise.tags.some((tag) => tags.includes(tag))).length;

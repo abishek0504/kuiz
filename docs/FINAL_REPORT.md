@@ -1,5 +1,17 @@
 # Kuiz Final Report
 
+## Implemented (2026-06-23 final pass)
+
+- Tightened vocab focus filtering in [`src/engine/vocabPractice.ts`](src/engine/vocabPractice.ts) so 어휘 and Vocab cards prioritize word/translation drills instead of grammar `What does … mean?` MCQs.
+- Added runtime vocab card synthesis from pack vocabulary entries when vocab pools are thin or Vocab cards is selected.
+- Added slot-based combinatorial variant generation in [`src/engine/variantSlots.ts`](src/engine/variantSlots.ts) wired through [`src/engine/variants.ts`](src/engine/variants.ts).
+- Added explicit Session complete panel with batch stats, strongest/weakest lane summary, Continue next 10, Review missed, and Change focus/type. Quiz session storage bumped to `kuiz.quizSession.v5`.
+- Strengthened Korean answer checking with Hangul-only, negation, and tense/ending guards in [`src/engine/answerCheck.ts`](src/engine/answerCheck.ts).
+- Added translation support for vocab MCQs via [`src/engine/quizFeedback.ts`](src/engine/quizFeedback.ts).
+- Enforced multi-blank blank-only `acceptedAnswers` and vocab-shape rules in [`src/importExport/quality.ts`](src/importExport/quality.ts).
+- Wired `particleCoverage: core` filtering for 조사 focus in [`src/features/quiz/QuizScreen.tsx`](src/features/quiz/QuizScreen.tsx).
+- Retagged progressive grammar legacy MCQs to remove misleading `card` tag; added `부터 까지` to starter fill-blank accepted answers.
+
 ## Implemented
 
 - Built a complete React + Vite + TypeScript app from scratch; old HTML versions were used only as content and behavior references.
@@ -64,16 +76,16 @@
 - Added local-first persistence for settings, review state, mistake tags, last mistake reasons, production/reception accuracy, import history, and backups via IndexedDB.
 - Added production PWA basics: web manifest, icon, and a network-first navigation service worker for offline app-shell use after first load without trapping phones on stale UI.
 - Added a compact in-app offline indicator when the browser loses network access.
-- Bumped the app-shell cache to `kuiz-app-v7` and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
+- Bumped the app-shell cache to `kuiz-app-v8` and added service-worker skip-waiting/reload handling so newly deployed builds replace stale mobile tabs more aggressively.
 - Generated Netlify-ready production output in `dist/` with `npm run build`.
 
 ## Tested
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack parses and validates with 505 exercises.
-- `npm run test:run`: 17 test files, 65 tests passing.
+- `npm run test:run`: 22 test files, 91 tests passing.
 - `npm run build`: production build succeeds.
-- `npm run e2e`: 38 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 46 Playwright runs (23 specs × desktop + iPhone viewport).
 
 Coverage includes:
 
@@ -81,7 +93,11 @@ Coverage includes:
 - Question-type selector for direct multiple-choice practice.
 - Vocab Cards type and vocab focus show word/translation practice rather than broad grammar tasks.
 - Quiz session state persists after switching bottom tabs on desktop and iPhone viewport.
-- Completing a 10-item mini-session advances to a fresh batch instead of restarting the same 10.
+- Completing a 10-item mini-session shows Session complete before continuing a fresh batch.
+- Slot-based variant engine generates 20+ unique sentences per supported family.
+- Vocab focus rejects grammar phrase-meaning drills; runtime vocab cards augment thin pools.
+- Answer checking rejects English-only, negation, and tense mismatches.
+- Import quality enforces blank-only multi-blank accepted answers and vocab MCQ shape.
 - `Try similar one` moves to a different exercise and generated variants change meaningful Korean sentence content for supported sentence-like patterns.
 - Multi-blank particle items accept blank-only answers such as `부터 까지`.
 - Feedback can reveal a translation after showing or answering when translation support exists.

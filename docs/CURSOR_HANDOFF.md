@@ -4,7 +4,7 @@ This file is the source of truth for the next implementation pass. It is intenti
 
 ## Repository
 
-- Local path: `C:\Users\abish\Documents\Codex\2026-06-19\new-chat`
+- Local path: `C:\Users\abish\Documents\GitHub\kuiz` (canonical); legacy Codex copy at `C:\Users\abish\Documents\Codex\2026-06-19\new-chat`
 - Remote: `https://github.com/abishek0504/kuiz`
 - Main branch: `main`
 - Live Pages URL: `https://abishek0504.github.io/kuiz/`
@@ -12,7 +12,7 @@ This file is the source of truth for the next implementation pass. It is intenti
 - Framework: React 18 + Vite + TypeScript
 - Storage: IndexedDB through Dexie
 - Content schema: `kuiz-pack@1`
-- Service worker cache after this handoff: `kuiz-app-v7`
+- Service worker cache after this handoff: `kuiz-app-v8`
 
 ## Current Product State
 
@@ -30,6 +30,7 @@ Kuiz is now a mobile-first, local-first Korean practice app, not a raw flashcard
 - `Try similar one` now prefers generated sentence variants for supported sentence-like tasks, then falls back to similar unseen/out-of-session exercises.
 - Generated variants are runtime-only and persist in the active quiz session state; they do not write generated content into IndexedDB content packs.
 - Feedback includes a collapsed `Show translation` option when English support exists.
+- Mini-session completion shows an explicit summary panel with Continue next 10, Review missed, and Change focus/type.
 - Import preview, quality gates, duplicate detection, and transactional merge for JSON lesson updates.
 - Local persistence for review state, mistake tags, production/reception accuracy, settings, and backups.
 - PWA app shell for offline use after first load.
@@ -40,13 +41,13 @@ Do not revert or weaken these files without replacing the behavior with somethin
 
 - `src/features/quiz/QuizScreen.tsx`
   - Owns focus/type filtering, quiz state persistence, mini-session planning, similar-question movement, typed answer persistence, feedback rendering, and audio visibility.
-  - The local-storage key is intentionally `kuiz.quizSession.v4` to invalidate older looping session plans and older pre-variant session state.
+  - The local-storage key is intentionally `kuiz.quizSession.v5` to invalidate older looping session plans and older pre-variant session state.
   - `seenExerciseIds` is intentionally persisted so completed sessions advance through the filtered pool.
   - Text input writes immediately to persisted state so tab switching does not lose in-progress typed answers.
 - `e2e/quiz-mcq.spec.ts`
   - Covers MCQ answer/Next, bottom-tab persistence, fresh mini-session batches, and `Try similar one`.
 - `public/sw.js`
-  - Cache is intentionally `kuiz-app-v7`.
+  - Cache is intentionally `kuiz-app-v8`.
   - Navigation is network-first so mobile Safari is less likely to stay stuck on a stale bundle.
 - `src/pwa/serviceWorker.test.ts`
   - Must match the service worker cache name.
@@ -104,9 +105,9 @@ Expected current results after this handoff:
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack validates with 505 exercises.
-- `npm run test:run`: 17 test files, 65 tests passing.
+- `npm run test:run`: 22 test files, 91 tests passing.
 - `npm run build`: succeeds, with the known Vite chunk-size warning.
-- `npm run e2e`: 38 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 46 Playwright runs (23 specs × desktop Chromium + iPhone viewport).
 
 If local command shims are missing because `node_modules` was interrupted, reinstall dependencies first:
 
@@ -122,20 +123,18 @@ The current implementation now includes a first-pass variant engine. It prevents
 - `저는 네 시에 카페에서 친구를 만나요.`
 - `동생은 아침에 학교에서 숙제를 해요.`
 
-This must not be random string replacement. The roles must stay valid and particles must move with their nouns.
+- The variant engine now uses combinatorial slot banks in `src/engine/variantSlots.ts` for time ranges, place-time-object sentences, directions, and routine connectors. Further scenario families (cafe, library, gift exchange, etc.) can extend the same module.
+- Session completion UI is implemented in `src/features/quiz/SessionCompletePanel.tsx`.
+- Vocab filtering lives in `src/engine/vocabPractice.ts` with runtime vocab cards for flashcard density.
+- Native-speaker verification of generated variants and expanded content has not been performed.
 
-## Next Implementation Pass
+## Next Implementation Pass (remaining)
 
-### 1. Expand the Variant Engine
+### 1. Expand the Variant Engine — partially done
 
-Current files:
+Implemented: `src/engine/variantSlots.ts`, combinatorial banks, 20+ unique variants per family, tests in `variantSlots.test.ts` and `variants.test.ts`.
 
-- `src/engine/variants.ts`
-- `src/engine/variants.test.ts`
-
-Do not replace this module with random string replacement. Extend it.
-
-Core API suggestion:
+Remaining:
 
 ```ts
 type KoreanSlot =
@@ -191,9 +190,11 @@ Tests:
 - Generated variant keeps the same grammar focus but changes at least one meaningful slot.
 - Generated variant never repeats the exact same prompt/model answer pair.
 
-### 3. Add Explicit Session Completion UI
+### 3. Add Explicit Session Completion UI — done
 
-Current behavior auto-continues to the next batch after item 10. Replace this with an explicit completion panel.
+Implemented in `SessionCompletePanel.tsx`, `sessionStats.ts`, quiz session key `kuiz.quizSession.v5`, and `e2e/session-complete.spec.ts`.
+
+### 3 legacy. Session Completion UI spec (archived)
 
 When the learner finishes item 10:
 

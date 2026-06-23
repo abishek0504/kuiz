@@ -32,13 +32,13 @@ const basePack = {
   exercises: [
     {
       id: "mcq.apple",
-      dedupeKey: "exercise:test:apple",
+      dedupeKey: "exercise:vocab:apple",
       type: "mcq",
       tags: ["vocab", "food"],
       sourceRefIds: ["test"],
-      prompt: { stem: "Choose the Korean for apple.", audioText: "사과" },
+      prompt: { stem: 'Choose the Korean for "apple".', audioText: "사과", stemEn: "apple" },
       explanation: "사과 means apple.",
-      choiceKind: "phrase-meaning",
+      choiceKind: "vocab",
       choices: [
         { id: "a", text: "학교", isCorrect: false, why: "학교 means school." },
         { id: "b", text: "사과", isCorrect: true, why: "Correct." },

@@ -58,20 +58,30 @@ test("quiz state survives switching bottom tabs", async ({ page }) => {
   await expect(page.getByLabel("Your answer")).toHaveValue("테스트");
 });
 
-test("finishing a mini session advances to a fresh batch", async ({ page }) => {
+async function skipUntilSessionComplete(page: import("@playwright/test").Page, maxSkips = 20) {
+  const skippedIds = new Set<string>();
+  for (let count = 0; count < maxSkips; count += 1) {
+    if (await page.getByTestId("session-complete-panel").isVisible()) return skippedIds;
+    await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
+    skippedIds.add((await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "");
+    await page.getByRole("button", { name: "Skip" }).click();
+  }
+  await expect(page.getByTestId("session-complete-panel")).toBeVisible();
+  return skippedIds;
+}
+
+test("finishing a mini session shows completion and can continue fresh", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
   await page.getByRole("tab", { name: "Multiple choice" }).click();
 
   await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
-  const firstSessionIds = new Set<string>();
-  const sessionText = (await page.getByTestId("quiz-index").textContent()) ?? "1 / 10";
-  const sessionTotal = Number(sessionText.split("/").at(1)?.trim() ?? "10");
+  const firstSessionIds = await skipUntilSessionComplete(page);
 
-  for (let count = 0; count < sessionTotal; count += 1) {
-    firstSessionIds.add((await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "");
-    await page.getByRole("button", { name: "Skip" }).click();
-  }
+  await expect(page.getByTestId("session-complete-panel")).toBeVisible({ timeout: 15000 });
+  await expect(page.getByRole("heading", { name: "Session complete" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Review missed" })).toBeEnabled();
+  await page.getByRole("button", { name: "Continue next 10" }).click();
 
   const nextSessionFirstId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";
   expect(firstSessionIds.has(nextSessionFirstId)).toBe(false);
@@ -95,8 +105,18 @@ test("vocab focus with vocab cards shows word translation practice", async ({ pa
   await page.getByRole("tab", { name: "Vocab cards" }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
-  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean|What does/i);
-  await expect(page.locator(".quiz-card h1")).not.toContainText(/fix the Korean sentence|Build:/i);
+  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
+  await expect(page.locator(".quiz-card h1")).not.toContainText(/What does|fix the Korean sentence|Build:/i);
+});
+
+test("vocab focus with all types stays word translation shaped", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /어휘/ }).click();
+
+  await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
+  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
+  await expect(page.locator(".quiz-card h1")).not.toContainText(/What does/i);
 });
 
 test("feedback can reveal translation after showing an answer", async ({ page }) => {

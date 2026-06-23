@@ -159,6 +159,20 @@ const tagLabels: Record<string, string> = {
   weather: "날씨",
 };
 
+export const coreParticleTags = [
+  "particles",
+  "particle",
+  "e",
+  "do",
+  "buteo",
+  "bakke",
+  "an",
+] as const;
+
+export function isCoreParticleExercise(exercise: { tags: string[] }): boolean {
+  return exercise.tags.some((tag) => coreParticleTags.includes(tag as (typeof coreParticleTags)[number]));
+}
+
 export function tagsForPracticeCategory(categoryId: PracticeCategoryId): string[] {
   return [...(practiceCategories.find((category) => category.id === categoryId)?.tags ?? [])];
 }

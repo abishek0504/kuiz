@@ -73,6 +73,7 @@ export function App() {
     if (tab === "quiz") {
       return (
         <QuizScreen
+          entries={entries}
           exercises={exercises}
           reviewStates={reviewStates}
           settings={settings}
