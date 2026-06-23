@@ -87,3 +87,52 @@ test("try similar moves to a different exercise", async ({ page }) => {
 
   await expect(page.getByTestId("quiz-card")).not.toHaveAttribute("data-exercise-id", initialId);
 });
+
+test("vocab focus with vocab cards shows word translation practice", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /어휘/ }).click();
+  await page.getByRole("tab", { name: "Vocab cards" }).click();
+
+  await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
+  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean|What does/i);
+  await expect(page.locator(".quiz-card h1")).not.toContainText(/fix the Korean sentence|Build:/i);
+});
+
+test("feedback can reveal translation after showing an answer", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.getByRole("tab", { name: "Build" }).click();
+
+  await expect(page.locator(".quiz-card h1")).toBeVisible({ timeout: 20000 });
+  await page.getByRole("button", { name: "Show answer" }).click();
+
+  await expect(page.getByText("Show translation")).toBeVisible();
+  await page.getByText("Show translation").click();
+  await expect(page.getByTestId("feedback-panel")).toContainText(/[A-Za-z]/);
+});
+
+test("multi blank particle fill accepts blank only answer and similar variant changes sentence", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Quiz", exact: true }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /숫자·시간/ }).click();
+  await page.getByRole("tab", { name: "Fill blank" }).click();
+
+  await expect(page.getByLabel("Your answer")).toBeVisible({ timeout: 20000 });
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const heading = (await page.locator(".quiz-card h1").textContent()) ?? "";
+    if (heading.includes("아침") && heading.includes("저녁")) break;
+    await page.getByRole("button", { name: "Skip" }).click();
+  }
+
+  const originalHeading = (await page.locator(".quiz-card h1").textContent()) ?? "";
+  await page.getByLabel("Your answer").fill("부터 까지");
+  await page.getByRole("button", { name: "Check" }).click();
+
+  await expect(page.getByTestId("feedback-panel")).toContainText("Correct");
+  await expect(page.getByTestId("feedback-panel")).toContainText("부터 까지");
+  await page.getByRole("button", { name: "Try similar one" }).click();
+
+  await expect(page.locator(".quiz-card h1")).not.toHaveText(originalHeading);
+  await expect(page.getByTestId("quiz-card")).toHaveAttribute("data-exercise-id", /^variant:/);
+});

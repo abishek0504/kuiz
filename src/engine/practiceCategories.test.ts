@@ -29,6 +29,7 @@ describe("practice categories", () => {
     expect(tagsForPracticeCategory("numbers")).toEqual(
       expect.arrayContaining(["number", "numbers", "sino-numbers", "native-numbers"]),
     );
+    expect(tagsForPracticeCategory("vocab")).toEqual(["vocab", "card"]);
     expect(tagsForPracticeCategory("particles")).toEqual(expect.arrayContaining(["particles", "buteo", "bakke"]));
     expect(tagsForPracticeCategory("mixed")).toEqual(expect.arrayContaining(["sentence-builder", "correction"]));
   });

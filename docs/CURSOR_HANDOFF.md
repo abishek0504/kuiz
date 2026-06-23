@@ -12,7 +12,7 @@ This file is the source of truth for the next implementation pass. It is intenti
 - Framework: React 18 + Vite + TypeScript
 - Storage: IndexedDB through Dexie
 - Content schema: `kuiz-pack@1`
-- Service worker cache after this handoff: `kuiz-app-v6`
+- Service worker cache after this handoff: `kuiz-app-v7`
 
 ## Current Product State
 
@@ -22,11 +22,14 @@ Kuiz is now a mobile-first, local-first Korean practice app, not a raw flashcard
 - Learner-facing focus lanes: `전체`, `어휘`, `숫자·시간`, `문법`, `조사`, `연결어`, `혼합`.
 - Session intent selector: recommended, practice, review, sentence, listening.
 - Separate question-type selector: all types, multiple choice, fill blank, build, fix, dialogue, reading, listening.
+- Dedicated Vocab Cards type and a narrowed vocab focus so vocabulary practice stays word/phrase-meaning oriented.
 - Korean-only audio controls. Pre-answer audio is hidden for non-listening tasks so audio does not reveal ordinary answers.
 - Flexible answer checking for typed Korean where particles mark roles and the final predicate remains fixed. Time/place/object chunks can move before the verb when they keep their particles.
 - Persistent quiz state across bottom-tab navigation.
 - Mini-session progression through unseen exercises. Completing a 10-item set now builds the next unseen batch instead of looping the same first 10.
-- `Try similar one` now prefers similar, unseen, out-of-session exercises and replaces the current item when needed.
+- `Try similar one` now prefers generated sentence variants for supported sentence-like tasks, then falls back to similar unseen/out-of-session exercises.
+- Generated variants are runtime-only and persist in the active quiz session state; they do not write generated content into IndexedDB content packs.
+- Feedback includes a collapsed `Show translation` option when English support exists.
 - Import preview, quality gates, duplicate detection, and transactional merge for JSON lesson updates.
 - Local persistence for review state, mistake tags, production/reception accuracy, settings, and backups.
 - PWA app shell for offline use after first load.
@@ -37,13 +40,13 @@ Do not revert or weaken these files without replacing the behavior with somethin
 
 - `src/features/quiz/QuizScreen.tsx`
   - Owns focus/type filtering, quiz state persistence, mini-session planning, similar-question movement, typed answer persistence, feedback rendering, and audio visibility.
-  - The local-storage key is intentionally `kuiz.quizSession.v3` to invalidate older looping session plans.
+  - The local-storage key is intentionally `kuiz.quizSession.v4` to invalidate older looping session plans and older pre-variant session state.
   - `seenExerciseIds` is intentionally persisted so completed sessions advance through the filtered pool.
   - Text input writes immediately to persisted state so tab switching does not lose in-progress typed answers.
 - `e2e/quiz-mcq.spec.ts`
   - Covers MCQ answer/Next, bottom-tab persistence, fresh mini-session batches, and `Try similar one`.
 - `public/sw.js`
-  - Cache is intentionally `kuiz-app-v6`.
+  - Cache is intentionally `kuiz-app-v7`.
   - Navigation is network-first so mobile Safari is less likely to stay stuck on a stale bundle.
 - `src/pwa/serviceWorker.test.ts`
   - Must match the service worker cache name.
@@ -67,6 +70,8 @@ These were directly fixed in the current code:
 - Switching bottom tabs should not restart the quiz or clear typed input.
 - Finishing a mini-session should not restart the same 10 cards.
 - `Try similar one` should not just show the exact same exercise again.
+- Vocab focus should not show broad grammar or scenario tasks just because they contain vocab tags.
+- Multi-blank particle answers such as `부터 까지` should be accepted when the prompt asks for blank-only particles.
 
 ## Important User Correction
 
@@ -99,9 +104,9 @@ Expected current results after this handoff:
 
 - `npm audit`: 0 vulnerabilities.
 - `npm run validate:pack`: starter pack validates with 505 exercises.
-- `npm run test:run`: 16 test files, 60 tests passing.
+- `npm run test:run`: 17 test files, 65 tests passing.
 - `npm run build`: succeeds, with the known Vite chunk-size warning.
-- `npm run e2e`: 32 Playwright tests passing across desktop Chromium and iPhone viewport.
+- `npm run e2e`: 38 Playwright tests passing across desktop Chromium and iPhone viewport.
 
 If local command shims are missing because `node_modules` was interrupted, reinstall dependencies first:
 
@@ -111,9 +116,7 @@ npm install
 
 ## Current Known Limitation
 
-The latest fix prevents exact session looping by selecting fresh exercises from the existing content pool. It does not yet generate live variants from a sentence template.
-
-The next product-quality jump is a real variant engine. For example, if the learner practices "I read a book at the library at 3 o'clock," follow-up practice should be able to vary time, place, object, person, and verb within valid Korean constraints:
+The current implementation now includes a first-pass variant engine. It prevents exact session looping by selecting fresh exercises from the existing content pool and can generate live variants for recognized beginner sentence families. For example, if the learner practices "I read a book at the library at 3 o'clock," follow-up practice can vary time, place, object, person, and verb within valid Korean constraints:
 
 - `저는 세 시에 도서관에서 책을 읽어요.`
 - `저는 네 시에 카페에서 친구를 만나요.`
@@ -123,12 +126,14 @@ This must not be random string replacement. The roles must stay valid and partic
 
 ## Next Implementation Pass
 
-### 1. Add a Proper Variant Engine
+### 1. Expand the Variant Engine
 
-Create:
+Current files:
 
 - `src/engine/variants.ts`
 - `src/engine/variants.test.ts`
+
+Do not replace this module with random string replacement. Extend it.
 
 Core API suggestion:
 
@@ -169,14 +174,13 @@ Tests:
 - Rejects variants where predicate is not final.
 - Rejects variants with missing or mismatched particle roles.
 
-### 2. Connect Variants to `Try similar one`
+### 2. Deepen Variant Coverage in `Try similar one`
 
-Current behavior selects a different existing exercise. Keep that fallback, but add generated variants for eligible sentence tasks.
+Current behavior already uses generated variants first and keeps existing-exercise fallback. Improve coverage and metadata.
 
 Implementation target:
 
-- In `QuizScreen.tsx`, when current exercise is `sentenceBuilder`, `fillBlank`, `correction`, `roleplay`, or `ordering`, check whether it has variant metadata.
-- If yes, generate a sibling exercise in memory and show it immediately.
+- In `QuizScreen.tsx`, when current exercise is `sentenceBuilder`, `fillBlank`, `correction`, `roleplay`, `ordering`, `dictation`, or `listening`, keep checking whether it can generate a sibling exercise in memory and show it immediately.
 - Do not persist generated variants as new content-pack exercises unless a separate import/editing workflow is added.
 - Generated exercise IDs should be temporary and stable for the current session, for example `variant:<base-id>:<hash>`.
 - Generated variants must still be counted as seen for the active session.
@@ -368,7 +372,7 @@ Manual inspection checklist:
 Update after the next implementation pass:
 
 - `README.md`
-  - Add variant engine and session completion UI.
+  - Add expanded variant coverage and session completion UI.
   - Keep screenshot table current.
   - Keep setup/deploy commands simple.
 - `docs/FINAL_REPORT.md`
@@ -389,8 +393,8 @@ Do not overclaim:
 
 Use small commits:
 
-1. `Add Korean sentence variant engine`
-2. `Use generated variants for similar practice`
+1. `Expand Korean sentence variants`
+2. `Deepen generated similar practice`
 3. `Add explicit quiz session completion`
 4. `Separate grammar rules from mixed sentence practice`
 5. `Expand scenario practice coverage`

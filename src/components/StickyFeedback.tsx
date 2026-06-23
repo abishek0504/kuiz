@@ -13,6 +13,7 @@ export type FeedbackState = {
   sentenceParts?: SentenceBreakdownPart[];
   lookupQuery: string;
   audioText?: string;
+  translation?: string;
 };
 
 type StickyFeedbackProps = {
@@ -30,6 +31,12 @@ export function StickyFeedback({ feedback, settings }: StickyFeedbackProps) {
         <NaverLookupLink query={feedback.lookupQuery} />
       </div>
       <p className="model-answer">{feedback.modelAnswer}</p>
+      {feedback.translation ? (
+        <details className="translation-details">
+          <summary>Show translation</summary>
+          <p>{feedback.translation}</p>
+        </details>
+      ) : null}
       <details className="feedback-details">
         <summary>Why this answer?</summary>
         {feedback.misconception ? <p className="note">What changed? {feedback.misconception}</p> : null}

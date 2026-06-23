@@ -23,11 +23,13 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
 - Recommended is the default quiz session. Session intents are recommended, practice, review, sentence, and listening; they should stay learner-facing rather than exposing low-level task slugs.
 - Question type is separate from focus and session intent. A learner can choose a focus such as `조사` or `숫자·시간`, then narrow the exercise format to multiple choice, fill blank, build, fix, dialogue, reading, or listening.
+- Vocab focus should prioritize vocabulary-shaped tasks: word/phrase to meaning, meaning to Korean, and short example recognition. Mixed grammar or sentence tasks should not appear just because they contain words tagged as vocabulary.
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.
 - Recommended sessions should include meaning-focused input, form noticing, production or repair, due or weak review, and a fluency item when the content pool allows it.
 - Recommended sessions should avoid repeating the exact same normalized Korean answer across task types unless the filtered content pool is too small to do otherwise.
 - Mini-sessions should progress through unseen exercises for the active focus and question type. Finishing a 10-item set should build a new batch from the remaining pool, only resetting once that filtered pool is exhausted.
 - Similar-question practice should prefer same exercise type plus shared learner-facing tags, and should not simply jump back into the same completed card.
+- Similar-question practice may use generated in-memory variants when a sentence pattern is recognized. A valid variant changes meaningful slots such as time, place, object, direction, or routine action while preserving particle roles and keeping the final predicate correct.
 - Recommendations must be evidence-based: start broad when there is no review history, then prioritize categories with due reviews, weak items, logged misses, and low production/reception accuracy before adding more new material.
 - Progress should show category diagnostics so learners can see why a focus is recommended, including due work, weak items, misses, and input/output accuracy.
 - MCQs must use same-granularity choices. Full-sentence Korean prompts need full-sentence English choices.
@@ -35,6 +37,7 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 - Distractors should encode a plausible misconception in `why`, not just be random wrong answers.
 - Number distractors must stay in the same number system and be near enough to require real recall.
 - Grammar references should explain separate particle jobs instead of inventing fake monolithic templates.
+- A sentence that combines `에서`, `에`, `을/를`, and `아/어요` is mixed sentence practice, not a new combined grammar rule. Rule-library entries should keep each particle, ending, connector, or form separate.
 - Feedback should explain the actual Korean sentence roles when possible: topic, subject, object, time, place, source/recipient, connector, predicate, and other useful particle jobs.
 - Typed Korean checking should preserve required particles and final predicates, while accepting normal particle spacing cleanup and natural particle-marked word-order variants before the final verb.
 - Audio should remain Korean-only. Pre-answer audio should only appear for listening and dictation tasks, not for ordinary prompts where it reveals the answer.

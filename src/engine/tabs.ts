@@ -3,6 +3,7 @@ export type QuizMode = "recommended" | "practice" | "review" | "sentence" | "lis
 export type QuizTypeFilter =
   | "all"
   | "mcq"
+  | "vocab"
   | "fillBlank"
   | "sentenceBuilder"
   | "correction"

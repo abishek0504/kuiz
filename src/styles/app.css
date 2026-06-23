@@ -469,6 +469,24 @@ button:disabled {
   background: transparent;
 }
 
+.translation-details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: var(--surface-strong);
+}
+
+.translation-details summary {
+  min-height: 28px;
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+.translation-details p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
 .feedback-details summary {
   min-height: 32px;
   color: var(--accent-strong);

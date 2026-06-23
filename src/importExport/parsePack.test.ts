@@ -98,4 +98,41 @@ describe("parsePack quality validation", () => {
       expect(result.errors.join("\n")).toMatch(/production or repair task/);
     }
   });
+
+  test("rejects fake combined grammar rules that should be sentence practice", () => {
+    const weakPack: any = structuredClone(basePack);
+    weakPack.pack.includes = ["grammar"];
+    weakPack.grammar = [
+      {
+        id: "grammar.fake-combo",
+        dedupeKey: "grammar:test:fake-combo",
+        kind: "grammar",
+        title: "Place plus time plus object plus verb ending",
+        pattern: "place + time + object + polite verb ending",
+        meaning: "combine location, time, object, and ending",
+        tags: ["grammar", "mixed"],
+        sourceRefIds: ["test"],
+        examples: [{ ko: "도서관에서 세 시에 책을 읽어요.", en: "I read a book at the library at 3.", audioText: "도서관에서 세 시에 책을 읽어요." }],
+      },
+    ];
+    weakPack.exercises.push({
+      id: "fake-combo-production",
+      dedupeKey: "exercise:test:fake-combo-production",
+      type: "sentenceBuilder",
+      tags: ["mixed"],
+      sourceRefIds: ["test"],
+      prompt: { stem: 'Build: "I read a book at the library at 3."', audioText: "도서관에서 세 시에 책을 읽어요." },
+      targetMeaning: "I read a book at the library at 3.",
+      tokens: ["도서관에서", "세 시에", "책을", "읽어요"],
+      acceptedAnswers: { strict: ["도서관에서 세 시에 책을 읽어요."], relaxed: [], regex: [] },
+      modelAnswer: "도서관에서 세 시에 책을 읽어요.",
+    });
+
+    const result = parsePack(JSON.stringify(weakPack));
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.errors.join("\n")).toMatch(/fake combined rules/);
+    }
+  });
 });

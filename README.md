@@ -12,10 +12,12 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 - Content quality gates reject weak imports with romanized audio, correct-first MCQs, bare numeric filler, missing distractor rationales, repeated generic choices, or grammar-only flashcard dumps.
 - Recommended quiz sessions interleave scenario input, form noticing, production, repair, due review, and fluency work instead of starting learners in MCQ-only practice.
 - Quiz has separate focus and question-type controls, so learners can study a category with only multiple choice, fill blanks, sentence building, corrections, dialogue, reading, or listening.
+- Vocab practice has a dedicated Vocab Cards type and keeps the vocab focus on word/phrase meaning practice instead of broad grammar tasks that happen to contain vocabulary.
 - Mini-sessions advance through unseen exercises; finishing a 10-question set creates a fresh batch instead of looping the same cards.
+- `Try similar one` can generate in-memory sentence variants for common Korean patterns, changing time/place/object/direction/routine slots while preserving particle roles and final predicates.
 - Recommendation and progress diagnostics use due reviews, weak answers, logged mistake tags, and production/reception accuracy to decide whether to stay broad, repair weak lanes, or move into mixed production.
 - Mobile-first quiz flow with sticky feedback, clear Skip vs Next behavior, and iPhone-safe layout.
-- Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates.
+- Feedback includes Korean sentence-role breakdowns for common particles, time/place markers, objects, connectors, and predicates, plus a collapsed translation reveal when English support is available.
 - Korean-only speech synthesis with voice/rate settings and `ko-KR` defaults; pre-answer audio appears only for listening/dictation so it does not reveal ordinary quiz answers.
 - Strict and relaxed particle checking for beginner-friendly practice without losing full-particle answers, plus tolerance for particle spacing and natural time/place word-order swaps before the final verb.
 - Simplified FSRS-style scheduler using stability, difficulty, retrievability, lapses, and due dates.
@@ -44,7 +46,7 @@ Kuiz is a mobile-first Korean study app built from scratch with React, Vite, and
 
 ### Study
 
-Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. A second question-type rail lets learners choose all types or narrow to multiple choice, fill blanks, build, fix, dialogue, reading, or listening. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Completing a 10-question mini-session moves into the next unseen batch for the same focus/type instead of restarting the same questions. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness and accept natural particle-marked word-order variants when the sentence meaning is unchanged.
+Quiz sessions use learner-facing intents: recommended, practice, review, sentence, and listening. The same focus rail appears on Home and Quiz: full deck, vocab, numbers/time, grammar, particles, connectors, and mixed sentence work. A second question-type rail lets learners choose all types or narrow to vocab cards, multiple choice, fill blanks, build, fix, dialogue, reading, or listening. Recommended sessions rotate through scenario input, form noticing, production, repair, due review, and fluency work. Completing a 10-question mini-session moves into the next unseen batch for the same focus/type instead of restarting the same questions. Multiple-choice answers reveal immediate feedback, while free-answer modes respect the selected particle strictness and accept natural particle-marked word-order variants when the sentence meaning is unchanged. Multi-blank particle items accept blank-only answers such as `부터 까지`, and similar practice can generate a fresh sentence variant without writing generated items into the content pack.
 
 ### Import Content
 

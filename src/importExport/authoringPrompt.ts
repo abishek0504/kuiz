@@ -37,6 +37,9 @@ Rules:
 - Do not use romanization except an optional display-only vocab "romanization" field.
 - Mark "inferred": true when something is reasonably inferred but not explicitly visible.
 - Prefer scenario practice over trivial translation drills.
+- Still create real vocabulary-card practice when the lesson introduces words. Vocab practice should be word/phrase <-> meaning, not grammar or scenario tasks merely tagged "vocab".
+- Keep grammar and particles as separate rule/function entries. Do not invent combined grammar rules such as "place + time + object + verb ending"; that is sentence practice, not a grammar rule.
+- If a sentence uses multiple forms, tag the exercise as mixed/sentence/scenario, but create separate grammar or particle entries for each rule that is actually being taught.
 - Every exercise may include optional "skill", "level", "scenario", "register", "communicativeGoal", and "rubric".
 - Valid skills: "reception", "production", "interaction", "mediation", "languageFocus", "fluency".
 - Valid levels: "A0", "A1", "A2", "TOPIK1", "TOPIK2".
@@ -60,6 +63,12 @@ Rules:
 - When lesson material includes grammar, particles, or connectors, include at least one production or repair task. Do not output MCQs only.
 - Include numbers, time/date expressions, vocab, particles, grammar, corrections, conjugations, and sentence production when present in the lesson material.
 - Use concrete Korean examples. Do not invent placeholder templates like "[place]에서 [time]에 ...".
+- For fillBlank items with multiple blanks, acceptedAnswers must include the blank-only answer. Example: prompt "아침___ 저녁___ 일해요." must accept "부터 까지" and may also accept the full sentence "아침부터 저녁까지 일해요."
+- For sentenceBuilder, ordering, correction, dictation, and roleplay items, include natural alternate acceptedAnswers only when the particles preserve the same roles and the final predicate remains correct.
+- Include stemEn, targetMeaning, passage.en, or dialogue turn en fields when available so Kuiz can show a collapsed translation after the answer.
+- For each new grammar or particle point, include: one explanation entry, one misconception-based MCQ, one production task, one correction/repair task, and one naturalness or register note when relevant.
+- For each new vocab item, include the vocab entry plus at least one phrase-meaning or vocab MCQ. Do not make the learner infer the word only through a long mixed sentence.
+- Before returning JSON, audit it for these failures: raw romanization in audioText, correct answer first, numeric filler choices, one-word choices for sentence prompts, MCQ-only grammar packs, duplicate dedupeKeys, placeholder brackets, fake combination rules, and missing blank-only accepted answers.
 
 CURRENT_SNAPSHOT:
 ${JSON.stringify(snapshot, null, 2)}

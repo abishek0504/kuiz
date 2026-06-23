@@ -1,5 +1,11 @@
 import { describe, expect, test } from "vitest";
-import { checkAnswer, hasFlexibleKoreanWordOrder, normalizeAnswerKorean, stripOptionalParticles } from "./answerCheck";
+import {
+  checkAnswer,
+  extractParticleSequence,
+  hasFlexibleKoreanWordOrder,
+  normalizeAnswerKorean,
+  stripOptionalParticles,
+} from "./answerCheck";
 
 describe("particle strictness", () => {
   test("strict mode requires particles when the model includes them", () => {
@@ -54,5 +60,17 @@ describe("particle strictness", () => {
     });
 
     expect(result.correct).toBe(true);
+  });
+
+  test("accepts blank-only particle sequence for multi-blank particle items", () => {
+    const result = checkAnswer({
+      model: "부터 저녁까지",
+      input: "부터 까지",
+      strictness: "strict",
+    });
+
+    expect(extractParticleSequence("부터 저녁까지")).toBe("부터 까지");
+    expect(result.correct).toBe(true);
+    expect(result.note).toMatch(/particle sequence/);
   });
 });

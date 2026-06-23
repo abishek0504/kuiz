@@ -18,7 +18,7 @@ export const practiceCategories: PracticeCategory[] = [
     id: "vocab",
     label: "어휘",
     description: "단어와 뜻",
-    tags: ["vocab", "routine", "animals", "food", "people", "places", "card"],
+    tags: ["vocab", "card"],
   },
   {
     id: "numbers",

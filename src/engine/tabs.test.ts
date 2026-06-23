@@ -15,6 +15,7 @@ describe("tab highlighting", () => {
 
   test("question type chip active state derives from selected type", () => {
     expect(isActiveQuizType("mcq", "mcq")).toBe(true);
+    expect(isActiveQuizType("vocab", "vocab")).toBe(true);
     expect(isActiveQuizType("mcq", "fillBlank")).toBe(false);
   });
 });

@@ -17,6 +17,15 @@ function isParticleLike(text: string): boolean {
   return !/\s/u.test(text.trim()) && text.trim().length <= 8;
 }
 
+function looksLikeFakeCombinationRule(text: string): boolean {
+  const normalized = text.toLocaleLowerCase();
+  const hasPlace = /장소|place|location/u.test(normalized);
+  const hasTime = /시간|time/u.test(normalized);
+  const hasObject = /목적어|object/u.test(normalized);
+  const hasEnding = /어미|ending|verb ending/u.test(normalized);
+  return (hasPlace && hasTime && hasObject) || (hasPlace && hasTime && hasEnding) || (hasObject && hasEnding && hasTime);
+}
+
 function modelAnswerFor(exercise: Exercise): string {
   if ("modelAnswer" in exercise) return exercise.modelAnswer;
   if ("corrected" in exercise) return exercise.corrected;
@@ -102,6 +111,11 @@ export function validateContentQuality(pack: ContentPack): string[] {
   for (const entry of pack.grammar) {
     if (/\[[^\]]+\]/u.test(`${entry.title} ${entry.pattern}`)) {
       errors.push(`grammar.${entry.id}: use real Korean examples instead of bracket placeholders.`);
+    }
+    if (looksLikeFakeCombinationRule(`${entry.title} ${entry.pattern} ${entry.meaning} ${entry.notes ?? ""}`)) {
+      errors.push(
+        `grammar.${entry.id}: do not create fake combined rules for place, time, object, and endings; keep rules separate and use mixed sentence exercises for combinations.`,
+      );
     }
   }
 

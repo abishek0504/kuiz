@@ -4,7 +4,7 @@ import { AudioButton } from "../../components/AudioButton";
 import { StickyFeedback, type FeedbackState } from "../../components/StickyFeedback";
 import { db } from "../../db/db";
 import type { ExerciseRecord, UserSettings } from "../../db/schema";
-import { checkAnswer } from "../../engine/answerCheck";
+import { checkAnswer, extractParticleSequence } from "../../engine/answerCheck";
 import { orderChoices } from "../../engine/choiceOrder";
 import { applyAnswerAnalytics } from "../../engine/mistakeAnalytics";
 import {
@@ -25,6 +25,7 @@ import {
 } from "../../engine/sessionPlanner";
 import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
 import { isActiveQuizMode, isActiveQuizType, type QuizMode, type QuizTypeFilter } from "../../engine/tabs";
+import { createVariantExercise, type VariantExerciseRecord } from "../../engine/variants";
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
@@ -38,6 +39,7 @@ const quizModes: Array<{ id: QuizMode; label: string }> = [
 const questionTypeFilters: Array<{ id: QuizTypeFilter; label: string }> = [
   { id: "all", label: "All types" },
   { id: "mcq", label: "Multiple choice" },
+  { id: "vocab", label: "Vocab cards" },
   { id: "fillBlank", label: "Fill blank" },
   { id: "sentenceBuilder", label: "Build" },
   { id: "correction", label: "Fix" },
@@ -80,10 +82,13 @@ type PersistedQuizState = {
   feedback?: FeedbackState;
   sessionPlanIds: string[];
   seenExerciseIds: string[];
+  variantExercises: VariantExerciseRecord[];
   filterSignature: string;
 };
 
-const quizSessionStorageKey = "kuiz.quizSession.v3";
+type RuntimeExerciseRecord = ExerciseRecord | VariantExerciseRecord;
+
+const quizSessionStorageKey = "kuiz.quizSession.v4";
 const sessionSize = 10;
 
 function isQuizMode(value: unknown): value is QuizMode {
@@ -113,6 +118,15 @@ function readPersistedQuizState(): PersistedQuizState {
       seenExerciseIds: Array.isArray(parsed.seenExerciseIds)
         ? parsed.seenExerciseIds.filter((id): id is string => typeof id === "string")
         : [],
+      variantExercises: Array.isArray(parsed.variantExercises)
+        ? parsed.variantExercises.filter(
+            (exercise): exercise is VariantExerciseRecord =>
+              Boolean(exercise) &&
+              typeof exercise === "object" &&
+              typeof (exercise as Partial<VariantExerciseRecord>).id === "string" &&
+              typeof (exercise as Partial<VariantExerciseRecord>).variantOf === "string",
+          )
+        : [],
       filterSignature: typeof parsed.filterSignature === "string" ? parsed.filterSignature : "",
     };
   } catch {
@@ -130,6 +144,7 @@ function emptyPersistedQuizState(): PersistedQuizState {
     input: "",
     sessionPlanIds: [],
     seenExerciseIds: [],
+    variantExercises: [],
     filterSignature: "",
   };
 }
@@ -144,29 +159,43 @@ function exerciseMatchesMode(exercise: ExerciseRecord, mode: QuizMode): boolean 
 function exerciseMatchesQuestionType(exercise: ExerciseRecord, questionType: QuizTypeFilter): boolean {
   if (questionType === "all") return true;
   if (questionType === "mcq") return exercise.type === "mcq" || exercise.type === "minimalPair";
+  if (questionType === "vocab") return isVocabPracticeExercise(exercise);
   if (questionType === "listening") return isListeningExercise(exercise);
   return exercise.type === questionType;
 }
 
-function isChoiceExercise(exercise: ExerciseRecord): exercise is Extract<ExerciseRecord, { type: "mcq" | "minimalPair" }> {
+function isVocabPracticeExercise(exercise: ExerciseRecord): boolean {
+  if (exercise.type === "mcq" && (exercise.choiceKind === "vocab" || exercise.choiceKind === "phrase-meaning")) {
+    return true;
+  }
+  if (exercise.tags.includes("card")) return true;
+  if (exercise.dedupeKey.startsWith("exercise:vocab:")) return true;
+  return exercise.tags.includes("vocab") && !exercise.tags.some((tag) => ["mixed", "scenario", "grammar", "particles"].includes(tag));
+}
+
+function selectedFocusIsVocab(selectedTags: string[]): boolean {
+  return selectedTags.includes("vocab") || selectedTags.includes("card");
+}
+
+function isChoiceExercise(exercise: RuntimeExerciseRecord): exercise is Extract<RuntimeExerciseRecord, { type: "mcq" | "minimalPair" }> {
   return exercise.type === "mcq" || exercise.type === "minimalPair";
 }
 
-function getModelAnswer(exercise: ExerciseRecord): string {
+function getModelAnswer(exercise: RuntimeExerciseRecord): string {
   if (isChoiceExercise(exercise)) return exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
   if (exercise.type === "correction") return exercise.corrected;
   return exercise.modelAnswer;
 }
 
-function getLookupQuery(exercise: ExerciseRecord): string {
+function getLookupQuery(exercise: RuntimeExerciseRecord): string {
   return exercise.prompt.audioText ?? getModelAnswer(exercise) ?? exercise.prompt.stem;
 }
 
-function getPromptAudioText(exercise: ExerciseRecord): string | undefined {
+function getPromptAudioText(exercise: RuntimeExerciseRecord): string | undefined {
   return isListeningExercise(exercise) ? exercise.prompt.audioText : undefined;
 }
 
-function answerInstruction(exercise: ExerciseRecord): string {
+function answerInstruction(exercise: RuntimeExerciseRecord): string {
   if (exercise.type === "fillBlank") {
     if (exercise.answerPresentation === "sentence") return "Type the complete Korean sentence.";
     if (exercise.answerPresentation === "particle") return "Type only the missing particle or particles.";
@@ -216,22 +245,53 @@ function buildSessionPlanIds(
   return { planIds, seenIds: nextSeenIds };
 }
 
+function getTranslation(exercise: RuntimeExerciseRecord): string | undefined {
+  if ("variantTranslation" in exercise && exercise.variantTranslation) return exercise.variantTranslation;
+  if (exercise.prompt.stemEn) return exercise.prompt.stemEn;
+  if (exercise.type === "sentenceBuilder") return exercise.targetMeaning;
+  if (exercise.type === "reading") return exercise.passage.en;
+  if (exercise.type === "dialogue") {
+    const translatedTurns = exercise.turns
+      .map((turn) => turn.en)
+      .filter((line): line is string => Boolean(line));
+    return translatedTurns.length > 0 ? translatedTurns.join(" / ") : undefined;
+  }
+  if (isChoiceExercise(exercise) && exercise.choiceKind === "full-sentence-meaning") return getModelAnswer(exercise);
+  return undefined;
+}
+
+function feedbackModelAnswer(exercise: RuntimeExerciseRecord): string {
+  const modelAnswer = getModelAnswer(exercise);
+  if (exercise.type !== "fillBlank" || exercise.answerPresentation === "sentence") return modelAnswer;
+  const particleSequence = extractParticleSequence(modelAnswer);
+  if (!particleSequence || particleSequence === modelAnswer) return modelAnswer;
+  return particleSequence;
+}
+
 function answerDetails(
-  exercise: ExerciseRecord,
+  exercise: RuntimeExerciseRecord,
 ): Pick<
   FeedbackState,
-  "modelAnswer" | "explanation" | "particleNote" | "naturalnessNote" | "lookupQuery" | "audioText" | "sentenceParts"
+  | "modelAnswer"
+  | "explanation"
+  | "particleNote"
+  | "naturalnessNote"
+  | "lookupQuery"
+  | "audioText"
+  | "sentenceParts"
+  | "translation"
 > {
   const modelAnswer = getModelAnswer(exercise);
   const audioText = exercise.prompt.audioText ?? modelAnswer;
   return {
-    modelAnswer,
+    modelAnswer: feedbackModelAnswer(exercise),
     explanation: exercise.explanation,
     particleNote: exercise.particleNote,
     naturalnessNote: exercise.naturalnessNote,
     lookupQuery: getLookupQuery(exercise),
     audioText,
     sentenceParts: sentenceBreakdown(audioText),
+    translation: getTranslation(exercise),
   };
 }
 
@@ -246,6 +306,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   const [feedback, setFeedback] = useState<FeedbackState | undefined>(initialQuizState.feedback);
   const [sessionPlanIds, setSessionPlanIds] = useState<string[]>(initialQuizState.sessionPlanIds);
   const [seenExerciseIds, setSeenExerciseIds] = useState<string[]>(initialQuizState.seenExerciseIds);
+  const [variantExercises, setVariantExercises] = useState<VariantExerciseRecord[]>(initialQuizState.variantExercises);
   const [sessionSignature, setSessionSignature] = useState(initialQuizState.filterSignature);
   const previousExerciseId = useRef<string | undefined>(undefined);
 
@@ -261,6 +322,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       feedback,
       sessionPlanIds,
       seenExerciseIds,
+      variantExercises,
       filterSignature: sessionSignature,
       ...patch,
     };
@@ -275,13 +337,21 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     const matchingFocus = matchingType.filter((exercise) =>
       exercise.tags.some((tag) => focusTags.includes(tag)),
     );
-    return matchingFocus.length > 0 ? matchingFocus : matchingType;
+    const focused = matchingFocus.length > 0 ? matchingFocus : matchingType;
+    if (selectedFocusIsVocab(focusTags) && questionType === "all") {
+      const vocabOnly = focused.filter(isVocabPracticeExercise);
+      return vocabOnly.length > 0 ? vocabOnly : focused;
+    }
+    return focused;
   }, [exercises, mode, questionType, settings.focusTags]);
-  const exerciseById = useMemo(() => new Map(modeExercises.map((candidate) => [candidate.id, candidate])), [modeExercises]);
+  const exerciseById = useMemo(
+    () => new Map<RuntimeExerciseRecord["id"], RuntimeExerciseRecord>([...modeExercises, ...variantExercises].map((candidate) => [candidate.id, candidate])),
+    [modeExercises, variantExercises],
+  );
   const sessionExercises = useMemo(() => {
     const restored = sessionPlanIds
       .map((id) => exerciseById.get(id))
-      .filter((candidate): candidate is ExerciseRecord => Boolean(candidate));
+      .filter((candidate): candidate is RuntimeExerciseRecord => Boolean(candidate));
     return restored;
   }, [exerciseById, sessionPlanIds]);
   const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
@@ -302,8 +372,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     () => filterSignature(mode, questionType, selectedTags),
     [mode, questionType, selectedTags],
   );
-  const similarExercise = useMemo(() => {
+  const generatedSimilarExercise = useMemo(() => {
     if (!exercise || !feedback) return undefined;
+    return createVariantExercise(exercise, [...sessionPlanIds, ...seenExerciseIds, ...variantExercises.map((variant) => variant.id)]);
+  }, [exercise, feedback, seenExerciseIds, sessionPlanIds, variantExercises]);
+  const similarExercise = useMemo((): RuntimeExerciseRecord | undefined => {
+    if (!exercise || !feedback) return undefined;
+    if (generatedSimilarExercise) return generatedSimilarExercise;
     const currentTags = new Set(exercise.tags.filter((tag) => !technicalTags.has(tag)));
     const currentSessionIds = new Set(sessionPlanIds);
     const seenIds = new Set(seenExerciseIds);
@@ -326,12 +401,13 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
       });
 
     return scored[0]?.candidate;
-  }, [exercise, feedback, modeExercises, seenExerciseIds, sessionPlanIds]);
+  }, [exercise, feedback, generatedSimilarExercise, modeExercises, seenExerciseIds, sessionPlanIds]);
   const promptAudioText = exercise ? getPromptAudioText(exercise) : undefined;
 
   function selectFocus(categoryId: PracticeCategoryId) {
     setSessionSignature("");
     setSeenExerciseIds([]);
+    setVariantExercises([]);
     onSettingsChange({ focusTags: tagsForPracticeCategory(categoryId) });
   }
 
@@ -346,12 +422,14 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
   function handleModeChange(nextMode: QuizMode) {
     setMode(nextMode);
     setSeenExerciseIds([]);
+    setVariantExercises([]);
     setSessionSignature("");
   }
 
   function handleQuestionTypeChange(nextType: QuizTypeFilter) {
     setQuestionType(nextType);
     setSeenExerciseIds([]);
+    setVariantExercises([]);
     setSessionSignature("");
   }
 
@@ -403,6 +481,7 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
     seenExerciseIds,
     sessionPlanIds,
     sessionSignature,
+    variantExercises,
   ]);
 
   useEffect(() => {
@@ -434,7 +513,8 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   async function gradeCurrent(correct: boolean, reason?: string) {
     if (!exercise) return;
-    const existing = (await db.reviewState.get(exercise.id)) ?? initialReviewState(exercise.id);
+    const cardId = "variantOf" in exercise ? exercise.variantOf : exercise.id;
+    const existing = (await db.reviewState.get(cardId)) ?? initialReviewState(cardId);
     const reviewed = review(existing, correct ? "good" : "again");
     await db.reviewState.put(applyAnswerAnalytics(reviewed, exercise, correct, reason));
   }
@@ -470,6 +550,11 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   function moveToSimilar() {
     if (!similarExercise) return;
+    if ("variantOf" in similarExercise) {
+      setVariantExercises((current) =>
+        current.some((variant) => variant.id === similarExercise.id) ? current : [...current, similarExercise],
+      );
+    }
     const nextIndex = sessionExercises.findIndex((candidate) => candidate.id === similarExercise.id);
     const currentIndex = sessionExercises.findIndex((candidate) => candidate.id === exercise?.id);
     if (nextIndex < 0) {
@@ -504,11 +589,19 @@ export function QuizScreen({ exercises, reviewStates, settings, onSettingsChange
 
   async function handleCheck() {
     if (!exercise || isChoiceExercise(exercise)) return;
+    const particleSequence =
+      exercise.type === "fillBlank" && exercise.answerPresentation !== "sentence"
+        ? extractParticleSequence(getModelAnswer(exercise))
+        : undefined;
     const accepted =
       "acceptedAnswers" in exercise
         ? {
-            strict: exercise.acceptedAnswers.strict,
-            relaxed: exercise.acceptedAnswers.relaxed,
+            strict: particleSequence
+              ? Array.from(new Set([...exercise.acceptedAnswers.strict, particleSequence]))
+              : exercise.acceptedAnswers.strict,
+            relaxed: particleSequence
+              ? Array.from(new Set([...exercise.acceptedAnswers.relaxed, particleSequence]))
+              : exercise.acceptedAnswers.relaxed,
             regex: exercise.acceptedAnswers.regex,
           }
         : undefined;

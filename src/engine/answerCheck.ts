@@ -66,6 +66,18 @@ export function stripOptionalParticles(value: string): string {
     .join(" ");
 }
 
+export function extractParticleSequence(value: string): string | undefined {
+  const particles = normalizeAnswerKorean(value)
+    .split(" ")
+    .flatMap((token) =>
+      PARTICLES.filter((particle) => token === particle || (token.length > particle.length && token.endsWith(particle))).sort(
+        (left, right) => right.length - left.length,
+      ),
+    );
+  const uniqueSequence = particles.filter((particle, index) => particle !== particles[index - 1]);
+  return uniqueSequence.length >= 2 ? uniqueSequence.join(" ") : undefined;
+}
+
 function acceptedSet(input: CheckAnswerInput): string[] {
   const strict = input.accepted?.strict ?? [];
   const relaxed = input.accepted?.relaxed ?? [];
@@ -103,6 +115,17 @@ export function checkAnswer(input: CheckAnswerInput): CheckAnswerResult {
 
   if (exactMatches.includes(submitted)) {
     return { correct: true, mode: input.strictness };
+  }
+
+  const particleSequenceMatches = models
+    .map(extractParticleSequence)
+    .filter((model): model is string => Boolean(model));
+  if (particleSequenceMatches.map(normalizeAnswerKorean).includes(submitted)) {
+    return {
+      correct: true,
+      mode: input.strictness,
+      note: "Accepted: for this multi-blank particle item, the particle sequence is enough.",
+    };
   }
 
   const regexPatterns = input.accepted?.regex ?? [];
