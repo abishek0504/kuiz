@@ -7,7 +7,7 @@ import {
 } from "./practiceCategories";
 
 describe("practice categories", () => {
-  test("exposes the learner-facing focus lanes", () => {
+  test("exposes learner-facing focus lanes in English with Korean where the lane names the target", () => {
     expect(practiceCategories.map((category) => category.id)).toEqual([
       "all",
       "vocab",
@@ -18,8 +18,14 @@ describe("practice categories", () => {
       "mixed",
     ]);
 
+    expect(practiceCategories.find((category) => category.id === "all")?.label).toBe("All");
+    expect(practiceCategories.find((category) => category.id === "vocab")?.label).toBe("Vocab");
+    expect(practiceCategories.find((category) => category.id === "numbers")?.label).toMatch(/숫자/u);
+    expect(practiceCategories.find((category) => category.id === "grammar")?.label).toBe("문법");
+    expect(practiceCategories.find((category) => category.id === "particles")?.label).toBe("Particles");
+    expect(practiceCategories.find((category) => category.id === "mixed")?.label).toBe("Mixed");
+
     for (const category of practiceCategories) {
-      expect(category.label).toMatch(/[가-힣]/u);
       expect(category.label).not.toMatch(/^[a-z0-9-]+$/u);
     }
   });

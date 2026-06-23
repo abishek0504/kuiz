@@ -101,7 +101,7 @@ test("try similar moves to a different exercise", async ({ page }) => {
 test("vocab focus with vocab cards shows word translation practice", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /어휘/ }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /Vocab/ }).click();
   await page.getByRole("tab", { name: "Vocab cards" }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
@@ -112,7 +112,7 @@ test("vocab focus with vocab cards shows word translation practice", async ({ pa
 test("vocab focus with all types stays word translation shaped", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /어휘/ }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /Vocab/ }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
   await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
@@ -135,7 +135,7 @@ test("feedback can reveal translation after showing an answer", async ({ page })
 test("multi blank particle fill accepts blank only answer and similar variant changes sentence", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /숫자·시간/ }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /숫자/ }).click();
   await page.getByRole("tab", { name: "Fill blank" }).click();
 
   await expect(page.getByLabel("Your answer")).toBeVisible({ timeout: 20000 });

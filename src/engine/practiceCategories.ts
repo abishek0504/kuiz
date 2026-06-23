@@ -10,26 +10,26 @@ export type PracticeCategory = {
 export const practiceCategories: PracticeCategory[] = [
   {
     id: "all",
-    label: "전체",
-    description: "모든 문제",
+    label: "All",
+    description: "Full deck",
     tags: [],
   },
   {
     id: "vocab",
-    label: "어휘",
-    description: "단어와 뜻",
+    label: "Vocab",
+    description: "Words and meanings",
     tags: ["vocab", "card"],
   },
   {
     id: "numbers",
-    label: "숫자·시간",
-    description: "숫자, 날짜, 시간",
+    label: "숫자 · 시간",
+    description: "Numbers, dates, and time",
     tags: ["number", "numbers", "sino-numbers", "native-numbers", "time", "dates", "calendar"],
   },
   {
     id: "grammar",
     label: "문법",
-    description: "문장 패턴",
+    description: "Sentence patterns",
     tags: [
       "grammar",
       "progressive",
@@ -48,7 +48,7 @@ export const practiceCategories: PracticeCategory[] = [
   },
   {
     id: "particles",
-    label: "조사",
+    label: "Particles",
     description: "은/는, 이/가, 에",
     tags: [
       "particles",
@@ -67,14 +67,14 @@ export const practiceCategories: PracticeCategory[] = [
   },
   {
     id: "connectors",
-    label: "연결어",
+    label: "Connectors",
     description: "그리고, 하지만",
     tags: ["connectors", "connection", "connector", "go", "jiman", "geona", "ani-myeon"],
   },
   {
     id: "mixed",
-    label: "혼합",
-    description: "문장 안에서 섞기",
+    label: "Mixed",
+    description: "Integrated sentence practice",
     tags: [
       "mixed",
       "sentencebuilder",

@@ -19,7 +19,7 @@ This file is the source of truth for the next implementation pass. It is intenti
 Kuiz is now a mobile-first, local-first Korean practice app, not a raw flashcard app. It has:
 
 - A starter content pack with 524 entries and 505 exercises.
-- Learner-facing focus lanes: `전체`, `어휘`, `숫자·시간`, `문법`, `조사`, `연결어`, `혼합`.
+- Learner-facing focus lanes: `All`, `Vocab`, `숫자 · 시간`, `문법`, `Particles`, `Connectors`, `Mixed`. Session-type chips use English labels.
 - Session intent selector: recommended, practice, review, sentence, listening.
 - Separate question-type selector: all types, multiple choice, fill blank, build, fix, dialogue, reading, listening.
 - Dedicated Vocab Cards type and a narrowed vocab focus so vocabulary practice stays word/phrase-meaning oriented.

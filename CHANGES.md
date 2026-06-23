@@ -53,3 +53,8 @@ Merged the Codex handoff copy (`Codex\2026-06-19\new-chat`) into the canonical w
 - Regenerate iPad session-complete / variant-practice screenshots when convenient
 - Extend variant slot banks for additional scenario families (cafe, library, gift exchange, etc.)
 - Native-speaker QA of generated variants and expanded content not yet performed
+
+## 2026-06-23 — English focus and session-type labels
+
+- Focus lane buttons now use English (`All`, `Vocab`, `Particles`, etc.) except lanes that name Korean learning targets (`숫자 · 시간`, `문법`).
+- Quiz session-type chips (`Recommended`, `Practice`, `Review`, `Sentences`, `Listening`) are English; question-type filters were already English.

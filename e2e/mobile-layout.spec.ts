@@ -48,16 +48,16 @@ test("recommended practice starts with scenario input", async ({ page }) => {
   await expect(page.getByLabel("Your answer")).toBeVisible();
 });
 
-test("home study focus uses Korean categories instead of raw tags", async ({ page }) => {
+test("home study focus uses learner categories instead of raw tags", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByLabel("Recommended next practice")).toBeVisible({ timeout: 20000 });
   await expect(page.getByRole("button", { name: "Start recommended" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Study focus" })).toBeVisible({ timeout: 20000 });
-  await expect(page.getByRole("button", { name: /어휘/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /숫자·시간/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /조사/ })).toBeVisible();
-  await expect(page.getByRole("button", { name: /혼합/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Vocab/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /숫자/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Particles/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Mixed/ })).toBeVisible();
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
 
@@ -84,10 +84,10 @@ test("quiz focus uses learner categories, not raw internal tags", async ({ page 
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
 
   const focus = page.locator('[aria-label="Practice focus"]');
-  await expect(focus.getByRole("button", { name: "숫자·시간" })).toBeVisible({ timeout: 20000 });
-  await focus.getByRole("button", { name: "숫자·시간" }).click();
+  await expect(focus.getByRole("button", { name: /숫자/ })).toBeVisible({ timeout: 20000 });
+  await focus.getByRole("button", { name: /숫자/ }).click();
 
-  await expect(focus.getByRole("button", { name: "숫자·시간" })).toHaveAttribute("aria-pressed", "true");
+  await expect(focus.getByRole("button", { name: /숫자/ })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("sino-numbers")).toHaveCount(0);
   await expect(page.getByText("native-numbers")).toHaveCount(0);
   for (const rawTag of ["particles", "vocab", "sino-numbers", "native-numbers", "ayo", "bakke", "buteo", "an"]) {
@@ -102,7 +102,7 @@ test("practice path opens mixed balanced production", async ({ page }) => {
   await page.locator(".path-card").filter({ hasText: "Produce" }).getByRole("button", { name: /Practice/ }).click();
 
   await expect(page.getByRole("tablist", { name: "Session type" }).getByRole("tab").first()).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /혼합/ })).toHaveAttribute(
+  await expect(page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /Mixed/ })).toHaveAttribute(
     "aria-pressed",
     "true",
   );

@@ -40,11 +40,11 @@ import { emptyBatchStats, recordBatchAnswer, recordBatchSkip, type SessionBatchS
 import { speakKorean } from "../../utils/speech";
 
 const quizModes: Array<{ id: QuizMode; label: string }> = [
-  { id: "recommended", label: "추천" },
-  { id: "practice", label: "연습" },
-  { id: "review", label: "복습" },
-  { id: "sentence", label: "문장" },
-  { id: "listening", label: "듣기" },
+  { id: "recommended", label: "Recommended" },
+  { id: "practice", label: "Practice" },
+  { id: "review", label: "Review" },
+  { id: "sentence", label: "Sentences" },
+  { id: "listening", label: "Listening" },
 ];
 
 const questionTypeFilters: Array<{ id: QuizTypeFilter; label: string }> = [

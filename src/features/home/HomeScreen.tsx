@@ -148,7 +148,7 @@ export function HomeScreen({
           <div>
             <h2>Study focus</h2>
             <p className="section-help">
-              Choose the lane you want Kuiz to prioritize. 전체 uses the full deck.
+              Choose the lane you want Kuiz to prioritize. All uses the full deck.
             </p>
           </div>
           {selectedTags.length > 0 ? (
