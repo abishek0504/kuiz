@@ -4,7 +4,7 @@ async function openNumberMcq(page: import("@playwright/test").Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
   await page.locator('[aria-label="Practice focus"]').getByRole("button").nth(2).click();
-  await page.getByRole("tab", { name: "Multiple choice" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "MCQ" }).click();
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
 }
 
@@ -46,7 +46,7 @@ test("skip advances without grading", async ({ page }) => {
 test("quiz state survives switching bottom tabs", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab", { name: "Fill blank" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "Blank" }).click();
 
   await expect(page.getByLabel("Your answer")).toBeVisible({ timeout: 20000 });
   const heading = await page.locator(".quiz-card h1").textContent();
@@ -73,7 +73,7 @@ async function skipUntilSessionComplete(page: import("@playwright/test").Page, m
 test("finishing a mini session shows completion and can continue fresh", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab", { name: "Multiple choice" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "MCQ" }).click();
 
   await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
   const firstSessionIds = await skipUntilSessionComplete(page);
@@ -102,7 +102,7 @@ test("vocab focus with vocab cards shows word translation practice", async ({ pa
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
   await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /Vocab/ }).click();
-  await page.getByRole("tab", { name: "Vocab cards" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "Vocab" }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
   await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
@@ -135,8 +135,8 @@ test("feedback can reveal translation after showing an answer", async ({ page })
 test("multi blank particle fill accepts blank only answer and similar variant changes sentence", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /숫자/ }).click();
-  await page.getByRole("tab", { name: "Fill blank" }).click();
+  await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: "Numbers · time" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "Blank" }).click();
 
   await expect(page.getByLabel("Your answer")).toBeVisible({ timeout: 20000 });
   for (let attempt = 0; attempt < 20; attempt += 1) {

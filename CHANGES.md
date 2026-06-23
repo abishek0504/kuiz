@@ -54,7 +54,9 @@ Merged the Codex handoff copy (`Codex\2026-06-19\new-chat`) into the canonical w
 - Extend variant slot banks for additional scenario families (cafe, library, gift exchange, etc.)
 - Native-speaker QA of generated variants and expanded content not yet performed
 
-## 2026-06-23 — English focus and session-type labels
+## 2026-06-23 — Simplified quiz menu (Focus / Session / Format)
 
-- Focus lane buttons now use English (`All`, `Vocab`, `Particles`, etc.) except lanes that name Korean learning targets (`숫자 · 시간`, `문법`).
-- Quiz session-type chips (`Recommended`, `Practice`, `Review`, `Sentences`, `Listening`) are English; question-type filters were already English.
+- All focus labels English (`Numbers · time`, `Grammar`, etc.).
+- Removed duplicate `Listening` and `Sentences` session modes; listening/production use the **Format** row (`Listen`, `Build`, `Fix`, …).
+- Session row trimmed to `Recommended | Practice | Review` only.
+- Format chips shortened for mobile (`MCQ`, `Blank`, `Listen`, …).

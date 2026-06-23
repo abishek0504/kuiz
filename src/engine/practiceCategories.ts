@@ -22,13 +22,13 @@ export const practiceCategories: PracticeCategory[] = [
   },
   {
     id: "numbers",
-    label: "숫자 · 시간",
+    label: "Numbers · time",
     description: "Numbers, dates, and time",
     tags: ["number", "numbers", "sino-numbers", "native-numbers", "time", "dates", "calendar"],
   },
   {
     id: "grammar",
-    label: "문법",
+    label: "Grammar",
     description: "Sentence patterns",
     tags: [
       "grammar",

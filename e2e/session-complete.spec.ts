@@ -49,7 +49,7 @@ test("completing a mini-session shows the completion panel", async ({ page }) =>
 test("review missed returns skipped items from the completed batch", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Quiz", exact: true }).click();
-  await page.getByRole("tab", { name: "Multiple choice" }).click();
+  await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "MCQ" }).click();
 
   await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
   const firstId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";

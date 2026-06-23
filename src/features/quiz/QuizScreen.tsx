@@ -39,25 +39,39 @@ import { SessionCompletePanel } from "./SessionCompletePanel";
 import { emptyBatchStats, recordBatchAnswer, recordBatchSkip, type SessionBatchStats } from "../../engine/sessionStats";
 import { speakKorean } from "../../utils/speech";
 
-const quizModes: Array<{ id: QuizMode; label: string }> = [
+const visibleQuizModes: Array<{ id: QuizMode; label: string }> = [
   { id: "recommended", label: "Recommended" },
   { id: "practice", label: "Practice" },
   { id: "review", label: "Review" },
-  { id: "sentence", label: "Sentences" },
-  { id: "listening", label: "Listening" },
 ];
 
 const questionTypeFilters: Array<{ id: QuizTypeFilter; label: string }> = [
-  { id: "all", label: "All types" },
-  { id: "mcq", label: "Multiple choice" },
-  { id: "vocab", label: "Vocab cards" },
-  { id: "fillBlank", label: "Fill blank" },
+  { id: "all", label: "All" },
+  { id: "mcq", label: "MCQ" },
+  { id: "vocab", label: "Vocab" },
+  { id: "fillBlank", label: "Blank" },
   { id: "sentenceBuilder", label: "Build" },
   { id: "correction", label: "Fix" },
   { id: "dialogue", label: "Dialogue" },
-  { id: "reading", label: "Reading" },
-  { id: "listening", label: "Listening" },
+  { id: "reading", label: "Read" },
+  { id: "listening", label: "Listen" },
 ];
+
+function normalizeQuizFilters(
+  mode: QuizMode,
+  questionType: QuizTypeFilter,
+): { mode: QuizMode; questionType: QuizTypeFilter } {
+  if (mode === "listening") {
+    return { mode: "recommended", questionType: questionType === "all" ? "listening" : questionType };
+  }
+  if (mode === "sentence") {
+    return { mode: "recommended", questionType };
+  }
+  if (mode === "recommended" || mode === "practice" || mode === "review") {
+    return { mode, questionType };
+  }
+  return { mode: "recommended", questionType };
+}
 
 const technicalTags = new Set([
   "mcq",
@@ -104,7 +118,7 @@ const quizSessionStorageKey = "kuiz.quizSession.v5";
 const sessionSize = 10;
 
 function isQuizMode(value: unknown): value is QuizMode {
-  return typeof value === "string" && quizModes.some((mode) => mode.id === value);
+  return typeof value === "string" && (visibleQuizModes.some((mode) => mode.id === value) || value === "sentence" || value === "listening");
 }
 
 function isQuizTypeFilter(value: unknown): value is QuizTypeFilter {
@@ -116,9 +130,12 @@ function readPersistedQuizState(): PersistedQuizState {
   try {
     const raw = window.localStorage.getItem(quizSessionStorageKey);
     const parsed = raw ? (JSON.parse(raw) as Partial<PersistedQuizState>) : {};
+    const parsedMode = isQuizMode(parsed.mode) ? parsed.mode : "recommended";
+    const parsedQuestionType = isQuizTypeFilter(parsed.questionType) ? parsed.questionType : "all";
+    const normalized = normalizeQuizFilters(parsedMode, parsedQuestionType);
     return {
-      mode: isQuizMode(parsed.mode) ? parsed.mode : "recommended",
-      questionType: isQuizTypeFilter(parsed.questionType) ? parsed.questionType : "all",
+      mode: normalized.mode,
+      questionType: normalized.questionType,
       index: typeof parsed.index === "number" && Number.isFinite(parsed.index) ? parsed.index : 0,
       activeExerciseId: typeof parsed.activeExerciseId === "string" ? parsed.activeExerciseId : null,
       selectedChoiceId: typeof parsed.selectedChoiceId === "string" ? parsed.selectedChoiceId : null,
@@ -715,9 +732,9 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
   if (!exercise) {
     return (
       <section className="stack">
-        <ChipTabs label="Session type" items={quizModes} current={mode} onChange={handleModeChange} />
+        <ChipTabs label="Session" items={visibleQuizModes} current={mode} onChange={handleModeChange} />
         <ChipTabs
-          label="Question type"
+          label="Format"
           items={questionTypeFilters}
           current={questionType}
           onChange={handleQuestionTypeChange}
@@ -745,9 +762,9 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
           );
         })}
       </div>
-      <ChipTabs label="Session type" items={quizModes} current={mode} onChange={handleModeChange} />
+      <ChipTabs label="Session" items={visibleQuizModes} current={mode} onChange={handleModeChange} />
       <ChipTabs
-        label="Question type"
+        label="Format"
         items={questionTypeFilters}
         current={questionType}
         onChange={handleQuestionTypeChange}
@@ -909,9 +926,9 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
       </article>
       <StickyFeedback feedback={feedback} settings={settings} />
       <p className="sr-only">
-        Active mode: {quizModes.find((item) => isActiveQuizMode(mode, item.id))?.label ?? mode}
+        Active session: {visibleQuizModes.find((item) => isActiveQuizMode(mode, item.id))?.label ?? mode}
         {"; "}
-        Active question type: {questionTypeFilters.find((item) => isActiveQuizType(questionType, item.id))?.label ?? questionType}
+        Active format: {questionTypeFilters.find((item) => isActiveQuizType(questionType, item.id))?.label ?? questionType}
       </p>
     </section>
   );

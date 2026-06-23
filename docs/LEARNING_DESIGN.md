@@ -18,11 +18,12 @@ Kuiz should be a Korean practice system, not a flashcard wrapper. The app should
 
 ## Current Product Rules
 
-- Study focus lanes are learner-facing categories: `All`, `Vocab`, `숫자 · 시간`, `문법`, `Particles`, `Connectors`, and `Mixed`. Quiz session-type chips (`Recommended`, `Practice`, etc.) and question-type filters stay in English.
+- Study focus lanes are learner-facing categories in English: `All`, `Vocab`, `Numbers · time`, `Grammar`, `Particles`, `Connectors`, and `Mixed`.
+- Quiz has three chip rows: **Focus** (topic), **Session** (how cards are ordered: recommended smart mix, balanced practice, or due review), and **Format** (exercise shape: MCQ, blank, listen, etc.). Do not duplicate `Listen` or sentence modes in Session — use Format instead.
 - `Mixed` means integrated sentence practice: sentence builder, correction, time/action, and multi-rule sentence production.
 - Quiz uses the same learner-facing focus lanes. Internal tags such as `sino-numbers`, `native-numbers`, `mcq`, and `card` are storage/search labels, not UI labels.
 - Recommended is the default quiz session. Session intents are recommended, practice, review, sentence, and listening; they should stay learner-facing rather than exposing low-level task slugs.
-- Question type is separate from focus and session intent. A learner can choose a focus such as `Particles` or `숫자 · 시간`, then narrow the exercise format to multiple choice, fill blank, build, fix, dialogue, reading, or listening.
+- Question type is separate from focus and session intent. A learner can choose a focus such as `Particles` or `Numbers · time`, then narrow the exercise format to MCQ, blank, build, fix, dialogue, read, or listen.
 - Vocab focus should prioritize vocabulary-shaped tasks: word/phrase to meaning, meaning to Korean, and short example recognition. Mixed grammar or sentence tasks should not appear just because they contain words tagged as vocabulary.
 - The content schema supports recognition and production tasks: MCQ, fill blank, sentence builder, correction, conjugation, dialogue, reading, listening, dictation, roleplay, ordering, and minimal-pair practice.
 - Recommended sessions should include meaning-focused input, form noticing, production or repair, due or weak review, and a fluency item when the content pool allows it.
