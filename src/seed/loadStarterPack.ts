@@ -1,8 +1,11 @@
 import starterPackJson from "../../content-packs/starter.core.v1.json";
+import lessonsPackJson from "../../content-packs/lessons.2026.review.v1.json";
 import type { KuizDatabase } from "../db/db";
 import type { ContentPack, Entry, Exercise } from "../schemas/contentPack";
 import { dedupeIdentity, mergeContentPack, packEntries, previewContentPack } from "../importExport/mergePack";
 import { simpleHash } from "../engine/normalize";
+
+const bundledPacks = [starterPackJson, lessonsPackJson] as ContentPack[];
 
 let starterLoadPromise: Promise<void> | undefined;
 
@@ -17,7 +20,12 @@ export async function loadStarterPack(database: KuizDatabase): Promise<void> {
 }
 
 async function loadStarterPackOnce(database: KuizDatabase): Promise<void> {
-  const starterPack = starterPackJson as ContentPack;
+  for (const pack of bundledPacks) {
+    await loadBundledPackOnce(database, pack);
+  }
+}
+
+async function loadBundledPackOnce(database: KuizDatabase, starterPack: ContentPack): Promise<void> {
   const packId = starterPack.pack.packId;
   const starterEntries = packEntries(starterPack);
   const existingPack = await database.packs.get(packId);
@@ -34,13 +42,13 @@ async function loadStarterPackOnce(database: KuizDatabase): Promise<void> {
     database.exercises.count(),
   ]);
   if (totalEntries === 0 && totalExercises === 0) {
-    await installFreshStarterPack(database, starterPack);
+    await installFreshBundledPack(database, starterPack);
     return;
   }
 
   const [preview, staleRecords] = await Promise.all([
     previewContentPack(database, starterPack),
-    findStaleStarterRecords(database, starterPack),
+    findStaleBundledRecords(database, starterPack),
   ]);
   const hasChanges =
     preview.creates.length > 0 ||
@@ -51,7 +59,7 @@ async function loadStarterPackOnce(database: KuizDatabase): Promise<void> {
     staleRecords.distractorGroupIds.length > 0;
   if (!hasChanges || preview.conflicts.length > 0) return;
   await mergeContentPack(database, starterPack, preview);
-  await pruneStaleStarterRecords(database, staleRecords);
+  await pruneStaleBundledRecords(database, staleRecords);
 }
 
 function entrySearchText(entry: Entry): string {
@@ -73,7 +81,7 @@ function exerciseSearchText(exercise: Exercise): string {
   return `${exercise.prompt.stem} ${exercise.prompt.stemKo ?? ""} ${passage} ${dialogue} ${modelAnswerFor(exercise)} ${exercise.tags.join(" ")}`;
 }
 
-async function installFreshStarterPack(database: KuizDatabase, starterPack: ContentPack): Promise<void> {
+async function installFreshBundledPack(database: KuizDatabase, starterPack: ContentPack): Promise<void> {
   const packId = starterPack.pack.packId;
   const now = new Date().toISOString();
 
@@ -124,16 +132,16 @@ async function installFreshStarterPack(database: KuizDatabase, starterPack: Cont
   );
 }
 
-type StaleStarterRecords = {
+type StaleBundledRecords = {
   entryIds: string[];
   exerciseIds: string[];
   distractorGroupIds: string[];
 };
 
-async function findStaleStarterRecords(
+async function findStaleBundledRecords(
   database: KuizDatabase,
   starterPack: ContentPack,
-): Promise<StaleStarterRecords> {
+): Promise<StaleBundledRecords> {
   const packId = starterPack.pack.packId;
   const starterEntries = packEntries(starterPack);
   const incomingEntryIds = new Set(starterEntries.map((entry) => entry.id));
@@ -159,7 +167,7 @@ async function findStaleStarterRecords(
   };
 }
 
-async function pruneStaleStarterRecords(database: KuizDatabase, staleRecords: StaleStarterRecords): Promise<void> {
+async function pruneStaleBundledRecords(database: KuizDatabase, staleRecords: StaleBundledRecords): Promise<void> {
   if (
     staleRecords.entryIds.length === 0 &&
     staleRecords.exerciseIds.length === 0 &&

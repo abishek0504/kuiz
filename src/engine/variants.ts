@@ -40,6 +40,31 @@ const sentenceFamilies: Array<{
   matches: (text: string, exercise: ExerciseRecord) => boolean;
 }> = [
   {
+    id: "number-context",
+    matches: (_text, exercise) =>
+      exercise.tags.some((tag) => ["numbers", "counter", "calendar", "dates", "native-numbers", "sino-numbers"].includes(tag)),
+  },
+  {
+    id: "experience",
+    matches: (text, exercise) => exercise.tags.includes("experience") && text.includes("적이"),
+  },
+  {
+    id: "try",
+    matches: (text, exercise) => exercise.tags.includes("try") || (exercise.tags.includes("experience") && text.includes("봤어요")),
+  },
+  {
+    id: "when",
+    matches: (text, exercise) => exercise.tags.includes("when") || /(?:^|\s)[^\s]*때(?:\s|$)/u.test(text),
+  },
+  {
+    id: "intention",
+    matches: (text, exercise) => exercise.tags.includes("intention") || text.includes("려고 해요"),
+  },
+  {
+    id: "seeming",
+    matches: (text, exercise) => exercise.tags.includes("seeming") || text.includes("것 같아요"),
+  },
+  {
     id: "time-range",
     matches: (text) => text.includes("부터") && text.includes("까지"),
   },
@@ -204,7 +229,15 @@ export function createVariantExercise(
   exercise: ExerciseRecord,
   blockedIds: Iterable<string> = [],
 ): VariantExerciseRecord | undefined {
-  if (exercise.type === "mcq" || exercise.type === "minimalPair" || exercise.type === "conjugation") return undefined;
+  return createVariantExercises(exercise, blockedIds, 1)[0];
+}
+
+export function createVariantExercises(
+  exercise: ExerciseRecord,
+  blockedIds: Iterable<string> = [],
+  limit = 24,
+): VariantExerciseRecord[] {
+  if (exercise.type === "mcq" || exercise.type === "minimalPair" || exercise.type === "conjugation") return [];
 
   const blocked = new Set(blockedIds);
   const candidates = familyCandidates(exercise);
@@ -213,13 +246,45 @@ export function createVariantExercise(
   );
   const offset = sorted.length > 0 ? parseInt(simpleHash({ id: exercise.id, answer: modelAnswerFor(exercise) }).slice(0, 6), 16) : 0;
 
-  for (let attempt = 0; attempt < sorted.length; attempt += 1) {
+  const generated: VariantExerciseRecord[] = [];
+  for (let attempt = 0; attempt < sorted.length && generated.length < limit; attempt += 1) {
     const variant = sorted[(offset + attempt) % sorted.length];
     const id = variantId(exercise.id, variant);
     if (blocked.has(id)) continue;
     const adapted = adaptVariant(exercise, variant);
-    if (adapted) return adapted;
+    if (adapted) generated.push(adapted);
   }
 
-  return undefined;
+  return generated;
+}
+
+export function buildRuntimeVariantExercises(
+  exercises: ExerciseRecord[],
+  blockedIds: Iterable<string> = [],
+  limit = 360,
+): VariantExerciseRecord[] {
+  const blocked = new Set(blockedIds);
+  const banks = exercises
+    .filter((exercise) => !exercise.id.startsWith("variant:"))
+    .map((exercise) => createVariantExercises(exercise, blocked, 24))
+    .filter((bank) => bank.length > 0);
+  const generated: VariantExerciseRecord[] = [];
+  const signatures = new Set<string>();
+
+  for (let position = 0; generated.length < limit; position += 1) {
+    let moved = false;
+    for (const bank of banks) {
+      const variant = bank[position];
+      if (!variant) continue;
+      moved = true;
+      const signature = `${variant.type}:${normalizeKorean(modelAnswerFor(variant))}`;
+      if (signatures.has(signature) || blocked.has(variant.id)) continue;
+      signatures.add(signature);
+      generated.push(variant);
+      if (generated.length >= limit) break;
+    }
+    if (!moved) break;
+  }
+
+  return generated;
 }

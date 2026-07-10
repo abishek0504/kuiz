@@ -50,8 +50,21 @@ const basePack = {
 };
 
 describe("parsePack quality validation", () => {
+  test("accepts a JSON code fence from a chat response", () => {
+    const result = parsePack(`\`\`\`json\n${JSON.stringify(basePack)}\n\`\`\``);
+    expect(result.ok).toBe(true);
+  });
+
   test("accepts Korean-audio vocab packs with non-revealing MCQ order", () => {
     expect(parsePack(JSON.stringify(basePack)).ok).toBe(true);
+  });
+
+  test("explains when a content update needs a newer app", () => {
+    const futurePack: typeof basePack = structuredClone(basePack);
+    futurePack.pack.appMinVersion = "2.0.0";
+    const result = parsePack(JSON.stringify(futurePack));
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors.join("\n")).toMatch(/requires Kuiz 2\.0\.0/i);
   });
 
   test("rejects romanized audio and correct-first multiple choice", () => {

@@ -74,6 +74,10 @@ describe("particle strictness", () => {
     expect(result.note).toMatch(/particle sequence/);
   });
 
+  test("keeps repeated particles when separate blanks have the same marker", () => {
+    expect(extractParticleSequence("주말에 두 시에 카페에서 친구를 만나요")).toBe("에 에 에서 를");
+  });
+
   test("rejects wrong particle roles even when word order is close", () => {
     const result = checkAnswer({
       model: "저는 도서관에서 세 시에 책을 읽어요.",
@@ -91,6 +95,26 @@ describe("particle strictness", () => {
     });
     expect(result.correct).toBe(false);
     expect(result.note).toMatch(/tense|ending/i);
+  });
+
+  test("recognizes multi-token future and progressive endings", () => {
+    const result = checkAnswer({
+      model: "내일 한국에 갈 거예요.",
+      input: "지금 한국에 가고 있어요.",
+      strictness: "strict",
+    });
+
+    expect(result.correct).toBe(false);
+    expect(result.note).toMatch(/tense|ending/i);
+  });
+
+  test("recognizes contracted past endings without treating 있어요 as past", () => {
+    expect(
+      checkAnswer({ model: "어제 학교에 갔어요.", input: "오늘 학교에 가요.", strictness: "strict" }).note,
+    ).toMatch(/tense|ending/i);
+    expect(
+      checkAnswer({ model: "책이 있어요.", input: "책이 없어요.", strictness: "strict" }).note,
+    ).not.toMatch(/tense|ending/i);
   });
 
   test("rejects negation when target is affirmative", () => {

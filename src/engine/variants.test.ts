@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { ExerciseRecord } from "../db/schema";
-import { createVariantExercise } from "./variants";
+import { buildRuntimeVariantExercises, createVariantExercise } from "./variants";
 
 function sentenceBuilderExercise(): ExerciseRecord {
   return {
@@ -119,5 +119,15 @@ describe("sentence variants", () => {
       choices: [],
     };
     expect(createVariantExercise(mcq as ExerciseRecord)).toBeUndefined();
+  });
+
+  test("builds a reusable runtime pool without duplicate type-answer pairs", () => {
+    const variants = buildRuntimeVariantExercises([sentenceBuilderExercise(), rangeBlankExercise(), directionCorrectionExercise()]);
+    const signatures = variants.map((variant) => {
+      const answer = variant.type === "correction" ? variant.corrected : "modelAnswer" in variant ? variant.modelAnswer : "";
+      return `${variant.type}:${answer}`;
+    });
+    expect(variants.length).toBeGreaterThan(20);
+    expect(new Set(signatures).size).toBe(signatures.length);
   });
 });

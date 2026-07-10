@@ -11,11 +11,17 @@ import { ProgressScreen } from "../features/progress/ProgressScreen";
 import { QuizScreen } from "../features/quiz/QuizScreen";
 import { SettingsScreen } from "../features/settings/SettingsScreen";
 import { loadStarterPack } from "../seed/loadStarterPack";
+import {
+  applyServiceWorkerUpdate,
+  serviceWorkerUpdateEvent,
+} from "../pwa/registerServiceWorker";
 
 export function App() {
   const [tab, setTab] = useState<MainTab>("home");
   const [starterReady, setStarterReady] = useState(false);
   const [bootError, setBootError] = useState("");
+  const [availableUpdate, setAvailableUpdate] = useState<ServiceWorkerRegistration | null>(null);
+  const [applyingUpdate, setApplyingUpdate] = useState(false);
   const packs = useLiveQuery(() => db.packs.toArray(), [], []);
   const entries = useLiveQuery(() => db.entries.toArray(), [], []);
   const exercises = useLiveQuery(() => db.exercises.toArray(), [], []);
@@ -38,6 +44,14 @@ export function App() {
     return () => {
       mounted = false;
     };
+  }, []);
+
+  useEffect(() => {
+    const handleUpdate = (event: Event) => {
+      setAvailableUpdate((event as CustomEvent<ServiceWorkerRegistration>).detail);
+    };
+    window.addEventListener(serviceWorkerUpdateEvent, handleUpdate);
+    return () => window.removeEventListener(serviceWorkerUpdateEvent, handleUpdate);
   }, []);
 
   async function updateSettings(patch: Partial<UserSettings>) {
@@ -95,6 +109,22 @@ export function App() {
 
   return (
     <AppShell currentTab={tab} onTabChange={setTab}>
+      {availableUpdate ? (
+        <aside className="update-banner" role="status">
+          <span>A newer Kuiz is ready. Your local progress and unfinished import are preserved.</span>
+          <button
+            type="button"
+            className="secondary-button"
+            disabled={applyingUpdate}
+            onClick={() => {
+              setApplyingUpdate(true);
+              if (!applyServiceWorkerUpdate(availableUpdate)) setApplyingUpdate(false);
+            }}
+          >
+            {applyingUpdate ? "Updating..." : "Update now"}
+          </button>
+        </aside>
+      ) : null}
       {renderScreen()}
     </AppShell>
   );

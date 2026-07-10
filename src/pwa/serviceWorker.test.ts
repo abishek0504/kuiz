@@ -3,10 +3,11 @@ import { describe, expect, test } from "vitest";
 
 const source = readFileSync("public/sw.js", "utf8");
 const mainSource = readFileSync("src/main.tsx", "utf8");
+const registrationSource = readFileSync("src/pwa/registerServiceWorker.ts", "utf8");
 
 describe("service worker update behavior", () => {
   test("uses a bumped app cache name", () => {
-    expect(source).toContain('const CACHE_NAME = "kuiz-app-v8"');
+    expect(source).toContain('const CACHE_NAME = "kuiz-app-v9"');
   });
 
   test("loads navigations from the network before falling back offline", () => {
@@ -16,11 +17,14 @@ describe("service worker update behavior", () => {
     expect(navigateBranch.indexOf("fetch(request)")).toBeLessThan(navigateBranch.indexOf("caches.match"));
   });
 
-  test("activates updated workers without waiting for stale mobile tabs", () => {
+  test("checks for updates but waits for the learner before refreshing", () => {
     expect(source).toContain("SKIP_WAITING");
-    expect(mainSource).toContain('updateViaCache: "none"');
-    expect(mainSource).toContain("controllerchange");
-    expect(mainSource).toContain("registration.update()");
-    expect(mainSource).toContain('type: "SKIP_WAITING"');
+    expect(registrationSource).toContain('updateViaCache: "none"');
+    expect(registrationSource).toContain("controllerchange");
+    expect(registrationSource).toContain("registration.update()");
+    expect(registrationSource).toContain('type: "SKIP_WAITING"');
+    expect(registrationSource).toContain("refreshAfterActivation");
+    expect(mainSource).toContain("registerServiceWorkerUpdateFlow");
+    expect(source).not.toContain(".then(() => self.skipWaiting())");
   });
 });

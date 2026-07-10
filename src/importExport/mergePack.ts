@@ -29,22 +29,18 @@ function modelAnswerFor(exercise: Exercise): string {
   return "";
 }
 
-function semanticIdentities(item: Entry | Exercise): string[] {
-  const primary = dedupeIdentity(item);
+function semanticIdentity(item: Entry | Exercise): string {
   if ("kind" in item) {
     if (item.kind === "vocab") {
-      return [primary, `vocab:${normalizeKorean(item.ko)}:${normalizeEnglish(item.en)}`];
+      return `vocab:${normalizeKorean(item.ko)}:${normalizeEnglish(item.en)}`;
     }
     if (item.kind === "particle") {
-      return [primary, `particle:${normalizeKorean(item.form)}:${normalizeEnglish(item.meaning)}`];
+      return `particle:${normalizeKorean(item.form)}:${normalizeEnglish(item.meaning)}`;
     }
-    return [primary, `grammar:${normalizeKorean(item.pattern)}:${normalizeEnglish(item.meaning)}`];
+    return `grammar:${normalizeKorean(item.pattern)}:${normalizeEnglish(item.meaning)}`;
   }
 
-  return [
-    primary,
-    `exercise:${item.type}:${normalizeKorean(item.prompt.stemKo ?? item.prompt.stem)}:${normalizeKorean(modelAnswerFor(item))}`,
-  ];
+  return `exercise:${item.type}:${normalizeKorean(item.prompt.stemKo ?? item.prompt.stem)}:${normalizeKorean(modelAnswerFor(item))}`;
 }
 
 function entrySearchText(entry: Entry): string {
@@ -111,24 +107,19 @@ export async function previewContentPack(
     database.exercises.toArray(),
   ]);
 
-  const existingByKey = new Map<string, { id: string; kind: string; hash: string }>();
+  const exactByKey = new Map<string, { id: string; kind: string; hash: string; packId: string }>();
+  const semanticByKey = new Map<string, { id: string; kind: string; hash: string; packId: string }>();
   for (const entry of existingEntries) {
-    for (const key of semanticIdentities(stripEntryMetadata(entry))) {
-      existingByKey.set(key, {
-        id: entry.id,
-        kind: entry.kind,
-        hash: simpleHash(stripEntryMetadata(entry)),
-      });
-    }
+    const stripped = stripEntryMetadata(entry);
+    const record = { id: entry.id, kind: entry.kind, hash: simpleHash(stripped), packId: entry.packId };
+    exactByKey.set(dedupeIdentity(stripped), record);
+    semanticByKey.set(semanticIdentity(stripped), record);
   }
   for (const exercise of existingExercises) {
-    for (const key of semanticIdentities(stripExerciseMetadata(exercise))) {
-      existingByKey.set(key, {
-        id: exercise.id,
-        kind: exercise.type,
-        hash: simpleHash(stripExerciseMetadata(exercise)),
-      });
-    }
+    const stripped = stripExerciseMetadata(exercise);
+    const record = { id: exercise.id, kind: exercise.type, hash: simpleHash(stripped), packId: exercise.packId };
+    exactByKey.set(dedupeIdentity(stripped), record);
+    semanticByKey.set(semanticIdentity(stripped), record);
   }
 
   const preview: ImportPreview = {
@@ -142,15 +133,19 @@ export async function previewContentPack(
 
   for (const item of [...incomingEntries, ...incomingExercises]) {
     const key = dedupeIdentity(item);
-    const existing = semanticIdentities(item).map((candidate) => existingByKey.get(candidate)).find(Boolean);
+    const exact = exactByKey.get(key);
+    const semantic = semanticByKey.get(semanticIdentity(item));
+    const existing = exact ?? semantic;
     if (!existing) {
       preview.creates.push(key);
       continue;
     }
 
     const kind = "kind" in item ? item.kind : item.type;
-    if (existing.kind !== kind) {
+    if (existing.kind !== kind || (exact && existing.packId !== pack.pack.packId && existing.hash !== simpleHash(item))) {
       preview.conflicts.push(key);
+    } else if (!exact || existing.packId !== pack.pack.packId) {
+      preview.skips.push(key);
     } else if (existing.hash !== simpleHash(item)) {
       preview.updates.push(key);
     } else {
@@ -183,14 +178,10 @@ export async function mergeContentPack(
   ]);
   const existingIdByKey = new Map<string, string>();
   for (const entry of existingEntries) {
-    for (const key of semanticIdentities(stripEntryMetadata(entry))) {
-      existingIdByKey.set(key, entry.id);
-    }
+    existingIdByKey.set(dedupeIdentity(stripEntryMetadata(entry)), entry.id);
   }
   for (const exercise of existingExercises) {
-    for (const key of semanticIdentities(stripExerciseMetadata(exercise))) {
-      existingIdByKey.set(key, exercise.id);
-    }
+    existingIdByKey.set(dedupeIdentity(stripExerciseMetadata(exercise)), exercise.id);
   }
 
   await database.transaction(
@@ -224,7 +215,7 @@ export async function mergeContentPack(
         .filter((entry) => createKeys.has(dedupeIdentity(entry)) || updateKeys.has(dedupeIdentity(entry)))
         .map((entry) => ({
           ...entry,
-          id: semanticIdentities(entry).map((key) => existingIdByKey.get(key)).find(Boolean) ?? entry.id,
+          id: existingIdByKey.get(dedupeIdentity(entry)) ?? entry.id,
         }))
         .map((entry) => toEntryRecord(packId, entry));
       if (entryRecords.length > 0) {
@@ -235,7 +226,7 @@ export async function mergeContentPack(
         .filter((exercise) => createKeys.has(dedupeIdentity(exercise)) || updateKeys.has(dedupeIdentity(exercise)))
         .map((exercise) => ({
           ...exercise,
-          id: semanticIdentities(exercise).map((key) => existingIdByKey.get(key)).find(Boolean) ?? exercise.id,
+          id: existingIdByKey.get(dedupeIdentity(exercise)) ?? exercise.id,
         }))
         .map((exercise) => toExerciseRecord(packId, exercise));
       if (exerciseRecords.length > 0) {
