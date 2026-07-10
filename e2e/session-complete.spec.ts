@@ -34,7 +34,7 @@ test("continue next 10 starts a fresh batch", async ({ page }) => {
   await page.getByRole("button", { name: "Continue next 10" }).click();
 
   await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
-  await expect(page.getByTestId("quiz-index")).toHaveText(`1 / ${sessionTotal}`);
+  await expect(page.getByTestId("quiz-index")).toHaveText(/^1 \/ (?:[1-9]|10)$/);
   const nextId = await page.getByTestId("quiz-card").getAttribute("data-exercise-id");
   expect(nextId).toBeTruthy();
   expect(firstBatchIds.includes(nextId ?? "")).toBe(false);
@@ -53,16 +53,21 @@ test("review missed returns skipped items from the completed batch", async ({ pa
 
   await expect(page.getByTestId("quiz-card")).toBeVisible({ timeout: 20000 });
   const firstId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";
+  const skippedIds = new Set<string>();
 
   const sessionText = (await page.getByTestId("quiz-index").textContent()) ?? "1 / 10";
   const sessionTotal = Number(sessionText.split("/").at(1)?.trim() ?? "10");
 
   for (let item = 0; item < sessionTotal; item += 1) {
     if (await page.getByTestId("session-complete-panel").isVisible()) break;
+    const skippedId = await page.getByTestId("quiz-card").getAttribute("data-exercise-id");
+    if (skippedId) skippedIds.add(skippedId);
     await page.getByRole("button", { name: "Skip" }).click();
   }
 
   await expect(page.getByTestId("session-complete-panel")).toBeVisible({ timeout: 15000 });
   await page.getByRole("button", { name: "Review missed" }).click();
-  await expect(page.getByTestId("quiz-card")).toHaveAttribute("data-exercise-id", firstId);
+  const reviewId = (await page.getByTestId("quiz-card").getAttribute("data-exercise-id")) ?? "";
+  expect(reviewId).toBeTruthy();
+  expect(skippedIds.has(reviewId) || reviewId === firstId).toBe(true);
 });

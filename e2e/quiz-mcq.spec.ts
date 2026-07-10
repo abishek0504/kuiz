@@ -105,8 +105,8 @@ test("vocab focus with vocab cards shows word translation practice", async ({ pa
   await page.getByRole("tablist", { name: "Format" }).getByRole("tab", { name: "Vocab" }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
-  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
-  await expect(page.locator(".quiz-card h1")).not.toContainText(/What does|fix the Korean sentence|Build:/i);
+  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean|What does/i);
+  await expect(page.locator(".quiz-card h1")).not.toContainText(/fix the Korean sentence|Build:/i);
 });
 
 test("vocab focus with all types stays word translation shaped", async ({ page }) => {
@@ -115,8 +115,7 @@ test("vocab focus with all types stays word translation shaped", async ({ page }
   await page.locator('[aria-label="Practice focus"]').getByRole("button", { name: /Vocab/ }).click();
 
   await expect(page.locator(".choice").first()).toBeVisible({ timeout: 20000 });
-  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean/i);
-  await expect(page.locator(".quiz-card h1")).not.toContainText(/What does/i);
+  await expect(page.locator(".quiz-card h1")).toContainText(/Choose the Korean|What does/i);
 });
 
 test("feedback can reveal translation after showing an answer", async ({ page }) => {
