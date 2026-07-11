@@ -44,7 +44,7 @@ test("recommended practice starts with scenario input", async ({ page }) => {
   await expect(page.getByRole("tablist", { name: "Session" }).getByRole("tab").first()).toHaveAttribute("aria-selected", "true", {
     timeout: 20000,
   });
-  await expect(page.locator(".dialogue-card, .reading-card, .choice-grid").first()).toBeVisible({ timeout: 20000 });
+  await expect(page.locator(".dialogue-card, .reading-card, .question-line").first()).toBeVisible({ timeout: 20000 });
   await expect(page.getByLabel("Your answer")).toBeVisible();
 });
 
