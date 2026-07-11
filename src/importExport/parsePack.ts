@@ -1,6 +1,7 @@
 import { ZodError } from "zod";
 import { ContentPackSchema, type ContentPack } from "../schemas/contentPack";
 import { validateContentQuality } from "./quality";
+import { appVersion, compareVersions } from "../appVersion";
 
 export type ParsePackResult =
   | {
@@ -12,10 +13,26 @@ export type ParsePackResult =
       errors: string[];
     };
 
+export function normalizePackJsonInput(raw: string): string {
+  const withoutBom = raw.replace(/^\uFEFF/u, "").trim();
+  const fenced = withoutBom.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/iu);
+  return (fenced?.[1] ?? withoutBom).trim();
+}
+
 export function parsePack(raw: string): ParsePackResult {
   try {
-    const parsedJson = JSON.parse(raw);
+    const parsedJson = JSON.parse(normalizePackJsonInput(raw));
     const pack = ContentPackSchema.parse(parsedJson);
+    const minimumComparison = compareVersions(pack.pack.appMinVersion, appVersion);
+    if (minimumComparison === undefined) {
+      return { ok: false, errors: [`pack.appMinVersion: expected semantic version, received ${pack.pack.appMinVersion}.`] };
+    }
+    if (minimumComparison > 0) {
+      return {
+        ok: false,
+        errors: [`This pack requires Kuiz ${pack.pack.appMinVersion} or newer. Update the app before importing it.`],
+      };
+    }
     const qualityErrors = validateContentQuality(pack);
     if (qualityErrors.length > 0) {
       return { ok: false, errors: qualityErrors };

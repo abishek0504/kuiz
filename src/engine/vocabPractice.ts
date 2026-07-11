@@ -20,7 +20,7 @@ const grammarShapeTags = new Set([
 const wordTranslationPromptPattern = /choose the (?:korean|english) for/i;
 const grammarMeaningPromptPattern = /^what does .+ mean\?$/i;
 
-export type RuntimeVocabExerciseRecord = ExerciseRecord & {
+export type RuntimeVocabExerciseRecord = Extract<ExerciseRecord, { type: "mcq" }> & {
   runtimeVocabOf: string;
   variantTranslation?: string;
 };
@@ -75,16 +75,27 @@ function shuffleWithSeed<T>(items: T[], seed: string): T[] {
   return copy;
 }
 
-function pickDistractors(target: VocabEntryRecord, pool: VocabEntryRecord[], count: number): string[] {
-  const sameTag = pool.filter(
-    (entry) =>
-      entry.id !== target.id &&
-      entry.ko !== target.ko &&
-      entry.tags.some((tag) => target.tags.includes(tag)),
-  );
-  const fallback = pool.filter((entry) => entry.id !== target.id && entry.ko !== target.ko);
-  const candidates = shuffleWithSeed(sameTag.length >= count ? sameTag : fallback, target.id);
-  return candidates.slice(0, count).map((entry) => entry.ko);
+function meaningfulTags(entry: VocabEntryRecord): string[] {
+  return entry.tags.filter((tag) => !["vocab", "card", "starter", "lesson", "a0", "a1", "a2"].includes(tag));
+}
+
+function pickDistractors(target: VocabEntryRecord, pool: VocabEntryRecord[], count: number): VocabEntryRecord[] {
+  const targetTags = new Set(meaningfulTags(target));
+  const candidates = pool
+    .filter((entry) => entry.id !== target.id && entry.ko !== target.ko && entry.en !== target.en)
+    .map((entry) => {
+      const sharedTags = meaningfulTags(entry).filter((tag) => targetTags.has(tag)).length;
+      const samePos = entry.pos === target.pos;
+      const lengthDistance = Math.abs(entry.ko.length - target.ko.length) + Math.abs(entry.en.length - target.en.length) / 4;
+      return {
+        entry,
+        score: (samePos ? 100 : 0) + sharedTags * 30 - lengthDistance,
+        tie: simpleHash(`${target.id}:${entry.id}`),
+      };
+    })
+    .sort((left, right) => right.score - left.score || left.tie.localeCompare(right.tie));
+
+  return candidates.slice(0, count).map(({ entry }) => entry);
 }
 
 export function buildRuntimeVocabExercise(
@@ -92,13 +103,18 @@ export function buildRuntimeVocabExercise(
   pool: VocabEntryRecord[],
   direction: "ko-from-en" | "en-from-ko",
 ): RuntimeVocabExerciseRecord {
-  const distractorKo = pickDistractors(entry, pool, 3);
+  const distractors = pickDistractors(entry, pool, 3);
   const correctKo = entry.ko;
-  const choicesKo = shuffleWithSeed([correctKo, ...distractorKo], `${entry.id}:${direction}`).map((text, index) => ({
+  const choicesKo = shuffleWithSeed(
+    [{ entry, isCorrect: true }, ...distractors.map((candidate) => ({ entry: candidate, isCorrect: false }))],
+    `${entry.id}:${direction}`,
+  ).map((choice, index) => ({
     id: String.fromCharCode(97 + index),
-    text,
-    isCorrect: text === correctKo,
-    why: text === correctKo ? "Correct." : `${text} is not the target word.`,
+    text: choice.entry.ko,
+    isCorrect: choice.isCorrect,
+    why: choice.isCorrect
+      ? `Correct: ${entry.ko} means ${entry.en}.`
+      : `${choice.entry.ko} means ${choice.entry.en}, not ${entry.en}.`,
   }));
 
   const stem =
@@ -111,24 +127,23 @@ export function buildRuntimeVocabExercise(
       : shuffleWithSeed(
           [
             { text: entry.en, isCorrect: true },
-            ...pickDistractors(entry, pool, 3).map((ko) => {
-              const match = pool.find((candidate) => candidate.ko === ko);
-              return { text: match?.en ?? ko, isCorrect: false };
-            }),
+            ...distractors.map((candidate) => ({ text: candidate.en, isCorrect: false, entry: candidate })),
           ],
           `${entry.id}:${direction}:en`,
         ).map((choice, index) => ({
           id: String.fromCharCode(97 + index),
           text: choice.text,
           isCorrect: choice.isCorrect,
-          why: choice.isCorrect ? "Correct." : "This is a different word.",
+          why: choice.isCorrect
+            ? `Correct: ${entry.ko} means ${entry.en}.`
+            : `${choice.text} is the meaning of ${"entry" in choice ? choice.entry.ko : "a different word"}, not ${entry.ko}.`,
         }));
 
   const id = `runtime-vocab:${entry.id}:${simpleHash({ entryId: entry.id, direction })}`;
 
   return {
     id,
-    dedupeKey: `exercise:vocab:${entry.ko}`,
+    dedupeKey: `exercise:vocab:${entry.ko}:${direction}`,
     type: "mcq",
     choiceKind: "vocab",
     tags: ["mcq", "vocab", "card", ...entry.tags.slice(0, 2)],
@@ -152,8 +167,8 @@ export function buildRuntimeVocabExercise(
 
 export function buildRuntimeVocabExercises(
   entries: EntryRecord[],
-  existingExerciseIds: Set<string>,
-  limit = 120,
+  _existingExercises: ExerciseRecord[],
+  limit = Number.POSITIVE_INFINITY,
 ): RuntimeVocabExerciseRecord[] {
   const pool = vocabEntries(entries);
   if (pool.length < 4) return [];
@@ -163,7 +178,6 @@ export function buildRuntimeVocabExercises(
     if (generated.length >= limit) break;
     for (const direction of ["ko-from-en", "en-from-ko"] as const) {
       const exercise = buildRuntimeVocabExercise(entry, pool, direction);
-      if (existingExerciseIds.has(exercise.dedupeKey)) continue;
       generated.push(exercise);
       if (generated.length >= limit) break;
     }
@@ -171,10 +185,16 @@ export function buildRuntimeVocabExercises(
   return generated;
 }
 
+export function vocabExerciseSignature(exercise: ExerciseRecord): string | undefined {
+  if (exercise.type !== "mcq") return undefined;
+  const answer = exercise.choices.find((choice) => choice.isCorrect)?.text ?? "";
+  return `${exercise.prompt.stem.trim().toLocaleLowerCase()}|${answer.trim().toLocaleLowerCase()}`;
+}
+
 export function shouldAugmentVocabPool(
   questionType: string,
   focusIsVocab: boolean,
-  vocabExerciseCount: number,
+  _vocabExerciseCount: number,
 ): boolean {
-  return questionType === "vocab" || (focusIsVocab && vocabExerciseCount < 20);
+  return questionType === "vocab" || focusIsVocab;
 }

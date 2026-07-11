@@ -3,9 +3,15 @@ import { normalizeKorean } from "./normalize";
 import {
   composeSentence,
   generateDirectionVariants,
+  generateExperienceVariants,
+  generateIntentionVariants,
+  generateNumberContextVariants,
   generatePlaceTimeObjectVariants,
   generateRoutineConnectorVariants,
+  generateSeemingVariants,
   generateTimeRangeVariants,
+  generateTryVariants,
+  generateWhenVariants,
   predicateIsFinal,
 } from "./variantSlots";
 
@@ -18,7 +24,25 @@ describe("variantSlots", () => {
       expect(predicateIsFinal(variant.korean)).toBe(true);
       expect(variant.korean).toMatch(/에서/);
       expect(variant.korean).toMatch(/에/);
+      expect(variant.korean).not.toMatch(/책을 마셔요|커피를 읽어요|숙제를 만나요|친구를 해요/u);
     }
+  });
+
+  it("generates the lesson grammar families from compatible curated frames", () => {
+    expect(generateExperienceVariants().length).toBeGreaterThanOrEqual(20);
+    expect(generateTryVariants().every((variant) => variant.korean.endsWith("봤어요."))).toBe(true);
+    expect(generateWhenVariants().every((variant) => variant.korean.includes("때"))).toBe(true);
+    expect(generateIntentionVariants().every((variant) => variant.korean.includes("려고"))).toBe(true);
+    expect(generateSeemingVariants().every((variant) => variant.korean.includes("것 같아요"))).toBe(true);
+  });
+
+  it("generates contextual number practice instead of exhaustive counting cards", () => {
+    const variants = generateNumberContextVariants();
+    expect(variants).toHaveLength(16);
+    expect(variants.some((variant) => variant.korean.includes("분"))).toBe(true);
+    expect(variants.some((variant) => variant.korean.includes("원"))).toBe(true);
+    expect(variants.some((variant) => variant.korean.includes("명"))).toBe(true);
+    expect(variants.every((variant) => !/^\d+$/u.test(variant.korean))).toBe(true);
   });
 
   it("generates time-range variants with blank answers", () => {

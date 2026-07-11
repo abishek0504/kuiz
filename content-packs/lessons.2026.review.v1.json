@@ -1,0 +1,3412 @@
+{
+  "schema": "kuiz-pack@1",
+  "pack": {
+    "packId": "lessons.2026.review.v1",
+    "version": "1.0.0",
+    "title": "2026 Lesson Notes, Handwriting, and Review",
+    "locale": "en-CA",
+    "createdAt": "2026-07-10",
+    "appMinVersion": "1.0.0",
+    "includes": [
+      "vocab",
+      "grammar",
+      "particles",
+      "numbers",
+      "time",
+      "calendar",
+      "experience",
+      "pronunciation",
+      "culture",
+      "mixed"
+    ]
+  },
+  "sourceRefs": [
+    {
+      "sourceId": "lessons-review-july-2026",
+      "label": "Korean Review Worksheet, word bank, and answer key",
+      "locator": "Lessons PDF pages 1-33",
+      "inferred": false
+    },
+    {
+      "sourceId": "advanced-class-handwritten-june-2026",
+      "label": "Advanced Korean Class with Ace, including handwritten corrections",
+      "locator": "Lessons PDF pages 35-40",
+      "inferred": false
+    },
+    {
+      "sourceId": "experience-time-handout-june-2026",
+      "label": "Experience and Time lesson",
+      "locator": "Lessons PDF pages 42-45",
+      "inferred": false
+    },
+    {
+      "sourceId": "numbers-units-handout-june-2026",
+      "label": "Korean Numbers and Units guide",
+      "locator": "Lessons PDF pages 47-51",
+      "inferred": false
+    },
+    {
+      "sourceId": "visual-routine-handwritten-june-2026",
+      "label": "Four-day visual output routine with handwritten answers",
+      "locator": "Lessons PDF pages 54-61",
+      "inferred": false
+    },
+    {
+      "sourceId": "pronunciation-handouts-march-june-2026",
+      "label": "Pronunciation and tense-consonant notes",
+      "locator": "Lessons PDF pages 63-66 and 335-337",
+      "inferred": false
+    },
+    {
+      "sourceId": "subakke-connectors-handwritten-june-2026",
+      "label": "Handwritten 수밖에 and connector notes",
+      "locator": "Lessons PDF page 68",
+      "inferred": false
+    },
+    {
+      "sourceId": "particle-handwritten-corrections-may-2026",
+      "label": "Teacher particle corrections and contrast notes",
+      "locator": "Lessons PDF pages 130-131, 219, 221, 224, and 227-230",
+      "inferred": false
+    },
+    {
+      "sourceId": "foundation-handwritten-february-march-2026",
+      "label": "Early handwritten lesson notes",
+      "locator": "Lessons PDF pages 329-343",
+      "inferred": false
+    }
+  ],
+  "vocab": [
+    {
+      "id": "lesson-vocab-월요일",
+      "dedupeKey": "vocab:월요일",
+      "kind": "vocab",
+      "ko": "월요일",
+      "en": "Monday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "월요일에 한국어 수업이 있어요.",
+          "en": "I have Korean class on Monday.",
+          "audioText": "월요일에 한국어 수업이 있어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-화요일",
+      "dedupeKey": "vocab:화요일",
+      "kind": "vocab",
+      "ko": "화요일",
+      "en": "Tuesday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "화요일에 운동해요.",
+          "en": "I exercise on Tuesday.",
+          "audioText": "화요일에 운동해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-수요일",
+      "dedupeKey": "vocab:수요일",
+      "kind": "vocab",
+      "ko": "수요일",
+      "en": "Wednesday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "수요일에 친구를 만나요.",
+          "en": "I meet a friend on Wednesday.",
+          "audioText": "수요일에 친구를 만나요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-목요일",
+      "dedupeKey": "vocab:목요일",
+      "kind": "vocab",
+      "ko": "목요일",
+      "en": "Thursday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "목요일에 공부해요.",
+          "en": "I study on Thursday.",
+          "audioText": "목요일에 공부해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-금요일",
+      "dedupeKey": "vocab:금요일",
+      "kind": "vocab",
+      "ko": "금요일",
+      "en": "Friday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "금요일에 일해요.",
+          "en": "I work on Friday.",
+          "audioText": "금요일에 일해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-토요일",
+      "dedupeKey": "vocab:토요일",
+      "kind": "vocab",
+      "ko": "토요일",
+      "en": "Saturday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "토요일에 쉬어요.",
+          "en": "I rest on Saturday.",
+          "audioText": "토요일에 쉬어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-일요일",
+      "dedupeKey": "vocab:일요일",
+      "kind": "vocab",
+      "ko": "일요일",
+      "en": "Sunday",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "weekday"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "일요일에 집에 있어요.",
+          "en": "I am home on Sunday.",
+          "audioText": "일요일에 집에 있어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-일월",
+      "dedupeKey": "vocab:일월",
+      "kind": "vocab",
+      "ko": "일월",
+      "en": "January",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "일월은 겨울이에요.",
+          "en": "January is in winter.",
+          "audioText": "일월은 겨울이에요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-이월",
+      "dedupeKey": "vocab:이월",
+      "kind": "vocab",
+      "ko": "이월",
+      "en": "February",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "제 생일은 이월이에요.",
+          "en": "My birthday is in February.",
+          "audioText": "제 생일은 이월이에요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-삼월",
+      "dedupeKey": "vocab:삼월",
+      "kind": "vocab",
+      "ko": "삼월",
+      "en": "March",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "삼월에 봄이 시작해요.",
+          "en": "Spring starts in March.",
+          "audioText": "삼월에 봄이 시작해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-사월",
+      "dedupeKey": "vocab:사월",
+      "kind": "vocab",
+      "ko": "사월",
+      "en": "April",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사월에 여행을 가요.",
+          "en": "I travel in April.",
+          "audioText": "사월에 여행을 가요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-오월",
+      "dedupeKey": "vocab:오월",
+      "kind": "vocab",
+      "ko": "오월",
+      "en": "May",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오월은 따뜻해요.",
+          "en": "May is warm.",
+          "audioText": "오월은 따뜻해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-유월",
+      "dedupeKey": "vocab:유월",
+      "kind": "vocab",
+      "ko": "유월",
+      "en": "June",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month",
+        "irregular-pronunciation"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "유월에 여름이 시작해요.",
+          "en": "Summer starts in June.",
+          "audioText": "유월에 여름이 시작해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-칠월",
+      "dedupeKey": "vocab:칠월",
+      "kind": "vocab",
+      "ko": "칠월",
+      "en": "July",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘은 칠월 사일이에요.",
+          "en": "Today is July 4.",
+          "audioText": "오늘은 칠월 사일이에요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-팔월",
+      "dedupeKey": "vocab:팔월",
+      "kind": "vocab",
+      "ko": "팔월",
+      "en": "August",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "팔월은 더워요.",
+          "en": "August is hot.",
+          "audioText": "팔월은 더워요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-구월",
+      "dedupeKey": "vocab:구월",
+      "kind": "vocab",
+      "ko": "구월",
+      "en": "September",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "구월에 학교가 시작해요.",
+          "en": "School starts in September.",
+          "audioText": "구월에 학교가 시작해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-시월",
+      "dedupeKey": "vocab:시월",
+      "kind": "vocab",
+      "ko": "시월",
+      "en": "October",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month",
+        "irregular-pronunciation"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "시월에는 날씨가 시원해요.",
+          "en": "The weather is cool in October.",
+          "audioText": "시월에는 날씨가 시원해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-십일월",
+      "dedupeKey": "vocab:십일월",
+      "kind": "vocab",
+      "ko": "십일월",
+      "en": "November",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "십일월은 추워요.",
+          "en": "November is cold.",
+          "audioText": "십일월은 추워요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-십이월",
+      "dedupeKey": "vocab:십이월",
+      "kind": "vocab",
+      "ko": "십이월",
+      "en": "December",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "calendar",
+        "month"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "크리스마스는 십이월 이십오일이에요.",
+          "en": "Christmas is December 25.",
+          "audioText": "크리스마스는 십이월 이십오일이에요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-눈치",
+      "dedupeKey": "vocab:눈치",
+      "kind": "vocab",
+      "ko": "눈치",
+      "en": "social awareness; ability to read the room",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "그 사람은 눈치가 빨라요.",
+          "en": "That person reads the room quickly.",
+          "audioText": "그 사람은 눈치가 빨라요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-눈치가-빠르다",
+      "dedupeKey": "vocab:눈치가 빠르다",
+      "kind": "vocab",
+      "ko": "눈치가 빠르다",
+      "en": "to be quick at reading social cues",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "눈치가 빨라서 제 기분을 알아요.",
+          "en": "They read the room and understand how I feel.",
+          "audioText": "눈치가 빨라서 제 기분을 알아요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-눈치가-없다",
+      "dedupeKey": "vocab:눈치가 없다",
+      "kind": "vocab",
+      "ko": "눈치가 없다",
+      "en": "to miss social cues",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "분위기가 안 좋은데 농담을 하다니 눈치가 없네요.",
+          "en": "Joking in this mood shows poor social awareness.",
+          "audioText": "분위기가 안 좋은데 농담을 하다니 눈치가 없네요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-눈치를-보다",
+      "dedupeKey": "vocab:눈치를 보다",
+      "kind": "vocab",
+      "ko": "눈치를 보다",
+      "en": "to watch someone's reaction; walk on eggshells",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "하루 종일 상사 눈치를 봤어요.",
+          "en": "I watched my boss's reaction all day.",
+          "audioText": "하루 종일 상사 눈치를 봤어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-정",
+      "dedupeKey": "vocab:정",
+      "kind": "vocab",
+      "ko": "정",
+      "en": "affection or attachment that grows over time",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "이 동네에 정이 들었어요.",
+          "en": "I grew attached to this neighbourhood.",
+          "audioText": "이 동네에 정이 들었어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-정이-많다",
+      "dedupeKey": "vocab:정이 많다",
+      "kind": "vocab",
+      "ko": "정이 많다",
+      "en": "to be warm-hearted and affectionate",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "알고 보면 정이 많아요.",
+          "en": "Once you know them, they are warm-hearted.",
+          "audioText": "알고 보면 정이 많아요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-정이-들다",
+      "dedupeKey": "vocab:정이 들다",
+      "kind": "vocab",
+      "ko": "정이 들다",
+      "en": "to grow attached",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "culture",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "이 지갑에 정이 들어서 버릴 수가 없어요.",
+          "en": "I am attached to this wallet and cannot throw it away.",
+          "audioText": "이 지갑에 정이 들어서 버릴 수가 없어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-답답하다",
+      "dedupeKey": "vocab:답답하다",
+      "kind": "vocab",
+      "ko": "답답하다",
+      "en": "to feel frustrated, trapped, or stifled",
+      "pos": "adjective",
+      "tags": [
+        "vocab",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "한국어로 말이 안 나와서 답답해요.",
+          "en": "I feel frustrated because the Korean words will not come out.",
+          "audioText": "한국어로 말이 안 나와서 답답해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-억울하다",
+      "dedupeKey": "vocab:억울하다",
+      "kind": "vocab",
+      "ko": "억울하다",
+      "en": "to feel wronged or unfairly blamed",
+      "pos": "adjective",
+      "tags": [
+        "vocab",
+        "emotion"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "제가 혼나서 너무 억울했어요.",
+          "en": "I felt wronged because I was scolded.",
+          "audioText": "제가 혼나서 너무 억울했어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-분위기",
+      "dedupeKey": "vocab:분위기",
+      "kind": "vocab",
+      "ko": "분위기",
+      "en": "atmosphere; mood",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "culture",
+        "social"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사무실 분위기가 조용해요.",
+          "en": "The office atmosphere is quiet.",
+          "audioText": "사무실 분위기가 조용해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-상사",
+      "dedupeKey": "vocab:상사",
+      "kind": "vocab",
+      "ko": "상사",
+      "en": "workplace superior; boss",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "work",
+        "people"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "상사가 화가 나 있어요.",
+          "en": "The boss is angry.",
+          "audioText": "상사가 화가 나 있어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-실력",
+      "dedupeKey": "vocab:실력",
+      "kind": "vocab",
+      "ko": "실력",
+      "en": "skill; ability",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "school",
+        "work"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "제 실력을 다 보여주고 싶어요.",
+          "en": "I want to show all of my ability.",
+          "audioText": "제 실력을 다 보여주고 싶어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-보여주다",
+      "dedupeKey": "vocab:보여주다",
+      "kind": "vocab",
+      "ko": "보여주다",
+      "en": "to show",
+      "pos": "verb",
+      "tags": [
+        "vocab",
+        "action"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사진을 보여 주세요.",
+          "en": "Please show me the photo.",
+          "audioText": "사진을 보여 주세요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-몇-월-며칠",
+      "dedupeKey": "vocab:몇 월 며칠",
+      "kind": "vocab",
+      "ko": "몇 월 며칠",
+      "en": "what month and day",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "calendar",
+        "question"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘은 몇 월 며칠이에요?",
+          "en": "What is today's date?",
+          "audioText": "오늘은 몇 월 며칠이에요?"
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-전화번호",
+      "dedupeKey": "vocab:전화번호",
+      "kind": "vocab",
+      "ko": "전화번호",
+      "en": "phone number",
+      "pos": "noun",
+      "tags": [
+        "vocab",
+        "numbers",
+        "daily-life"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "전화번호가 뭐예요?",
+          "en": "What is your phone number?",
+          "audioText": "전화번호가 뭐예요?"
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-한-명",
+      "dedupeKey": "vocab:한 명",
+      "kind": "vocab",
+      "ko": "한 명",
+      "en": "one person",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "counter",
+        "people",
+        "native-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "한 명이 왔어요.",
+          "en": "One person came.",
+          "audioText": "한 명이 왔어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-두-명",
+      "dedupeKey": "vocab:두 명",
+      "kind": "vocab",
+      "ko": "두 명",
+      "en": "two people",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "counter",
+        "people",
+        "native-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "두 명이 왔어요.",
+          "en": "Two people came.",
+          "audioText": "두 명이 왔어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-한-개",
+      "dedupeKey": "vocab:한 개",
+      "kind": "vocab",
+      "ko": "한 개",
+      "en": "one item",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "counter",
+        "objects",
+        "native-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사과 한 개 주세요.",
+          "en": "One apple, please.",
+          "audioText": "사과 한 개 주세요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-세-개",
+      "dedupeKey": "vocab:세 개",
+      "kind": "vocab",
+      "ko": "세 개",
+      "en": "three items",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "counter",
+        "objects",
+        "native-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사과 세 개 주세요.",
+          "en": "Three apples, please.",
+          "audioText": "사과 세 개 주세요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-스무-살",
+      "dedupeKey": "vocab:스무 살",
+      "kind": "vocab",
+      "ko": "스무 살",
+      "en": "twenty years old",
+      "pos": "expression",
+      "tags": [
+        "vocab",
+        "counter",
+        "age",
+        "native-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "저는 스무 살이에요.",
+          "en": "I am twenty years old.",
+          "audioText": "저는 스무 살이에요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-그러므로",
+      "dedupeKey": "vocab:그러므로",
+      "kind": "vocab",
+      "ko": "그러므로",
+      "en": "therefore",
+      "pos": "adverb",
+      "tags": [
+        "vocab",
+        "connectors",
+        "formal"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "시간이 없어요. 그러므로 지금 가야 해요.",
+          "en": "There is no time. Therefore, we must go now.",
+          "audioText": "시간이 없어요. 그러므로 지금 가야 해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-게다가",
+      "dedupeKey": "vocab:게다가",
+      "kind": "vocab",
+      "ko": "게다가",
+      "en": "in addition; moreover",
+      "pos": "adverb",
+      "tags": [
+        "vocab",
+        "connectors"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친절해요. 게다가 재미있어요.",
+          "en": "They are kind. In addition, they are funny.",
+          "audioText": "친절해요. 게다가 재미있어요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-따라가다",
+      "dedupeKey": "vocab:따라가다",
+      "kind": "vocab",
+      "ko": "따라가다",
+      "en": "to follow; go along",
+      "pos": "verb",
+      "tags": [
+        "vocab",
+        "action",
+        "pronunciation"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "친구를 따라가요.",
+          "en": "I follow my friend.",
+          "audioText": "친구를 따라가요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-짜다",
+      "dedupeKey": "vocab:짜다",
+      "kind": "vocab",
+      "ko": "짜다",
+      "en": "to be salty",
+      "pos": "adjective",
+      "tags": [
+        "vocab",
+        "food",
+        "pronunciation"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "이거 좀 짜요.",
+          "en": "This is a little salty.",
+          "audioText": "이거 좀 짜요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-꼭",
+      "dedupeKey": "vocab:꼭",
+      "kind": "vocab",
+      "ko": "꼭",
+      "en": "surely; 반드시; must",
+      "pos": "adverb",
+      "tags": [
+        "vocab",
+        "necessity",
+        "pronunciation"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "꼭 해야 해요.",
+          "en": "You really must do it.",
+          "audioText": "꼭 해야 해요."
+        }
+      ]
+    },
+    {
+      "id": "lesson-vocab-딱",
+      "dedupeKey": "vocab:딱",
+      "kind": "vocab",
+      "ko": "딱",
+      "en": "exactly; just right",
+      "pos": "adverb",
+      "tags": [
+        "vocab",
+        "pronunciation"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "딱 좋아요.",
+          "en": "It is exactly right.",
+          "audioText": "딱 좋아요."
+        }
+      ]
+    }
+  ],
+  "particles": [],
+  "grammar": [
+    {
+      "id": "lesson-grammar-experience",
+      "dedupeKey": "grammar:past-experience-eun-jeogi-isseoyo",
+      "kind": "grammar",
+      "title": "Past experience: -(으)ㄴ 적이 있어요 / 없어요",
+      "pattern": "V-(으)ㄴ 적이 있어요 / 없어요",
+      "meaning": "have or have never had the experience of doing something",
+      "formation": [
+        "Vowel or ㄹ-ending stem + ㄴ 적이 있어요: 가다 → 간 적이 있어요",
+        "Consonant-ending stem + 은 적이 있어요: 먹다 → 먹은 적이 있어요",
+        "ㄷ irregular: 듣다 → 들은 적이 있어요",
+        "Use 없어요 for no past experience."
+      ],
+      "tags": [
+        "grammar",
+        "experience",
+        "past"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "한국에 간 적이 있어요.",
+          "en": "I have been to Korea.",
+          "audioText": "한국에 간 적이 있어요."
+        },
+        {
+          "ko": "한복을 입은 적이 없어요.",
+          "en": "I have never worn hanbok.",
+          "audioText": "한복을 입은 적이 없어요."
+        }
+      ],
+      "pitfalls": [
+        "Do not place the dictionary form directly before 적.",
+        "This presents a life-history fact, while -아/어 봤어요 emphasizes trying the action."
+      ]
+    },
+    {
+      "id": "lesson-grammar-try",
+      "dedupeKey": "grammar:try-a-eo-boda",
+      "kind": "grammar",
+      "title": "Trying an action: -아/어 보다",
+      "pattern": "V-아/어 보다; past polite V-아/어 봤어요",
+      "meaning": "try doing something to see what it is like",
+      "formation": [
+        "먹다 → 먹어 봤어요",
+        "공부하다 → 공부해 봤어요",
+        "입다 → 입어 봤어요",
+        "듣다 → 들어 봤어요",
+        "만들다 → 만들어 봤어요"
+      ],
+      "tags": [
+        "grammar",
+        "experience",
+        "try",
+        "past"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "김치를 먹어 봤어요.",
+          "en": "I tried eating kimchi.",
+          "audioText": "김치를 먹어 봤어요."
+        },
+        {
+          "ko": "한복을 입어 봤어요.",
+          "en": "I tried wearing hanbok.",
+          "audioText": "한복을 입어 봤어요."
+        }
+      ],
+      "pitfalls": [
+        "-아/어 봤어요 focuses on the attempt or taste, not only the historical record.",
+        "Do not replace the connective with -고."
+      ]
+    },
+    {
+      "id": "lesson-grammar-when",
+      "dedupeKey": "grammar:when-eul-ttae",
+      "kind": "grammar",
+      "title": "When or during: -(으)ㄹ 때",
+      "pattern": "N 때; V/A-(으)ㄹ 때",
+      "meaning": "when, during, or in the situation that",
+      "formation": [
+        "Noun + 때 for a period or life stage: 어렸을 때",
+        "Vowel or ㄹ-ending stem + ㄹ 때: 가다 → 갈 때",
+        "Consonant-ending stem + 을 때: 먹다 → 먹을 때",
+        "Use 에 for calendar points: 월요일에, 주말에."
+      ],
+      "tags": [
+        "grammar",
+        "when",
+        "time"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "배고플 때 밥을 먹어요.",
+          "en": "I eat when I am hungry.",
+          "audioText": "배고플 때 밥을 먹어요."
+        },
+        {
+          "ko": "월요일에 한국어 수업이 있어요.",
+          "en": "I have Korean class on Monday.",
+          "audioText": "월요일에 한국어 수업이 있어요.",
+          "note": "A calendar point uses 에, not 때."
+        }
+      ],
+      "pitfalls": [
+        "Do not use 때 after a regular weekday as if it were a continuous situation.",
+        "Do not use 에 to attach a verb clause."
+      ]
+    },
+    {
+      "id": "lesson-grammar-intention",
+      "dedupeKey": "grammar:intention-euryeogo-haeyo",
+      "kind": "grammar",
+      "title": "Intention: -(으)려고 해요",
+      "pattern": "V-(으)려고 해요",
+      "meaning": "intend or plan internally to do something",
+      "formation": [
+        "Vowel or ㄹ-ending stem + 려고 해요: 가다 → 가려고 해요, 만들다 → 만들려고 해요",
+        "Consonant-ending stem + 으려고 해요: 먹다 → 먹으려고 해요",
+        "하다 → 하려고 해요"
+      ],
+      "tags": [
+        "grammar",
+        "intention",
+        "future"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "내년에 한국에 가려고 해요.",
+          "en": "I intend to go to Korea next year.",
+          "audioText": "내년에 한국에 가려고 해요."
+        },
+        {
+          "ko": "이번 주말에는 집에서 쉬려고 해요.",
+          "en": "I intend to rest at home this weekend.",
+          "audioText": "이번 주말에는 집에서 쉬려고 해요."
+        }
+      ],
+      "pitfalls": [
+        "This emphasizes intention, not a fixed prediction.",
+        "Do not use the future modifier -ㄹ before 려고."
+      ]
+    },
+    {
+      "id": "lesson-grammar-seeming",
+      "dedupeKey": "grammar:seeming-geot-gatayo",
+      "kind": "grammar",
+      "title": "Soft opinion or appearance: 것 같아요",
+      "pattern": "A-(으)ㄴ 것 같아요; V-는 것 같아요; past V-(으)ㄴ 것 같아요",
+      "meaning": "I think, it seems, or it looks like",
+      "formation": [
+        "Present descriptive verb + -(으)ㄴ: 좋다 → 좋은 것 같아요",
+        "Present action verb + -는: 오다 → 오는 것 같아요",
+        "Past action + -(으)ㄴ: 오다 → 온 것 같아요",
+        "잘하다 is an action verb: 잘하는 것 같아요."
+      ],
+      "tags": [
+        "grammar",
+        "seeming",
+        "naturalness"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘 날씨가 좋은 것 같아요.",
+          "en": "I think the weather is nice today.",
+          "audioText": "오늘 날씨가 좋은 것 같아요."
+        },
+        {
+          "ko": "밖을 보니 비가 오는 것 같아요.",
+          "en": "It looks like it is raining.",
+          "audioText": "밖을 보니 비가 오는 것 같아요."
+        },
+        {
+          "ko": "어제 비가 온 것 같아요.",
+          "en": "I think it rained yesterday.",
+          "audioText": "어제 비가 온 것 같아요."
+        }
+      ],
+      "pitfalls": [
+        "Do not use -는 with a descriptive verb.",
+        "Keep present observation and past inference distinct.",
+        "Korean often uses this form to sound less blunt even when the speaker feels sure."
+      ]
+    },
+    {
+      "id": "lesson-grammar-number-systems",
+      "dedupeKey": "grammar:native-sino-number-systems-and-counters",
+      "kind": "grammar",
+      "title": "Native and Sino-Korean number systems",
+      "pattern": "Native + 살/개/명/시; Sino + 원/월/일/분/phone digits",
+      "meaning": "choose the number system based on the following counter or context",
+      "formation": [
+        "Native numbers for age, people, objects, and hours.",
+        "Sino-Korean numbers for prices, dates, phone numbers, and minutes.",
+        "Before counters: 하나→한, 둘→두, 셋→세, 넷→네, 스물→스무."
+      ],
+      "tags": [
+        "grammar",
+        "numbers",
+        "counter",
+        "native-numbers",
+        "sino-numbers"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "사과 세 개 주세요.",
+          "en": "Three apples, please.",
+          "audioText": "사과 세 개 주세요."
+        },
+        {
+          "ko": "지금 오후 두 시 십오 분이에요.",
+          "en": "It is 2:15 PM.",
+          "audioText": "지금 오후 두 시 십오 분이에요."
+        },
+        {
+          "ko": "만 원이에요.",
+          "en": "It is 10,000 won.",
+          "audioText": "만 원이에요."
+        }
+      ],
+      "pitfalls": [
+        "Hours are Native Korean, but minutes are Sino-Korean.",
+        "Do not say 하나 시, 둘 명, or 스물 살."
+      ]
+    },
+    {
+      "id": "lesson-grammar-calendar-months",
+      "dedupeKey": "grammar:calendar-month-day-and-irregular-months",
+      "kind": "grammar",
+      "title": "Calendar dates and irregular month names",
+      "pattern": "Sino number + 월 + Sino number + 일",
+      "meaning": "state months and days of the month",
+      "formation": [
+        "June is 유월, not 육월.",
+        "October is 시월, not 십월.",
+        "Ask 오늘은 몇 월 며칠이에요?"
+      ],
+      "tags": [
+        "grammar",
+        "calendar",
+        "dates",
+        "months"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "오늘은 칠월 사일이에요.",
+          "en": "Today is July 4.",
+          "audioText": "오늘은 칠월 사일이에요."
+        },
+        {
+          "ko": "제 생일은 이월 칠일이에요.",
+          "en": "My birthday is February 7.",
+          "audioText": "제 생일은 이월 칠일이에요."
+        }
+      ],
+      "pitfalls": [
+        "Use 유월 and 시월 for natural pronunciation."
+      ]
+    },
+    {
+      "id": "lesson-grammar-pronunciation-contrast",
+      "dedupeKey": "grammar:plain-aspirated-tense-consonants",
+      "kind": "grammar",
+      "title": "Plain, aspirated, and tense consonants",
+      "pattern": "ㄱ/ㅋ/ㄲ, ㄷ/ㅌ/ㄸ, ㅂ/ㅍ/ㅃ, ㅈ/ㅊ/ㅉ, ㅅ/ㅆ",
+      "meaning": "distinguish consonants by aspiration and muscle tension",
+      "formation": [
+        "Plain consonants are relaxed.",
+        "Aspirated consonants release a strong burst of air.",
+        "Tense consonants use tight, controlled pressure with very little air.",
+        "Accuracy and physical tension matter more than speed or loudness."
+      ],
+      "tags": [
+        "grammar",
+        "pronunciation",
+        "minimal-pair"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "examples": [
+        {
+          "ko": "발이 아파요.",
+          "en": "My foot hurts.",
+          "audioText": "발이 아파요."
+        },
+        {
+          "ko": "빨리 와요.",
+          "en": "Come quickly.",
+          "audioText": "빨리 와요."
+        },
+        {
+          "ko": "딱 좋아요.",
+          "en": "It is exactly right.",
+          "audioText": "딱 좋아요."
+        },
+        {
+          "ko": "이거 좀 짜요.",
+          "en": "This is a little salty.",
+          "audioText": "이거 좀 짜요."
+        }
+      ],
+      "pitfalls": [
+        "Tense does not mean louder.",
+        "Do not add a large puff of air to a tense consonant."
+      ]
+    }
+  ],
+  "distractorGroups": [],
+  "exercises": [
+    {
+      "id": "lesson-experience-form-mcq",
+      "dedupeKey": "exercise:lesson-2026:experience-form-mcq",
+      "type": "mcq",
+      "tags": [
+        "grammar",
+        "experience",
+        "past",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the correctly formed past-experience sentence."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "한국에 가는 적이 있어요.",
+          "isCorrect": false,
+          "why": "-는 describes a present action, not a completed experience."
+        },
+        {
+          "id": "b",
+          "text": "한국에 간 적이 있어요.",
+          "isCorrect": true,
+          "why": "Correct: 가다 becomes 간 before 적."
+        },
+        {
+          "id": "c",
+          "text": "한국에 가은 적이 있어요.",
+          "isCorrect": false,
+          "why": "A vowel-ending stem takes -ㄴ, not -은."
+        },
+        {
+          "id": "d",
+          "text": "한국에 갈 적이 있어요.",
+          "isCorrect": false,
+          "why": "-ㄹ points forward and does not form this past-experience pattern."
+        }
+      ],
+      "explanation": "Use the past modifier -(으)ㄴ before 적이 있어요."
+    },
+    {
+      "id": "lesson-experience-listen-blank",
+      "dedupeKey": "exercise:lesson-2026:experience-listen-blank",
+      "type": "fillBlank",
+      "tags": [
+        "grammar",
+        "experience",
+        "past",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "한국 노래를 ___ 적이 있어요.",
+        "audioText": "한국 노래를 들은 적이 있어요.",
+        "stemEn": "I have listened to a Korean song before."
+      },
+      "level": "A1",
+      "answerPresentation": "word",
+      "acceptedAnswers": {
+        "strict": [
+          "들은",
+          "한국 노래를 들은 적이 있어요"
+        ],
+        "relaxed": [
+          "들은",
+          "한국 노래를 들은 적이 있어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "들은",
+      "explanation": "듣다 is ㄷ-irregular before a vowel, so it becomes 들은."
+    },
+    {
+      "id": "lesson-experience-fix",
+      "dedupeKey": "exercise:lesson-2026:experience-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "experience",
+        "past",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the experience sentence.",
+        "stemEn": "I have made kimchi before."
+      },
+      "level": "A1",
+      "incorrect": "김치를 만들은 적이 있어요.",
+      "corrected": "김치를 만든 적이 있어요.",
+      "acceptedAnswers": {
+        "strict": [
+          "김치를 만든 적이 있어요"
+        ],
+        "relaxed": [
+          "김치를 만든 적이 있어요"
+        ],
+        "regex": []
+      },
+      "explanation": "만들다 has a ㄹ-ending stem, so use 만든, not 만들은."
+    },
+    {
+      "id": "lesson-experience-build",
+      "dedupeKey": "exercise:lesson-2026:experience-build",
+      "type": "sentenceBuilder",
+      "tags": [
+        "grammar",
+        "experience",
+        "past",
+        "sentence-builder"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Build: I have worn hanbok before.",
+        "stemEn": "I have worn hanbok before."
+      },
+      "level": "A1",
+      "tokens": [
+        "저는",
+        "한복을",
+        "입은",
+        "적이",
+        "있어요"
+      ],
+      "targetMeaning": "I have worn hanbok before.",
+      "acceptedAnswers": {
+        "strict": [
+          "저는 한복을 입은 적이 있어요",
+          "한복을 입은 적이 있어요"
+        ],
+        "relaxed": [
+          "저는 한복을 입은 적이 있어요",
+          "한복을 입은 적이 있어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "저는 한복을 입은 적이 있어요",
+      "explanation": "입다 takes -은 before 적이 있어요."
+    },
+    {
+      "id": "lesson-experience-roleplay",
+      "dedupeKey": "exercise:lesson-2026:experience-roleplay",
+      "type": "roleplay",
+      "tags": [
+        "grammar",
+        "experience",
+        "interaction",
+        "roleplay"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Answer the question in Korean.",
+        "context": "A friend asks whether you have ever been to Korea.",
+        "stemKo": "한국에 간 적이 있어요?"
+      },
+      "level": "A1",
+      "acceptedAnswers": {
+        "strict": [
+          "네, 한국에 간 적이 있어요",
+          "아니요, 한국에 간 적이 없어요"
+        ],
+        "relaxed": [
+          "네, 한국에 간 적이 있어요",
+          "아니요, 한국에 간 적이 없어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "네, 한국에 간 적이 있어요",
+      "explanation": "Use 있어요 for experience and 없어요 for no experience."
+    },
+    {
+      "id": "lesson-try-vs-history-mcq",
+      "dedupeKey": "exercise:lesson-2026:try-vs-history-mcq",
+      "type": "mcq",
+      "tags": [
+        "grammar",
+        "experience",
+        "try",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "You are emphasizing the attempt and taste. What fits best?",
+        "stemKo": "김치를 ___"
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "먹은 적이 있어요",
+          "isCorrect": false,
+          "why": "This presents a historical fact rather than focusing on trying it."
+        },
+        {
+          "id": "b",
+          "text": "먹어 봤어요",
+          "isCorrect": true,
+          "why": "Correct: This emphasizes trying kimchi to see what it is like."
+        },
+        {
+          "id": "c",
+          "text": "먹을 때예요",
+          "isCorrect": false,
+          "why": "This means it is a time to eat."
+        },
+        {
+          "id": "d",
+          "text": "먹으려고 해요",
+          "isCorrect": false,
+          "why": "This expresses a future intention."
+        }
+      ],
+      "explanation": "-아/어 봤어요 focuses on trying an action."
+    },
+    {
+      "id": "lesson-try-fill",
+      "dedupeKey": "exercise:lesson-2026:try-fill",
+      "type": "fillBlank",
+      "tags": [
+        "grammar",
+        "experience",
+        "try",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "한국 노래를 ___ 봤어요.",
+        "audioText": "한국 노래를 들어 봤어요.",
+        "stemEn": "I tried listening to a Korean song."
+      },
+      "level": "A1",
+      "answerPresentation": "word",
+      "acceptedAnswers": {
+        "strict": [
+          "들어",
+          "한국 노래를 들어 봤어요"
+        ],
+        "relaxed": [
+          "들어",
+          "한국 노래를 들어 봤어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "들어",
+      "explanation": "듣다 becomes 들어 before 보다."
+    },
+    {
+      "id": "lesson-try-fix",
+      "dedupeKey": "exercise:lesson-2026:try-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "experience",
+        "try",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the sentence about trying an action."
+      },
+      "level": "A1",
+      "incorrect": "김치를 먹고 봤어요.",
+      "corrected": "김치를 먹어 봤어요.",
+      "acceptedAnswers": {
+        "strict": [
+          "김치를 먹어 봤어요"
+        ],
+        "relaxed": [
+          "김치를 먹어 봤어요"
+        ],
+        "regex": []
+      },
+      "explanation": "The try construction is -아/어 보다, not -고 보다."
+    },
+    {
+      "id": "lesson-try-order",
+      "dedupeKey": "exercise:lesson-2026:try-order",
+      "type": "ordering",
+      "tags": [
+        "grammar",
+        "experience",
+        "try",
+        "ordering"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Put the chunks in a natural order.",
+        "stemEn": "I tried taking a plane."
+      },
+      "level": "A1",
+      "chunks": [
+        "저는",
+        "비행기를",
+        "타",
+        "봤어요"
+      ],
+      "acceptedAnswers": {
+        "strict": [
+          "저는 비행기를 타 봤어요",
+          "비행기를 타 봤어요"
+        ],
+        "relaxed": [
+          "저는 비행기를 타 봤어요",
+          "비행기를 타 봤어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "저는 비행기를 타 봤어요",
+      "explanation": "타다 becomes 타 봤어요."
+    },
+    {
+      "id": "lesson-when-calendar-mcq",
+      "dedupeKey": "exercise:lesson-2026:when-calendar-mcq",
+      "type": "mcq",
+      "tags": [
+        "grammar",
+        "when",
+        "time",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the natural pair for a calendar day and an action situation."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "월요일 때 / 공부할 에",
+          "isCorrect": false,
+          "why": "These endings are reversed."
+        },
+        {
+          "id": "b",
+          "text": "월요일에 / 공부할 때",
+          "isCorrect": true,
+          "why": "Correct: A calendar point takes 에, while a verb clause takes 때."
+        },
+        {
+          "id": "c",
+          "text": "월요일에서 / 공부할 때",
+          "isCorrect": false,
+          "why": "에서 marks an action place or source, not a weekday."
+        },
+        {
+          "id": "d",
+          "text": "월요일에 / 공부해서",
+          "isCorrect": false,
+          "why": "-아서 gives a cause or sequence, not simply when."
+        }
+      ],
+      "explanation": "Use 월요일에 but 공부할 때."
+    },
+    {
+      "id": "lesson-when-fill",
+      "dedupeKey": "exercise:lesson-2026:when-fill",
+      "type": "fillBlank",
+      "tags": [
+        "grammar",
+        "when",
+        "time",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "학교에 ___ 버스를 타요.",
+        "audioText": "학교에 갈 때 버스를 타요.",
+        "stemEn": "When I go to school, I take the bus."
+      },
+      "level": "A1",
+      "answerPresentation": "phrase",
+      "acceptedAnswers": {
+        "strict": [
+          "갈 때",
+          "학교에 갈 때 버스를 타요"
+        ],
+        "relaxed": [
+          "갈 때",
+          "학교에 갈 때 버스를 타요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "갈 때",
+      "explanation": "가다 becomes 갈 때."
+    },
+    {
+      "id": "lesson-when-fix",
+      "dedupeKey": "exercise:lesson-2026:when-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "when",
+        "time",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "experience-time-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the time expression."
+      },
+      "level": "A1",
+      "incorrect": "월요일 때 한국어 수업이 있어요.",
+      "corrected": "월요일에 한국어 수업이 있어요.",
+      "acceptedAnswers": {
+        "strict": [
+          "월요일에 한국어 수업이 있어요"
+        ],
+        "relaxed": [
+          "월요일에 한국어 수업이 있어요"
+        ],
+        "regex": []
+      },
+      "explanation": "Regular calendar points use 에."
+    },
+    {
+      "id": "lesson-when-build",
+      "dedupeKey": "exercise:lesson-2026:when-build",
+      "type": "sentenceBuilder",
+      "tags": [
+        "grammar",
+        "when",
+        "time",
+        "sentence-builder"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Build: When I am tired, I drink coffee.",
+        "stemEn": "When I am tired, I drink coffee."
+      },
+      "level": "A1",
+      "tokens": [
+        "피곤할",
+        "때",
+        "커피를",
+        "마셔요"
+      ],
+      "targetMeaning": "When I am tired, I drink coffee.",
+      "acceptedAnswers": {
+        "strict": [
+          "피곤할 때 커피를 마셔요"
+        ],
+        "relaxed": [
+          "피곤할 때 커피를 마셔요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "피곤할 때 커피를 마셔요",
+      "explanation": "피곤하다 becomes 피곤할 때."
+    },
+    {
+      "id": "lesson-intention-mcq",
+      "dedupeKey": "exercise:lesson-2026:intention-mcq",
+      "type": "mcq",
+      "tags": [
+        "grammar",
+        "intention",
+        "future",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the sentence that emphasizes an internal plan."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "내년에 한국에 갈 거예요.",
+          "isCorrect": false,
+          "why": "This is a future statement and does not emphasize internal planning as strongly."
+        },
+        {
+          "id": "b",
+          "text": "내년에 한국에 가려고 해요.",
+          "isCorrect": true,
+          "why": "Correct: -(으)려고 해요 emphasizes intention."
+        },
+        {
+          "id": "c",
+          "text": "내년에 한국에 간 적이 있어요.",
+          "isCorrect": false,
+          "why": "This describes a past experience."
+        },
+        {
+          "id": "d",
+          "text": "내년에 한국에 가는 것 같아요.",
+          "isCorrect": false,
+          "why": "This gives an impression or opinion."
+        }
+      ],
+      "explanation": "Use -(으)려고 해요 for intention."
+    },
+    {
+      "id": "lesson-intention-fill",
+      "dedupeKey": "exercise:lesson-2026:intention-fill",
+      "type": "fillBlank",
+      "tags": [
+        "grammar",
+        "intention",
+        "future",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "오늘 저녁은 건강하게 ___ 해요.",
+        "audioText": "오늘 저녁은 건강하게 먹으려고 해요.",
+        "stemEn": "I intend to eat healthily tonight."
+      },
+      "level": "A1",
+      "answerPresentation": "phrase",
+      "acceptedAnswers": {
+        "strict": [
+          "먹으려고",
+          "오늘 저녁은 건강하게 먹으려고 해요"
+        ],
+        "relaxed": [
+          "먹으려고",
+          "오늘 저녁은 건강하게 먹으려고 해요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "먹으려고",
+      "explanation": "먹다 ends in a consonant, so use 먹으려고."
+    },
+    {
+      "id": "lesson-intention-fix",
+      "dedupeKey": "exercise:lesson-2026:intention-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "intention",
+        "future",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the intention form."
+      },
+      "level": "A1",
+      "incorrect": "이번 주말에는 집에서 쉴려고 해요.",
+      "corrected": "이번 주말에는 집에서 쉬려고 해요.",
+      "acceptedAnswers": {
+        "strict": [
+          "이번 주말에는 집에서 쉬려고 해요"
+        ],
+        "relaxed": [
+          "이번 주말에는 집에서 쉬려고 해요"
+        ],
+        "regex": []
+      },
+      "explanation": "쉬다 has a vowel-ending stem: 쉬려고 해요."
+    },
+    {
+      "id": "lesson-intention-dialogue",
+      "dedupeKey": "exercise:lesson-2026:intention-dialogue",
+      "type": "dialogue",
+      "tags": [
+        "grammar",
+        "intention",
+        "interaction",
+        "dialogue"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Read the exchange and answer with the planned action."
+      },
+      "level": "A1",
+      "turns": [
+        {
+          "speaker": "A",
+          "ko": "오늘 수업이 끝나고 뭐 하려고 해요?",
+          "en": "What do you intend to do after class?",
+          "audioText": "오늘 수업이 끝나고 뭐 하려고 해요?"
+        },
+        {
+          "speaker": "B",
+          "ko": "친구를 만나려고 해요.",
+          "en": "I intend to meet a friend.",
+          "audioText": "친구를 만나려고 해요."
+        }
+      ],
+      "question": "B는 뭐 하려고 해요?",
+      "acceptedAnswers": {
+        "strict": [
+          "친구를 만나려고 해요"
+        ],
+        "relaxed": [
+          "친구를 만나려고 해요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "친구를 만나려고 해요",
+      "explanation": "The answer repeats the intended action."
+    },
+    {
+      "id": "lesson-seeming-form-mcq",
+      "dedupeKey": "exercise:lesson-2026:seeming-form-mcq",
+      "type": "mcq",
+      "tags": [
+        "grammar",
+        "seeming",
+        "naturalness",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the correctly formed present observation."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "비가 온 것 같아요.",
+          "isCorrect": false,
+          "why": "This normally points to a past event: it seems it rained."
+        },
+        {
+          "id": "b",
+          "text": "비가 오는 것 같아요.",
+          "isCorrect": true,
+          "why": "Correct: A present action verb takes -는 것 같아요."
+        },
+        {
+          "id": "c",
+          "text": "비가 오은 것 같아요.",
+          "isCorrect": false,
+          "why": "오다 does not take -은 in this present observation."
+        },
+        {
+          "id": "d",
+          "text": "비가 올 때 같아요.",
+          "isCorrect": false,
+          "why": "This combines unrelated time and similarity forms."
+        }
+      ],
+      "explanation": "Present action: 오는 것 같아요. Past inference: 온 것 같아요."
+    },
+    {
+      "id": "lesson-seeming-adjective-fill",
+      "dedupeKey": "exercise:lesson-2026:seeming-adjective-fill",
+      "type": "fillBlank",
+      "tags": [
+        "grammar",
+        "seeming",
+        "naturalness",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "이 옷은 저한테 조금 ___ 것 같아요.",
+        "audioText": "이 옷은 저한테 조금 작은 것 같아요.",
+        "stemEn": "I think these clothes are a little small for me."
+      },
+      "level": "A1",
+      "answerPresentation": "word",
+      "acceptedAnswers": {
+        "strict": [
+          "작은",
+          "이 옷은 저한테 조금 작은 것 같아요"
+        ],
+        "relaxed": [
+          "작은",
+          "이 옷은 저한테 조금 작은 것 같아요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "작은",
+      "explanation": "A present descriptive verb uses -(으)ㄴ: 작다 → 작은."
+    },
+    {
+      "id": "lesson-seeming-action-fix",
+      "dedupeKey": "exercise:lesson-2026:seeming-action-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "seeming",
+        "naturalness",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the handwritten lesson example."
+      },
+      "level": "A1",
+      "incorrect": "Ace 씨는 한국어를 정말 잘한 것 같아요.",
+      "corrected": "Ace 씨는 한국어를 정말 잘하는 것 같아요.",
+      "acceptedAnswers": {
+        "strict": [
+          "Ace 씨는 한국어를 정말 잘하는 것 같아요"
+        ],
+        "relaxed": [
+          "Ace 씨는 한국어를 정말 잘하는 것 같아요"
+        ],
+        "regex": []
+      },
+      "explanation": "잘하다 is an action verb here, so the present form is 잘하는 것 같아요."
+    },
+    {
+      "id": "lesson-seeming-listen",
+      "dedupeKey": "exercise:lesson-2026:seeming-listen",
+      "type": "listening",
+      "tags": [
+        "grammar",
+        "seeming",
+        "listening"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Listen and type the Korean sentence.",
+        "audioText": "어제 비가 온 것 같아요.",
+        "stemEn": "I think it rained yesterday."
+      },
+      "level": "A1",
+      "question": "What did you hear?",
+      "acceptedAnswers": {
+        "strict": [
+          "어제 비가 온 것 같아요"
+        ],
+        "relaxed": [
+          "어제 비가 온 것 같아요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "어제 비가 온 것 같아요",
+      "explanation": "Past action 오다 becomes 온 것 같아요."
+    },
+    {
+      "id": "lesson-counter-context-mcq",
+      "dedupeKey": "exercise:lesson-2026:counter-context-mcq",
+      "type": "mcq",
+      "tags": [
+        "numbers",
+        "counter",
+        "native-numbers",
+        "sino-numbers",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Which line uses the correct number systems for 2:15?"
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "이 시 열다섯 분",
+          "isCorrect": false,
+          "why": "The hour incorrectly uses Sino 이."
+        },
+        {
+          "id": "b",
+          "text": "두 시 십오 분",
+          "isCorrect": true,
+          "why": "Correct: Hours use Native 두 and minutes use Sino 십오."
+        },
+        {
+          "id": "c",
+          "text": "둘 시 십오 분",
+          "isCorrect": false,
+          "why": "둘 contracts to 두 before 시."
+        },
+        {
+          "id": "d",
+          "text": "두 시 열다섯 분",
+          "isCorrect": false,
+          "why": "Minutes use Sino 십오, not Native 열다섯."
+        }
+      ],
+      "explanation": "Hours are Native Korean; minutes are Sino-Korean."
+    },
+    {
+      "id": "lesson-counter-object-mcq",
+      "dedupeKey": "exercise:lesson-2026:counter-object-mcq",
+      "type": "mcq",
+      "tags": [
+        "numbers",
+        "counter",
+        "native-numbers",
+        "shopping",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Ask for three apples naturally."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "사과 삼 개 주세요.",
+          "isCorrect": false,
+          "why": "개 normally takes Native Korean numbers."
+        },
+        {
+          "id": "b",
+          "text": "사과 세 개 주세요.",
+          "isCorrect": true,
+          "why": "Correct: 셋 contracts to 세 before 개."
+        },
+        {
+          "id": "c",
+          "text": "사과 셋 개 주세요.",
+          "isCorrect": false,
+          "why": "셋 must contract before a counter."
+        },
+        {
+          "id": "d",
+          "text": "사과 세 명 주세요.",
+          "isCorrect": false,
+          "why": "명 counts people, not objects."
+        }
+      ],
+      "explanation": "Use 세 개 for three items."
+    },
+    {
+      "id": "lesson-counter-age-fix",
+      "dedupeKey": "exercise:lesson-2026:counter-age-fix",
+      "type": "correction",
+      "tags": [
+        "numbers",
+        "counter",
+        "native-numbers",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the age expression."
+      },
+      "level": "A1",
+      "incorrect": "저는 스물 살이에요.",
+      "corrected": "저는 스무 살이에요.",
+      "acceptedAnswers": {
+        "strict": [
+          "저는 스무 살이에요"
+        ],
+        "relaxed": [
+          "저는 스무 살이에요"
+        ],
+        "regex": []
+      },
+      "explanation": "스물 contracts to 스무 before the counter 살."
+    },
+    {
+      "id": "lesson-counter-time-fix",
+      "dedupeKey": "exercise:lesson-2026:counter-time-fix",
+      "type": "correction",
+      "tags": [
+        "numbers",
+        "time",
+        "native-numbers",
+        "sino-numbers",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the time expression."
+      },
+      "level": "A1",
+      "incorrect": "지금 오후 둘 시 열다섯 분이에요.",
+      "corrected": "지금 오후 두 시 십오 분이에요.",
+      "acceptedAnswers": {
+        "strict": [
+          "지금 오후 두 시 십오 분이에요"
+        ],
+        "relaxed": [
+          "지금 오후 두 시 십오 분이에요"
+        ],
+        "regex": []
+      },
+      "explanation": "Use contracted Native 두 for hours and Sino 십오 for minutes."
+    },
+    {
+      "id": "lesson-calendar-irregular-mcq",
+      "dedupeKey": "exercise:lesson-2026:calendar-irregular-mcq",
+      "type": "mcq",
+      "tags": [
+        "calendar",
+        "dates",
+        "months",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the natural names for June and October."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "육월 / 십월",
+          "isCorrect": false,
+          "why": "Both keep a final consonant that is dropped in these month names."
+        },
+        {
+          "id": "b",
+          "text": "유월 / 시월",
+          "isCorrect": true,
+          "why": "Correct: June is 유월 and October is 시월."
+        },
+        {
+          "id": "c",
+          "text": "유월 / 십일월",
+          "isCorrect": false,
+          "why": "십일월 is November, not October."
+        },
+        {
+          "id": "d",
+          "text": "오월 / 구월",
+          "isCorrect": false,
+          "why": "These are May and September."
+        }
+      ],
+      "explanation": "The irregular month names are 유월 and 시월."
+    },
+    {
+      "id": "lesson-calendar-date-fill",
+      "dedupeKey": "exercise:lesson-2026:calendar-date-fill",
+      "type": "fillBlank",
+      "tags": [
+        "calendar",
+        "dates",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "오늘은 ___월 ___일이에요.",
+        "audioText": "오늘은 칠월 사일이에요.",
+        "stemEn": "Today is July 4."
+      },
+      "level": "A1",
+      "answerPresentation": "phrase",
+      "acceptedAnswers": {
+        "strict": [
+          "칠 사",
+          "칠월 사일",
+          "오늘은 칠월 사일이에요"
+        ],
+        "relaxed": [
+          "칠 사",
+          "칠월 사일",
+          "오늘은 칠월 사일이에요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "칠 사",
+      "explanation": "Dates use Sino-Korean numbers with 월 and 일."
+    },
+    {
+      "id": "lesson-calendar-question-fix",
+      "dedupeKey": "exercise:lesson-2026:calendar-question-fix",
+      "type": "correction",
+      "tags": [
+        "calendar",
+        "dates",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the date question."
+      },
+      "level": "A1",
+      "incorrect": "몇 월 몇 일이에요?",
+      "corrected": "몇 월 며칠이에요?",
+      "acceptedAnswers": {
+        "strict": [
+          "몇 월 며칠이에요"
+        ],
+        "relaxed": [
+          "몇 월 며칠이에요"
+        ],
+        "regex": []
+      },
+      "explanation": "The natural question is 몇 월 며칠이에요?"
+    },
+    {
+      "id": "lesson-time-dialogue",
+      "dedupeKey": "exercise:lesson-2026:time-dialogue",
+      "type": "dialogue",
+      "tags": [
+        "numbers",
+        "time",
+        "dialogue",
+        "interaction"
+      ],
+      "sourceRefIds": [
+        "visual-routine-handwritten-june-2026",
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Read the exchange and answer with the exact time."
+      },
+      "level": "A1",
+      "turns": [
+        {
+          "speaker": "A",
+          "ko": "지금 몇 시 몇 분이에요?",
+          "en": "What time is it now?",
+          "audioText": "지금 몇 시 몇 분이에요?"
+        },
+        {
+          "speaker": "B",
+          "ko": "지금 오후 세 시 십오 분이에요.",
+          "en": "It is 3:15 PM.",
+          "audioText": "지금 오후 세 시 십오 분이에요."
+        }
+      ],
+      "question": "지금 몇 시예요?",
+      "acceptedAnswers": {
+        "strict": [
+          "오후 세 시 십오 분이에요",
+          "지금 오후 세 시 십오 분이에요"
+        ],
+        "relaxed": [
+          "오후 세 시 십오 분이에요",
+          "지금 오후 세 시 십오 분이에요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "지금 오후 세 시 십오 분이에요",
+      "explanation": "세 시 is the Native hour and 십오 분 is the Sino minute."
+    },
+    {
+      "id": "lesson-shopping-dialogue",
+      "dedupeKey": "exercise:lesson-2026:shopping-dialogue",
+      "type": "dialogue",
+      "tags": [
+        "numbers",
+        "counter",
+        "shopping",
+        "dialogue"
+      ],
+      "sourceRefIds": [
+        "numbers-units-handout-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Read the shop exchange and give the requested quantity."
+      },
+      "level": "A1",
+      "turns": [
+        {
+          "speaker": "A",
+          "ko": "사과 몇 개 드릴까요?",
+          "en": "How many apples would you like?",
+          "audioText": "사과 몇 개 드릴까요?"
+        },
+        {
+          "speaker": "B",
+          "ko": "세 개 주세요.",
+          "en": "Three, please.",
+          "audioText": "세 개 주세요."
+        }
+      ],
+      "question": "사과를 몇 개 달라고 했어요?",
+      "acceptedAnswers": {
+        "strict": [
+          "세 개 주세요",
+          "세 개"
+        ],
+        "relaxed": [
+          "세 개 주세요",
+          "세 개"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "세 개 주세요",
+      "explanation": "Use the contracted Native form 세 before 개."
+    },
+    {
+      "id": "lesson-particle-topic-subject-object-mcq",
+      "dedupeKey": "exercise:lesson-2026:particle-topic-subject-object-mcq",
+      "type": "mcq",
+      "tags": [
+        "particles",
+        "contrast",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Complete the contrast: There is rice, but no kimchi.",
+        "stemKo": "밥___ 있어요, 김치___ 없어요."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "이 / 를",
+          "isCorrect": false,
+          "why": "를 would mark an action target, but nothing is acting on kimchi."
+        },
+        {
+          "id": "b",
+          "text": "은 / 는",
+          "isCorrect": true,
+          "why": "Correct: 은/는 sets up the explicit contrast between rice and kimchi."
+        },
+        {
+          "id": "c",
+          "text": "을 / 를",
+          "isCorrect": false,
+          "why": "Object particles do not mark simple existence."
+        },
+        {
+          "id": "d",
+          "text": "이 / 가",
+          "isCorrect": false,
+          "why": "이/가 is possible for neutral existence, but it does not express the intended contrast as clearly."
+        }
+      ],
+      "explanation": "Contrast uses 밥은 있어요, 김치는 없어요."
+    },
+    {
+      "id": "lesson-particle-existence-action-fill",
+      "dedupeKey": "exercise:lesson-2026:particle-existence-action-fill",
+      "type": "fillBlank",
+      "tags": [
+        "particles",
+        "contrast",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "밥___ 있어요. 밥___ 먹어요.",
+        "audioText": "밥이 있어요. 밥을 먹어요.",
+        "stemEn": "There is rice. I eat rice."
+      },
+      "level": "A1",
+      "answerPresentation": "particle",
+      "acceptedAnswers": {
+        "strict": [
+          "이 을",
+          "밥이 있어요 밥을 먹어요"
+        ],
+        "relaxed": [
+          "이 을",
+          "밥이 있어요 밥을 먹어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "이 을",
+      "explanation": "이 marks neutral existence; 을 marks the thing receiving the action."
+    },
+    {
+      "id": "lesson-particle-e-eseo-fix",
+      "dedupeKey": "exercise:lesson-2026:particle-e-eseo-fix",
+      "type": "correction",
+      "tags": [
+        "particles",
+        "places",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the action-place particle."
+      },
+      "level": "A1",
+      "incorrect": "저는 집에 한국어를 공부해요.",
+      "corrected": "저는 집에서 한국어를 공부해요.",
+      "acceptedAnswers": {
+        "strict": [
+          "저는 집에서 한국어를 공부해요"
+        ],
+        "relaxed": [
+          "저는 집에서 한국어를 공부해요"
+        ],
+        "regex": []
+      },
+      "explanation": "공부하다 is an action, so the action place takes 에서."
+    },
+    {
+      "id": "lesson-particle-time-place-mixed",
+      "dedupeKey": "exercise:lesson-2026:particle-time-place-mixed",
+      "type": "fillBlank",
+      "tags": [
+        "particles",
+        "time",
+        "places",
+        "mixed",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "저는 주말___ 오후 두 시___ 카페___ 친구___ 만나요.",
+        "audioText": "저는 주말에 오후 두 시에 카페에서 친구를 만나요.",
+        "stemEn": "On the weekend at 2 PM, I meet a friend at a cafe."
+      },
+      "level": "A1",
+      "answerPresentation": "particle",
+      "acceptedAnswers": {
+        "strict": [
+          "에 에 에서 를",
+          "저는 주말에 오후 두 시에 카페에서 친구를 만나요"
+        ],
+        "relaxed": [
+          "에 에 에서 를",
+          "저는 주말에 오후 두 시에 카페에서 친구를 만나요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "에 에 에서 를",
+      "explanation": "Time points take 에, an action place takes 에서, and the person met takes 를."
+    },
+    {
+      "id": "lesson-particle-recipient-source-mcq",
+      "dedupeKey": "exercise:lesson-2026:particle-recipient-source-mcq",
+      "type": "mcq",
+      "tags": [
+        "particles",
+        "hante",
+        "recipient",
+        "source",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Choose the pair that clearly marks a recipient and then a source."
+      },
+      "level": "A1",
+      "choiceKind": "grammar-form",
+      "choices": [
+        {
+          "id": "a",
+          "text": "에게서 / 에게",
+          "isCorrect": false,
+          "why": "These reverse source and recipient."
+        },
+        {
+          "id": "b",
+          "text": "에게 / 에게서",
+          "isCorrect": true,
+          "why": "Correct: 에게 marks the recipient; 에게서 clearly marks the person something came from."
+        },
+        {
+          "id": "c",
+          "text": "에서 / 한테",
+          "isCorrect": false,
+          "why": "에서 is not used for a person in this contrast."
+        },
+        {
+          "id": "d",
+          "text": "께서 / 께",
+          "isCorrect": false,
+          "why": "께서 is an honorific subject marker, not a source marker."
+        }
+      ],
+      "explanation": "친구에게 선물을 줘요, 친구에게서 편지를 받아요."
+    },
+    {
+      "id": "lesson-particle-honorific-fix",
+      "dedupeKey": "exercise:lesson-2026:particle-honorific-fix",
+      "type": "correction",
+      "tags": [
+        "particles",
+        "honorific",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the honorific recipient marker."
+      },
+      "level": "A1",
+      "incorrect": "선생님한테 편지를 드렸어요.",
+      "corrected": "선생님께 편지를 드렸어요.",
+      "acceptedAnswers": {
+        "strict": [
+          "선생님께 편지를 드렸어요"
+        ],
+        "relaxed": [
+          "선생님께 편지를 드렸어요"
+        ],
+        "regex": []
+      },
+      "explanation": "께 is the respectful recipient marker and matches 드렸어요."
+    },
+    {
+      "id": "lesson-particle-direction-rieul",
+      "dedupeKey": "exercise:lesson-2026:particle-direction-rieul",
+      "type": "mcq",
+      "tags": [
+        "particles",
+        "direction",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "particle-handwritten-corrections-may-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Which form follows the ㄹ-final noun 길?"
+      },
+      "level": "A1",
+      "choiceKind": "particle",
+      "choices": [
+        {
+          "id": "a",
+          "text": "길으로",
+          "isCorrect": false,
+          "why": "ㄹ-final nouns are the exception and do not take 으로."
+        },
+        {
+          "id": "b",
+          "text": "길로",
+          "isCorrect": true,
+          "why": "Correct: After a ㄹ-final noun, use 로."
+        },
+        {
+          "id": "c",
+          "text": "길에로",
+          "isCorrect": false,
+          "why": "Do not stack 에 and 로 here."
+        },
+        {
+          "id": "d",
+          "text": "길에서",
+          "isCorrect": false,
+          "why": "에서 marks an action place or source, not direction along a route."
+        }
+      ],
+      "explanation": "받침 ㄹ is the exception: 길로."
+    },
+    {
+      "id": "lesson-culture-lunchbox-mcq",
+      "dedupeKey": "exercise:lesson-2026:culture-lunchbox-mcq",
+      "type": "mcq",
+      "tags": [
+        "culture",
+        "emotion",
+        "scenario",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "A manager blames you for food you did not throw away. Which reaction fits?"
+      },
+      "level": "A1",
+      "choiceKind": "naturalness",
+      "choices": [
+        {
+          "id": "a",
+          "text": "정이 들었어요.",
+          "isCorrect": false,
+          "why": "This means you grew attached."
+        },
+        {
+          "id": "b",
+          "text": "너무 억울해요.",
+          "isCorrect": true,
+          "why": "Correct: 억울하다 expresses being wrongly blamed or treated unfairly."
+        },
+        {
+          "id": "c",
+          "text": "눈치가 빨라요.",
+          "isCorrect": false,
+          "why": "This means someone reads social cues quickly."
+        },
+        {
+          "id": "d",
+          "text": "답답하지 않아요.",
+          "isCorrect": false,
+          "why": "This denies frustration and misses the injustice."
+        }
+      ],
+      "explanation": "Use 억울하다 for the burning feeling of being unfairly blamed."
+    },
+    {
+      "id": "lesson-culture-office-mcq",
+      "dedupeKey": "exercise:lesson-2026:culture-office-mcq",
+      "type": "mcq",
+      "tags": [
+        "culture",
+        "emotion",
+        "scenario",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "The office is tense and quiet, but someone enters singing loudly. Which description fits?"
+      },
+      "level": "A1",
+      "choiceKind": "naturalness",
+      "choices": [
+        {
+          "id": "a",
+          "text": "정이 많아요.",
+          "isCorrect": false,
+          "why": "This describes warmth or affection."
+        },
+        {
+          "id": "b",
+          "text": "눈치가 없어요.",
+          "isCorrect": true,
+          "why": "Correct: The person is missing the mood and social cues."
+        },
+        {
+          "id": "c",
+          "text": "억울해요.",
+          "isCorrect": false,
+          "why": "No one is being wrongly blamed in this situation."
+        },
+        {
+          "id": "d",
+          "text": "눈치를 봐요.",
+          "isCorrect": false,
+          "why": "This would mean carefully watching reactions, which the person is not doing."
+        }
+      ],
+      "explanation": "눈치가 없다 means failing to read the room."
+    },
+    {
+      "id": "lesson-culture-attachment-fill",
+      "dedupeKey": "exercise:lesson-2026:culture-attachment-fill",
+      "type": "fillBlank",
+      "tags": [
+        "culture",
+        "emotion",
+        "fillBlank"
+      ],
+      "sourceRefIds": [
+        "lessons-review-july-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "이 오래된 가방은 ___ 들어서 버릴 수가 없어요.",
+        "audioText": "이 오래된 가방은 정이 들어서 버릴 수가 없어요.",
+        "stemEn": "I have grown attached to this old bag, so I cannot throw it away."
+      },
+      "level": "A1",
+      "answerPresentation": "phrase",
+      "acceptedAnswers": {
+        "strict": [
+          "정이",
+          "정이 들어서",
+          "이 오래된 가방은 정이 들어서 버릴 수가 없어요"
+        ],
+        "relaxed": [
+          "정이",
+          "정이 들어서",
+          "이 오래된 가방은 정이 들어서 버릴 수가 없어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "정이",
+      "explanation": "정이 들다 means to grow attached over time."
+    },
+    {
+      "id": "lesson-culture-frustration-roleplay",
+      "dedupeKey": "exercise:lesson-2026:culture-frustration-roleplay",
+      "type": "roleplay",
+      "tags": [
+        "culture",
+        "emotion",
+        "interaction",
+        "roleplay"
+      ],
+      "sourceRefIds": [
+        "advanced-class-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Respond naturally in Korean.",
+        "context": "You know what you want to say, but the Korean words will not come out."
+      },
+      "level": "A1",
+      "acceptedAnswers": {
+        "strict": [
+          "한국어로 말이 안 나와서 너무 답답해요",
+          "정말 답답해요"
+        ],
+        "relaxed": [
+          "한국어로 말이 안 나와서 너무 답답해요",
+          "정말 답답해요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "한국어로 말이 안 나와서 너무 답답해요",
+      "explanation": "답답하다 can describe psychological frustration or feeling trapped."
+    },
+    {
+      "id": "lesson-pronunciation-tense-mcq",
+      "dedupeKey": "exercise:lesson-2026:pronunciation-tense-mcq",
+      "type": "minimalPair",
+      "tags": [
+        "pronunciation",
+        "minimal-pair",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Which word begins with the tense ㅉ sound and means salty?"
+      },
+      "level": "A1",
+      "contrast": "ㅈ / ㅊ / ㅉ",
+      "choiceKind": "naturalness",
+      "choices": [
+        {
+          "id": "a",
+          "text": "자요",
+          "isCorrect": false,
+          "why": "자요 begins with plain ㅈ and means sleeps."
+        },
+        {
+          "id": "b",
+          "text": "짜요",
+          "isCorrect": true,
+          "why": "Correct: 짜요 begins with tense ㅉ and means salty."
+        },
+        {
+          "id": "c",
+          "text": "차요",
+          "isCorrect": false,
+          "why": "차요 begins with aspirated ㅊ and has a different meaning."
+        },
+        {
+          "id": "d",
+          "text": "싸요",
+          "isCorrect": false,
+          "why": "싸요 begins with tense ㅆ and means cheap."
+        }
+      ],
+      "explanation": "ㅉ is a tight tense consonant with little extra air."
+    },
+    {
+      "id": "lesson-pronunciation-pp-mcq",
+      "dedupeKey": "exercise:lesson-2026:pronunciation-pp-mcq",
+      "type": "minimalPair",
+      "tags": [
+        "pronunciation",
+        "minimal-pair",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Which syllable starts with tense ㅃ?"
+      },
+      "level": "A1",
+      "contrast": "ㅂ / ㅍ / ㅃ",
+      "choiceKind": "naturalness",
+      "choices": [
+        {
+          "id": "a",
+          "text": "분",
+          "isCorrect": false,
+          "why": "분 begins with plain ㅂ."
+        },
+        {
+          "id": "b",
+          "text": "뿔",
+          "isCorrect": true,
+          "why": "Correct: 뿔 begins with tense ㅃ."
+        },
+        {
+          "id": "c",
+          "text": "풀",
+          "isCorrect": false,
+          "why": "풀 begins with aspirated ㅍ."
+        },
+        {
+          "id": "d",
+          "text": "불",
+          "isCorrect": false,
+          "why": "불 begins with plain ㅂ."
+        }
+      ],
+      "explanation": "Tense ㅃ uses firm lip pressure and very little air."
+    },
+    {
+      "id": "lesson-pronunciation-dictation",
+      "dedupeKey": "exercise:lesson-2026:pronunciation-dictation",
+      "type": "dictation",
+      "tags": [
+        "pronunciation",
+        "listening",
+        "dictation"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Listen for the tense consonant and type the sentence.",
+        "audioText": "이거 좀 짜요.",
+        "stemEn": "This is a little salty."
+      },
+      "level": "A1",
+      "acceptedAnswers": {
+        "strict": [
+          "이거 좀 짜요"
+        ],
+        "relaxed": [
+          "이거 좀 짜요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "이거 좀 짜요",
+      "explanation": "짜요 starts with tense ㅉ."
+    },
+    {
+      "id": "lesson-pronunciation-order",
+      "dedupeKey": "exercise:lesson-2026:pronunciation-order",
+      "type": "ordering",
+      "tags": [
+        "pronunciation",
+        "ordering",
+        "fluency"
+      ],
+      "sourceRefIds": [
+        "pronunciation-handouts-march-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Put the chunks in order, then read the result slowly."
+      },
+      "level": "A1",
+      "chunks": [
+        "오늘",
+        "날씨가",
+        "따뜻해요"
+      ],
+      "acceptedAnswers": {
+        "strict": [
+          "오늘 날씨가 따뜻해요"
+        ],
+        "relaxed": [
+          "오늘 날씨가 따뜻해요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "오늘 날씨가 따뜻해요",
+      "explanation": "Read accurately and keep the tense ㄸ controlled rather than loud."
+    },
+    {
+      "id": "lesson-subakke-connectors-order",
+      "dedupeKey": "exercise:lesson-2026:subakke-connectors-order",
+      "type": "ordering",
+      "tags": [
+        "grammar",
+        "necessity",
+        "connectors",
+        "ordering"
+      ],
+      "sourceRefIds": [
+        "subakke-connectors-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Put the consequence sentence in order.",
+        "stemEn": "The road is slippery, so I have no choice but to wear skates."
+      },
+      "level": "A1",
+      "chunks": [
+        "길이",
+        "미끄러워서",
+        "스케이트를",
+        "신을",
+        "수밖에",
+        "없어요"
+      ],
+      "acceptedAnswers": {
+        "strict": [
+          "길이 미끄러워서 스케이트를 신을 수밖에 없어요"
+        ],
+        "relaxed": [
+          "길이 미끄러워서 스케이트를 신을 수밖에 없어요"
+        ],
+        "regex": []
+      },
+      "modelAnswer": "길이 미끄러워서 스케이트를 신을 수밖에 없어요",
+      "explanation": "-아서 gives the reason; -(으)ㄹ 수밖에 없어요 says there is no other choice."
+    },
+    {
+      "id": "lesson-connectors-formal-mcq",
+      "dedupeKey": "exercise:lesson-2026:connectors-formal-mcq",
+      "type": "mcq",
+      "tags": [
+        "connectors",
+        "register",
+        "mcq"
+      ],
+      "sourceRefIds": [
+        "subakke-connectors-handwritten-june-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Which connector is the more formal equivalent of therefore?"
+      },
+      "level": "A1",
+      "choiceKind": "connector",
+      "choices": [
+        {
+          "id": "a",
+          "text": "하지만",
+          "isCorrect": false,
+          "why": "하지만 means but."
+        },
+        {
+          "id": "b",
+          "text": "그러므로",
+          "isCorrect": true,
+          "why": "Correct: 그러므로 means therefore in a formal style."
+        },
+        {
+          "id": "c",
+          "text": "게다가",
+          "isCorrect": false,
+          "why": "게다가 means in addition."
+        },
+        {
+          "id": "d",
+          "text": "그리고",
+          "isCorrect": false,
+          "why": "그리고 means and or and then."
+        }
+      ],
+      "explanation": "그러므로 is a formal therefore connector."
+    },
+    {
+      "id": "lesson-foundation-present-past-fix",
+      "dedupeKey": "exercise:lesson-2026:foundation-present-past-fix",
+      "type": "correction",
+      "tags": [
+        "grammar",
+        "conjugation",
+        "past",
+        "correction"
+      ],
+      "sourceRefIds": [
+        "foundation-handwritten-february-march-2026"
+      ],
+      "inferred": false,
+      "prompt": {
+        "stem": "Fix the past polite form of 만들다."
+      },
+      "level": "A1",
+      "incorrect": "어제 차를 만들아요.",
+      "corrected": "어제 차를 만들었어요.",
+      "acceptedAnswers": {
+        "strict": [
+          "어제 차를 만들었어요"
+        ],
+        "relaxed": [
+          "어제 차를 만들었어요"
+        ],
+        "regex": []
+      },
+      "explanation": "만들다 becomes 만들었어요 in the polite past."
+    }
+  ]
+}

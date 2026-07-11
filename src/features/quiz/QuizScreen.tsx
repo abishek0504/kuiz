@@ -26,6 +26,7 @@ import {
   sessionSummary,
 } from "../../engine/sessionPlanner";
 import { sentenceBreakdown } from "../../engine/sentenceBreakdown";
+import { compactLegacyNumberDrills } from "../../engine/numberPractice";
 import { isActiveQuizMode, isActiveQuizType, type QuizMode, type QuizTypeFilter } from "../../engine/tabs";
 import {
   buildRuntimeVocabExercises,
@@ -33,8 +34,9 @@ import {
   isVocabPracticeExercise,
   shouldAugmentVocabPool,
   type RuntimeVocabExerciseRecord,
+  vocabExerciseSignature,
 } from "../../engine/vocabPractice";
-import { createVariantExercise, type VariantExerciseRecord } from "../../engine/variants";
+import { buildRuntimeVariantExercises, createVariantExercise, type VariantExerciseRecord } from "../../engine/variants";
 import { SessionCompletePanel } from "./SessionCompletePanel";
 import { emptyBatchStats, recordBatchAnswer, recordBatchSkip, type SessionBatchStats } from "../../engine/sessionStats";
 import { speakKorean } from "../../utils/speech";
@@ -353,7 +355,8 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
   }
 
   const packModeExercises = useMemo(() => {
-    const matchingMode = questionType === "all" ? exercises.filter((exercise) => exerciseMatchesMode(exercise, mode)) : exercises;
+    const compactedExercises = compactLegacyNumberDrills(exercises, reviewStates);
+    const matchingMode = questionType === "all" ? compactedExercises.filter((exercise) => exerciseMatchesMode(exercise, mode)) : compactedExercises;
     const matchingType = matchingMode.filter((exercise) => exerciseMatchesQuestionType(exercise, questionType));
     const focusTags = settings.focusTags ?? [];
     if (focusTags.length === 0) return matchingType;
@@ -373,20 +376,30 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
       return coreOnly.length > 0 ? coreOnly : focused;
     }
     return focused;
-  }, [exercises, mode, questionType, settings.focusTags, settings.particleCoverage]);
+  }, [exercises, mode, questionType, reviewStates, settings.focusTags, settings.particleCoverage]);
 
   const runtimeVocabExercises = useMemo((): RuntimeVocabExerciseRecord[] => {
     const focusTags = settings.focusTags ?? [];
     const vocabCount = countVocabPracticeExercises(packModeExercises);
     if (!shouldAugmentVocabPool(questionType, selectedFocusIsVocab(focusTags), vocabCount)) return [];
-    const existingKeys = new Set(exercises.map((item) => item.dedupeKey));
-    return buildRuntimeVocabExercises(entries, existingKeys);
+    return buildRuntimeVocabExercises(entries, exercises);
   }, [entries, exercises, packModeExercises, questionType, settings.focusTags]);
 
+  const runtimeVariantExercises = useMemo(
+    () => buildRuntimeVariantExercises(packModeExercises),
+    [packModeExercises],
+  );
+
   const modeExercises = useMemo(() => {
-    if (runtimeVocabExercises.length === 0) return packModeExercises;
-    return [...packModeExercises, ...runtimeVocabExercises];
-  }, [packModeExercises, runtimeVocabExercises]);
+    const generatedVocabSignatures = new Set(
+      runtimeVocabExercises.map(vocabExerciseSignature).filter((signature): signature is string => Boolean(signature)),
+    );
+    const authoredExercises = packModeExercises.filter((candidate) => {
+      const signature = vocabExerciseSignature(candidate);
+      return !signature || !generatedVocabSignatures.has(signature);
+    });
+    return [...authoredExercises, ...runtimeVocabExercises, ...runtimeVariantExercises];
+  }, [packModeExercises, runtimeVariantExercises, runtimeVocabExercises]);
   const exerciseById = useMemo(
     () => new Map<RuntimeExerciseRecord["id"], RuntimeExerciseRecord>([...modeExercises, ...variantExercises].map((candidate) => [candidate.id, candidate])),
     [modeExercises, variantExercises],
@@ -397,7 +410,7 @@ export function QuizScreen({ entries, exercises, reviewStates, settings, onSetti
       .filter((candidate): candidate is RuntimeExerciseRecord => Boolean(candidate));
     return restored;
   }, [exerciseById, sessionPlanIds]);
-  const summary = useMemo(() => sessionSummary(modeExercises, reviewStates), [modeExercises, reviewStates]);
+  const summary = useMemo(() => sessionSummary(sessionExercises, reviewStates), [reviewStates, sessionExercises]);
   const exercise =
     sessionExercises.find((candidate) => candidate.id === activeExerciseId) ??
     sessionExercises[index % Math.max(1, sessionExercises.length)];

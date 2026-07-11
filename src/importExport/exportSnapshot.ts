@@ -1,6 +1,7 @@
 import type { KuizDatabase } from "../db/db";
 import { getSettings } from "../db/db";
 import type { AuthoringSnapshot } from "../schemas/snapshot";
+import { appVersion } from "../appVersion";
 
 export async function exportAuthoringSnapshot(database: KuizDatabase): Promise<AuthoringSnapshot> {
   const [packs, entries, exercises, settings] = await Promise.all([
@@ -15,8 +16,11 @@ export async function exportAuthoringSnapshot(database: KuizDatabase): Promise<A
 
   return {
     schema: "kuiz-snapshot@1",
-    appVersion: "1.0.0",
+    appVersion,
     installedPackIds: packs.map((pack) => pack.packId).sort(),
+    installedPacks: packs
+      .map((pack) => ({ packId: pack.packId, version: pack.version, title: pack.title }))
+      .sort((left, right) => left.packId.localeCompare(right.packId)),
     dedupeKeys,
     tags,
     settings: {

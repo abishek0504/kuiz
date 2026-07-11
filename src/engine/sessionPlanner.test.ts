@@ -201,6 +201,20 @@ describe("session planner", () => {
     expect(repeated).toHaveLength(1);
   });
 
+  test("recommended sessions begin with contextual input when it is available", () => {
+    const dialogue = {
+      ...exercise("dialogue", "listening"),
+      type: "dialogue" as const,
+      turns: [
+        { speaker: "A", ko: "안녕하세요." },
+        { speaker: "B", ko: "안녕하세요." },
+      ],
+      question: "뭐라고 했어요?",
+    } as ExerciseRecord;
+    const planned = planRecommendedSessionExercises([exercise("mcq", "mcq"), dialogue, exercise("blank")], [], now);
+    expect(planned[0].type).toBe("dialogue");
+  });
+
   test("listening classification only includes actual listening and dictation tasks", () => {
     const blankWithAudio = {
       ...exercise("blank-with-audio", "fillBlank"),

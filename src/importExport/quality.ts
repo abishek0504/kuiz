@@ -29,8 +29,7 @@ function extractBlankParticleSequence(value: string): string | undefined {
     .flatMap((token) =>
       particles.filter((particle) => token === particle || (token.length > particle.length && token.endsWith(particle))),
     );
-  const uniqueSequence = tokens.filter((particle, index) => particle !== tokens[index - 1]);
-  return uniqueSequence.length >= 2 ? uniqueSequence.join(" ") : undefined;
+  return tokens.length >= 2 ? tokens.join(" ") : undefined;
 }
 
 function hasHangul(text: string): boolean {

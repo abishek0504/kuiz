@@ -74,8 +74,7 @@ export function extractParticleSequence(value: string): string | undefined {
         (left, right) => right.length - left.length,
       ),
     );
-  const uniqueSequence = particles.filter((particle, index) => particle !== particles[index - 1]);
-  return uniqueSequence.length >= 2 ? uniqueSequence.join(" ") : undefined;
+  return particles.length >= 2 ? particles.join(" ") : undefined;
 }
 
 function acceptedSet(input: CheckAnswerInput): string[] {
@@ -121,12 +120,20 @@ function finalPredicateToken(value: string): string | undefined {
   return normalizeAnswerKorean(value).split(" ").filter(Boolean).at(-1);
 }
 
-function predicateEndingClass(predicate: string): string {
-  if (/었어요|았어요|했어요$/u.test(predicate)) return "past";
-  if (/을 거예요|ㄹ 거예요$/u.test(predicate)) return "future";
-  if (/고 있어요$/u.test(predicate)) return "progressive";
-  if (/어요|아요|여요|세요$/u.test(predicate)) return "present";
-  return predicate;
+function predicateEndingClass(value: string): string {
+  const normalized = normalizeAnswerKorean(value);
+  if (/(?:을|ㄹ) 거예요$/u.test(normalized)) return "future";
+  if (/고 있어요$/u.test(normalized)) return "progressive";
+  const contractedPast = normalized.match(/([가-힣])(?:어|아|여)요$/u)?.[1];
+  if (
+    contractedPast &&
+    !/(?:있|없)어요$/u.test(normalized) &&
+    (contractedPast.codePointAt(0)! - 0xac00) % 28 === 20
+  ) {
+    return "past";
+  }
+  if (/(?:어|아|여|세)요$/u.test(normalized)) return "present";
+  return finalPredicateToken(normalized) ?? normalized;
 }
 
 export function answerGuardNote(model: string, submitted: string): string | undefined {
@@ -144,7 +151,7 @@ export function answerGuardNote(model: string, submitted: string): string | unde
   const modelFinal = finalPredicateToken(model);
   const submittedFinal = finalPredicateToken(trimmed);
   if (modelFinal && submittedFinal && modelFinal !== submittedFinal) {
-    if (predicateEndingClass(modelFinal) !== predicateEndingClass(submittedFinal)) {
+    if (predicateEndingClass(model) !== predicateEndingClass(trimmed)) {
       return "The verb ending or tense does not match the target.";
     }
   }

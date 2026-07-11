@@ -3,9 +3,12 @@ import type { ExerciseRecord } from "../db/schema";
 import type { VocabEntry } from "../schemas/contentPack";
 import {
   buildRuntimeVocabExercise,
+  buildRuntimeVocabExercises,
   isGrammarMeaningPrompt,
   isVocabPracticeExercise,
   isWordTranslationPrompt,
+  shouldAugmentVocabPool,
+  vocabExerciseSignature,
 } from "./vocabPractice";
 
 function mcqExercise(partial: Partial<ExerciseRecord> & Pick<ExerciseRecord, "id" | "prompt">): ExerciseRecord {
@@ -70,6 +73,11 @@ describe("prompt helpers", () => {
   it("detects grammar meaning prompts", () => {
     expect(isGrammarMeaningPrompt("What does 공부하고 있어요 mean?")).toBe(true);
     expect(isWordTranslationPrompt('Choose the Korean for "school".')).toBe(true);
+  });
+
+  it("keeps the generated pool available even when an old vocab deck is large", () => {
+    expect(shouldAugmentVocabPool("all", true, 420)).toBe(true);
+    expect(shouldAugmentVocabPool("all", false, 420)).toBe(false);
   });
 });
 
@@ -141,5 +149,18 @@ describe("buildRuntimeVocabExercise", () => {
     expect(exercise.choices).toHaveLength(4);
     expect(exercise.choices.some((choice) => choice.isCorrect)).toBe(true);
     expect(exercise.prompt.stem).toContain("friend");
+    expect(exercise.choices.filter((choice) => !choice.isCorrect).every((choice) => choice.why?.includes("means"))).toBe(true);
+  });
+
+  it("builds both directions for the full available vocabulary pool", () => {
+    const exercises = buildRuntimeVocabExercises(pool, []);
+    expect(exercises).toHaveLength(pool.length * 2);
+    expect(new Set(exercises.map((exercise) => exercise.dedupeKey)).size).toBe(exercises.length);
+  });
+
+  it("uses the same prompt-answer signature as an authored duplicate", () => {
+    const runtime = buildRuntimeVocabExercise(pool[0], pool, "ko-from-en");
+    const authored = { ...runtime, id: "old-authored-card" } as ExerciseRecord;
+    expect(vocabExerciseSignature(runtime)).toBe(vocabExerciseSignature(authored));
   });
 });

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db } from "../db/db";
 import { parsePack } from "../importExport/parsePack";
 import { mergeContentPack, previewContentPack, type ImportPreview } from "../importExport/mergePack";
@@ -13,11 +13,19 @@ type ImportPreviewModalProps = {
 };
 
 export function ImportPreviewModal({ open, onClose, onImported }: ImportPreviewModalProps) {
-  const [raw, setRaw] = useState("");
+  const [raw, setRaw] = useState(() =>
+    typeof window === "undefined" ? "" : window.localStorage.getItem("kuiz.importDraft.v1") ?? "",
+  );
   const [pack, setPack] = useState<ContentPack | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (raw.trim()) window.localStorage.setItem("kuiz.importDraft.v1", raw);
+    else window.localStorage.removeItem("kuiz.importDraft.v1");
+  }, [raw]);
 
   const canConfirm = useMemo(() => Boolean(pack && preview && preview.conflicts.length === 0), [pack, preview]);
   const typeCounts = useMemo(() => {

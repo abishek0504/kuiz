@@ -1,6 +1,6 @@
 import type { ExerciseRecord } from "../db/schema";
 import { mistakeCount } from "./mistakeAnalytics";
-import { normalizeKorean } from "./normalize";
+import { normalizeKorean, simpleHash } from "./normalize";
 import type { ReviewState } from "./scheduler";
 
 function isDue(card: ReviewState, now: Date): boolean {
@@ -43,7 +43,7 @@ export function planSessionExercises(
     const scoreDelta = reviewScore(rightReview, now) - reviewScore(leftReview, now);
     if (scoreDelta !== 0) return scoreDelta;
 
-    return left.id.localeCompare(right.id);
+    return simpleHash({ id: left.id, type: left.type }).localeCompare(simpleHash({ id: right.id, type: right.type }));
   });
 }
 
@@ -86,20 +86,27 @@ export function planBalancedSessionExercises(
   }
 
   const planned: ExerciseRecord[] = [];
+  const deferred: ExerciseRecord[] = [];
+  const usedAnswerKeys = new Set<string>();
   while (planned.length < sorted.length) {
     let moved = false;
     for (const type of balancedTypeOrder) {
       const bucket = byType.get(type);
-      const next = bucket?.shift();
+      let next = bucket?.shift();
+      while (next && usedAnswerKeys.has(answerKey(next))) {
+        deferred.push(next);
+        next = bucket?.shift();
+      }
       if (next) {
         planned.push(next);
+        usedAnswerKeys.add(answerKey(next));
         moved = true;
       }
     }
     if (!moved) break;
   }
 
-  return planned;
+  return [...planned, ...deferred];
 }
 
 function answerKey(exercise: ExerciseRecord): string {
@@ -142,13 +149,16 @@ export function planRecommendedSessionExercises(
     );
   });
   const input = sorted.filter(isInputExercise);
+  const scenarioInput = sorted.filter((exercise) =>
+    ["dialogue", "reading", "listening"].includes(exercise.type),
+  );
   const form = sorted.filter((exercise) => exercise.type === "fillBlank" || exercise.type === "minimalPair");
   const production = sorted.filter(isProductionExercise);
 
   const planned: ExerciseRecord[] = [];
   const usedIds = new Set<string>();
   const usedAnswerKeys = new Set<string>();
-  for (const bucket of [input, input, form, form, production, production, production, dueOrWeak, dueOrWeak, sorted]) {
+  for (const bucket of [scenarioInput, input, form, form, production, production, production, dueOrWeak, dueOrWeak, sorted]) {
     takeNext(bucket, planned, usedIds, usedAnswerKeys);
   }
   for (const exercise of sorted) {

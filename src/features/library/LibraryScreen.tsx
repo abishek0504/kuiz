@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImportPreviewModal } from "../../components/ImportPreviewModal";
 import { db } from "../../db/db";
 import type { EntryRecord, ExerciseRecord, ImportLogRecord, PackRecord } from "../../db/schema";
@@ -19,6 +19,25 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
   const [importOpen, setImportOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [restoreText, setRestoreText] = useState("");
+  const [authoringSnapshotText, setAuthoringSnapshotText] = useState("");
+  const [updatePrompt, setUpdatePrompt] = useState("");
+  const [manualCopyText, setManualCopyText] = useState("");
+
+  useEffect(() => {
+    let active = true;
+    exportAuthoringSnapshot(db)
+      .then((snapshot) => {
+        if (!active) return;
+        setAuthoringSnapshotText(JSON.stringify(snapshot, null, 2));
+        setUpdatePrompt(buildAuthoringPrompt(snapshot));
+      })
+      .catch((error: unknown) => {
+        if (active) setStatus(error instanceof Error ? error.message : "Could not prepare the update prompt.");
+      });
+    return () => {
+      active = false;
+    };
+  }, [entries, exercises, packs]);
 
   async function downloadBackup() {
     const backup = await exportBackup(db);
@@ -33,16 +52,21 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
   }
 
   async function copySnapshot() {
-    const snapshot = await exportAuthoringSnapshot(db);
-    const copied = await copyText(JSON.stringify(snapshot, null, 2));
-    setStatus(copied ? "Authoring snapshot copied." : JSON.stringify(snapshot));
+    if (!authoringSnapshotText) return;
+    const copied = await copyText(authoringSnapshotText);
+    setManualCopyText(copied ? "" : authoringSnapshotText);
+    setStatus(copied ? "Authoring snapshot copied." : "Automatic copy was blocked. Use the manual copy box below.");
   }
 
   async function copyUpdatePrompt() {
-    const snapshot = await exportAuthoringSnapshot(db);
-    const prompt = buildAuthoringPrompt(snapshot);
-    const copied = await copyText(prompt);
-    setStatus(copied ? "ChatGPT update prompt copied." : prompt);
+    if (!updatePrompt) return;
+    const copied = await copyText(updatePrompt);
+    setManualCopyText(copied ? "" : updatePrompt);
+    setStatus(
+      copied
+        ? `ChatGPT update prompt copied (${updatePrompt.length.toLocaleString()} characters).`
+        : "Automatic copy was blocked. Use the manual copy box below.",
+    );
   }
 
   async function restore() {
@@ -65,14 +89,24 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
         <button type="button" className="secondary-button" onClick={downloadBackup}>
           Export backup
         </button>
-        <button type="button" className="secondary-button" onClick={copySnapshot}>
+        <button type="button" className="secondary-button" disabled={!authoringSnapshotText} onClick={copySnapshot}>
           Copy authoring snapshot
         </button>
-        <button type="button" className="secondary-button" onClick={copyUpdatePrompt}>
+        <button type="button" className="secondary-button" disabled={!updatePrompt} onClick={copyUpdatePrompt}>
           Copy ChatGPT update prompt
         </button>
       </div>
       {status ? <p className="status-line">{status}</p> : null}
+      {manualCopyText ? (
+        <section className="plain-section" aria-label="Manual copy fallback">
+          <h2>Manual copy</h2>
+          <p>Select all of the text below and copy it.</p>
+          <textarea className="json-input small" readOnly value={manualCopyText} onFocus={(event) => event.currentTarget.select()} />
+          <button type="button" className="text-button" onClick={() => setManualCopyText("")}>
+            Hide
+          </button>
+        </section>
+      ) : null}
       <div className="stats-grid">
         <div className="stat-card">
           <strong>{packs.length}</strong>
@@ -92,7 +126,8 @@ export function LibraryScreen({ packs, entries, exercises, importLog }: LibraryS
         <ol className="numbered-list">
           <li>Copy the ChatGPT update prompt.</li>
           <li>Paste it into chat with your new lesson notes, screenshots, PDF text, or worksheet material.</li>
-          <li>Ask for JSON only, then paste the returned pack into Paste JSON update.</li>
+          <li>Attach the complete lesson and let the prompt require visual review of printed and handwritten notes.</li>
+          <li>Paste the returned JSON, including a fenced JSON response if chat added one, into Paste JSON update.</li>
           <li>Preview the import counts before confirming the merge.</li>
         </ol>
       </section>
